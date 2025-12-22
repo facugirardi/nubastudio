@@ -336,8 +336,8 @@ export default function Home() {
       <Navbar />
 
       <main className="relative flex flex-col">
-        <section ref={heroRef} className="relative min-h-[50vh] sm:min-h-[70vh] md:min-h-screen flex flex-col md:flex-row items-start bg-white overflow-hidden">
-          <div className="flex-1 p-6 sm:p-10 md:p-16 pt-24 sm:pt-32 flex flex-col justify-start md:justify-between min-h-0 md:min-h-screen relative z-10">
+        <section ref={heroRef} className="relative min-h-[50vh] sm:min-h-[70vh] flex flex-col md:flex-row items-start bg-white overflow-hidden">
+          <div className="flex-1 p-6 sm:p-10 md:p-16 pt-24 sm:pt-32 flex flex-col justify-start md:justify-between min-h-0 relative z-10">
             <div className="mt-6 sm:mt-10 md:mt-16">
               <motion.h1
                 initial={{ opacity: 0, y: 40 }}
@@ -363,7 +363,7 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="mt-4 sm:mt-6 md:mt-auto mb-20 sm:mb-24 md:mb-0 pb-0 md:pb-16 max-w-3xl"
             >
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-black leading-relaxed uppercase tracking-[0.08em]">
+              <p className="mt-20 text-sm sm:text-base md:text-lg lg:text-xl text-black leading-relaxed uppercase tracking-[0.08em]">
                 WE CREATE{" "}
                 <span className="relative inline-block">
                   SOLUTIONS
