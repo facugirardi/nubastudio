@@ -363,7 +363,7 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="mt-4 sm:mt-6 md:mt-auto mb-20 sm:mb-24 md:mb-0 pb-0 md:pb-16 max-w-3xl"
             >
-              <p className="mt-20 text-sm sm:text-base md:text-lg lg:text-xl text-black leading-relaxed uppercase tracking-[0.08em]">
+              <p className="mt-20  text-sm sm:text-base md:text-lg lg:text-xl text-black leading-relaxed uppercase tracking-[0.08em]">
                 WE CREATE{" "}
                 <span className="relative inline-block">
                   SOLUTIONS
