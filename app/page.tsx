@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, useEffect } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   motion,
@@ -8,9 +8,6 @@ import {
   useScroll,
   useSpring,
   useTransform,
-  useMotionValue,
-  useSpring as useSpringMotion,
-  AnimatePresence,
 } from "framer-motion";
 import styles from "./page.module.css";
 import Navbar from "./components/Navbar";
@@ -271,35 +268,6 @@ export default function Home() {
     mass: 1.1,
   });
 
-  // Cursor position for hover image - using motion values for better performance
-  const cursorX = useMotionValue(0);
-  const cursorY = useMotionValue(0);
-
-  useEffect(() => {
-    let rafId: number;
-    let lastX = 0;
-    let lastY = 0;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      lastX = e.clientX;
-      lastY = e.clientY;
-      
-      // Use requestAnimationFrame to throttle updates
-      if (!rafId) {
-        rafId = requestAnimationFrame(() => {
-          cursorX.set(lastX);
-          cursorY.set(lastY);
-          rafId = 0;
-        });
-      }
-    };
-
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [cursorX, cursorY]);
 
   const introWords = useMemo(
     () =>
@@ -601,34 +569,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Hover Image that follows cursor - Hidden on mobile */}
-          <AnimatePresence>
-            {hoveredWork !== null && (
-              <motion.div
-                key={hoveredWork}
-                className="hidden md:block fixed w-60 h-60 overflow-hidden pointer-events-none z-50 shadow-2xl"
-                style={{
-                  left: cursorX,
-                  top: cursorY,
-                  x: "-50%",
-                  y: "-50%",
-                }}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <img
-                  key={works[hoveredWork].image}
-                  src={works[hoveredWork].image}
-                  alt={works[hoveredWork].title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
         </section>
 
         {/* Services Section */}
