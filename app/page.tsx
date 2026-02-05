@@ -271,17 +271,35 @@ export default function Home() {
     mass: 1.1,
   });
 
-  // Cursor position for hover image
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  // Cursor position for hover image - using motion values for better performance
+  const cursorX = useMotionValue(0);
+  const cursorY = useMotionValue(0);
 
   useEffect(() => {
+    let rafId: number;
+    let lastX = 0;
+    let lastY = 0;
+
     const handleMouseMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
+      lastX = e.clientX;
+      lastY = e.clientY;
+      
+      // Use requestAnimationFrame to throttle updates
+      if (!rafId) {
+        rafId = requestAnimationFrame(() => {
+          cursorX.set(lastX);
+          cursorY.set(lastY);
+          rafId = 0;
+        });
+      }
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [cursorX, cursorY]);
 
   const introWords = useMemo(
     () =>
@@ -588,10 +606,10 @@ export default function Home() {
             {hoveredWork !== null && (
               <motion.div
                 key={hoveredWork}
-                className="hidden md:block fixed w-60 h-60 overflow-hidden pointer-events-none z-50 shadow-2xl will-change-transform"
+                className="hidden md:block fixed w-60 h-60 overflow-hidden pointer-events-none z-50 shadow-2xl"
                 style={{
-                  left: cursorPos.x,
-                  top: cursorPos.y,
+                  left: cursorX,
+                  top: cursorY,
                   x: "-50%",
                   y: "-50%",
                 }}
@@ -605,7 +623,8 @@ export default function Home() {
                   src={works[hoveredWork].image}
                   alt={works[hoveredWork].title}
                   className="w-full h-full object-cover"
-                  style={{ willChange: "transform" }}
+                  loading="lazy"
+                  decoding="async"
                 />
               </motion.div>
             )}
