@@ -84,7 +84,7 @@ export const works: WorkItem[] = [
       "Local brand showcase space",
       "Multi-platform support (Web, iOS, Android)"
     ],
-    technologies: ["Python", "Flask", "JavaScript", "React Native", "Next.js", "Figma", "User Research", "Wireframing", "Prototyping"],
+    technologies: ["Python", "JavaScript", "React Native", "Next.js", "Figma", "User Research", "Wireframing", "Prototyping"],
     images: [
       "/images/cases/nuddo/frame2.webp",
       "/images/cases/nuddo/frame3.webp",
@@ -148,7 +148,7 @@ export const works: WorkItem[] = [
       "Inspector and owner dashboards",
       "Compliance tracking"
     ],
-    technologies: ["Python", "Flask", "JavaScript", "Next.js", "Figma", "User Research", "Wireframing", "Prototyping"],
+    technologies: ["Python", "JavaScript", "Next.js", "Figma", "User Research", "Wireframing", "Prototyping"],
     images: [
       "/images/cases/checkrto/check1.webp",
       "/images/cases/checkrto/2check.webp",
@@ -161,29 +161,39 @@ export const works: WorkItem[] = [
       web: "https://www.checkrto.com"
     }
   },
-  // {
-  //   title: "Bausing",
-  //   subtitle: "Web Development",
-  //   image: "https://images.unsplash.com/photo-1631049035182-249067d7618e?w=800&h=600&fit=crop",
-  //   slug: "bausing",
-  //   task: "Develop a comprehensive e-commerce platform for mattresses and a digital wallet for Argentine pesos (Bausing wallet). Create an intuitive online store that allows customers to browse, compare, and purchase mattresses with ease, along with a digital wallet system that enables users to manage their pesos digitally. Build user-friendly interfaces for both the e-commerce platform and the wallet functionality.",
-  //   solutions: "We developed a full-featured e-commerce platform specifically designed for mattress sales, along with a digital wallet system for Argentine pesos. The platform includes detailed product catalogs, easy navigation, secure checkout processes, and an intuitive shopping experience. Additionally, we built a digital wallet (Bausing wallet) that allows users to manage, transfer, and use pesos digitally within the platform.",
-  //   description: "Bausing is an e-commerce platform specializing in mattress sales, featuring a comprehensive online shopping experience with detailed product information, easy browsing, and secure purchasing options. Additionally, Bausing includes a digital wallet system for Argentine pesos, allowing users to manage their money digitally within the platform.",
-  //   process: "We built a full-stack web application with a focus on creating an exceptional shopping experience for mattress buyers and implementing a digital wallet system. The development process involved creating intuitive product browsing, implementing secure payment systems, building the digital wallet functionality for pesos, and developing user-friendly interfaces for both the e-commerce and wallet features.",
-  //   result: "Bausing successfully provides customers with a seamless online shopping experience for mattresses, along with a fully functional digital wallet for Argentine pesos. The platform is now live and enables customers to easily browse, compare, and purchase mattresses, while also managing their pesos digitally through the integrated wallet system.",
-  //   features: [
-  //     "Product catalog and browsing",
-  //     "Detailed product specifications",
-  //     "Secure checkout process",
-  //     "Digital wallet for Argentine pesos (Bausing wallet)",
-  //     "User-friendly interface",
-  //     "Mobile-responsive design",
-  //     "Product search and filtering",
-  //     "Wallet balance management"
-  //   ],
-  //   technologies: ["Python", "Flask", "JavaScript", "Next.js", "Figma", "User Research", "Wireframing", "Prototyping"],
-  //   links: {}
-  // },
+  {
+    title: "Bausing",
+    subtitle: "E-commerce",
+    image: "/images/cases/bausing/desktop1-bausing.webp",
+    slug: "bausing",
+    task: "Develop a comprehensive e-commerce platform for a company based in Córdoba, Argentina that primarily sells mattresses and bed bases, with secondary products including home appliances. The platform needed to serve customers throughout Argentina, requiring a robust catalog system, location-based pricing, secure payment integration with MercadoPago, and a complete shopping experience from browsing to checkout.",
+    solutions: "We built a full-featured e-commerce platform with a sophisticated product catalog system supporting categories, variants, and location-based pricing. The platform includes an intuitive shopping experience with detailed product information, secure checkout with MercadoPago integration, cart management, order tracking, and a comprehensive admin panel for managing products, inventory, and orders. We implemented a locality detection system to automatically adjust prices based on the customer's location, ensuring accurate pricing across all of Argentina.",
+    description: "Bausing is an e-commerce platform for a Córdoba-based company specializing in mattresses and bed bases, with a secondary focus on home appliances. The platform serves customers throughout Argentina, offering a seamless online shopping experience with location-based pricing, secure payments, and comprehensive product management.",
+    process: "We developed a full-stack solution using Flask for the backend and Next.js for the frontend. The development process involved creating a flexible catalog system with categories and subcategories, implementing product variants with stock management, building a location-based pricing system, integrating MercadoPago for secure payments, and creating an admin panel for complete business management. We also implemented features like product reviews, blog functionality, and a digital wallet system.",
+    result: "Bausing is now live and successfully serving customers across Argentina. The platform provides a seamless shopping experience with accurate location-based pricing, secure payment processing, and comprehensive product information. The admin panel enables efficient management of the entire catalog, orders, and business operations.",
+    features: [
+      "Comprehensive product catalog with categories and variants",
+      "Location-based pricing for all of Argentina",
+      "MercadoPago secure payment integration",
+      "Shopping cart and checkout flow",
+      "Order tracking and management",
+      "Product reviews and ratings",
+      "Blog functionality",
+      "Digital wallet system",
+      "Admin panel for business management",
+      "Mobile-responsive design"
+    ],
+    technologies: ["Python", "PostgreSQL", "JavaScript", "Next.js", "TypeScript", "MercadoPago API"],
+    images: [
+      "/images/cases/bausing/desktop1-bausing.webp",
+      "/images/cases/bausing/desktop2-bausing.webp",
+      "/images/cases/bausing/desktop3-bausing.webp",
+      "/images/cases/bausing/desktop4-bausing.webp",
+      "/images/cases/bausing/foto5.webp",
+      "/images/cases/bausing/foto6.webp"
+    ],
+    links: {}
+  },
   {
     title: "PartidosYa",
     subtitle: "UX/UI Design",
@@ -216,35 +226,35 @@ export const works: WorkItem[] = [
     }
   },
   {
-    title: "FAMates",
-    subtitle: "UX/UI Design",
-    image: "/images/cases/ffmates/ffmatesmock1.webp",
-    slug: "famates",
-    task: "Design an e-commerce platform with a focus on navigability, product visualization, and purchase flow. Create an intuitive shopping experience that guides users seamlessly from browsing to checkout.",
-    solutions: "We designed an e-commerce platform centered on exceptional user experience. The design prioritizes easy navigation, clear product visualization, and a streamlined purchase flow, making online shopping intuitive and enjoyable for customers.",
-    description: "FAMates is an e-commerce platform designed with a strong focus on user experience. The project required a design that prioritizes navigability, effective product visualization, and a smooth purchase flow that guides users naturally from product discovery to checkout completion.",
-    process: "Our design process focused on creating an intuitive shopping experience. We conducted user research, developed wireframes, and created high-fidelity designs that emphasize easy navigation, clear product presentation, and a streamlined checkout process. Every design decision was made with the user journey in mind.",
-    result: "The FAMates design successfully creates an engaging and intuitive e-commerce experience. The design emphasizes user-friendly navigation, effective product visualization, and a purchase flow that reduces friction and encourages conversions.",
+    title: "Provia Consulting",
+    subtitle: "Institutional Website",
+    image: "/images/cases/provia/desktop1-provia.webp",
+    slug: "provia-consulting",
+    task: "Develop an institutional website for Provia Consulting, a strategic consulting firm specialized in road safety, vehicle technical inspection, and business development strategies. The website needed to communicate the company's expertise in working with companies, organizations, and municipalities, showcasing their services in process modernization, efficiency optimization, and sustainable growth.",
+    solutions: "We built a modern, professional institutional website using Astro framework that effectively presents Provia Consulting's services and expertise. The site features clear service descriptions, company information, and a professional design that reflects the consulting firm's credibility. The static site architecture ensures fast loading times and excellent performance, while maintaining a clean and professional aesthetic that builds trust with potential clients.",
+    description: "Provia Consulting is a comprehensive consulting firm specialized in road safety education, vehicle technical inspection, and business development strategies. The institutional website showcases their expertise in working with companies, organizations, and municipalities, helping them modernize processes, optimize operations, and achieve sustainable growth.",
+    process: "We developed a static website using Astro framework, focusing on creating a professional and informative institutional presence. The development process involved designing a clean layout that effectively communicates the company's services, creating responsive components for different sections, and ensuring optimal performance with Astro's static site generation capabilities.",
+    result: "The Provia Consulting website successfully presents the company as a trusted consulting partner. The site provides clear information about their services, expertise, and value proposition, helping potential clients understand how Provia can help modernize their operations and achieve their business goals.",
     features: [
-      "Intuitive navigation system",
-      "Enhanced product visualization",
-      "Streamlined checkout flow",
-      "User-centered design",
-      "Mobile-responsive layouts",
-      "Conversion-optimized UX"
+      "Professional institutional design",
+      "Service showcase sections",
+      "Company information and expertise",
+      "Contact and inquiry forms",
+      "Responsive design",
+      "Fast static site performance",
+      "SEO optimized",
+      "Clean and professional aesthetic"
     ],
-    technologies: ["Figma", "User Research", "Wireframing", "Prototyping", "UI Design"],
+    technologies: ["Astro", "TypeScript", "Tailwind CSS"],
     images: [
-      "/images/cases/ffmates/ffmatesmock1.webp",
-      "/images/cases/ffmates/ffmatesmock2.webp",
-      "/images/cases/ffmates/ffmatesmock3.webp",
-      "/images/cases/ffmates/ffmatesm4.webp",
-      "/images/cases/ffmates/ffmatz5.webp",
-      "/images/cases/ffmates/ffmatesmock6.webp"
+      "/images/cases/provia/desktop1-provia.webp",
+      "/images/cases/provia/desktop2-provia.webp",
+      "/images/cases/provia/desktop3-provia.webp",
+      "/images/cases/provia/provia-4dekstop.webp",
+      "/images/cases/provia/desktop5.webp",
+      "/images/cases/provia/desktop6.webp"
     ],
-    links: {
-      behance: "https://www.behance.net/gallery/225646897/E-commerce-Design-UIUX"
-    }
+    links: {}
   },
 ];
 
