@@ -163,7 +163,7 @@ export const works: WorkItem[] = [
   },
   {
     title: "Bausing",
-    subtitle: "E-commerce",
+    subtitle: "Web Development",
     image: "/images/cases/bausing/desktop1-bausing.webp",
     slug: "bausing",
     task: "Develop a comprehensive e-commerce platform for a company based in Córdoba, Argentina that primarily sells mattresses and bed bases, with secondary products including home appliances. The platform needed to serve customers throughout Argentina, requiring a robust catalog system, location-based pricing, secure payment integration with MercadoPago, and a complete shopping experience from browsing to checkout.",
@@ -227,7 +227,7 @@ export const works: WorkItem[] = [
   },
   {
     title: "Provia Consulting",
-    subtitle: "Institutional Website",
+    subtitle: "Web Development",
     image: "/images/cases/provia/desktop1-provia.webp",
     slug: "provia-consulting",
     task: "Develop an institutional website for Provia Consulting, a strategic consulting firm specialized in road safety, vehicle technical inspection, and business development strategies. The website needed to communicate the company's expertise in working with companies, organizations, and municipalities, showcasing their services in process modernization, efficiency optimization, and sustainable growth.",
