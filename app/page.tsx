@@ -336,7 +336,7 @@ export default function Home() {
       <main className="relative flex flex-col">
         <section ref={heroRef} className="relative min-h-[50vh] sm:min-h-[70vh] flex flex-col md:flex-row items-start bg-white overflow-hidden">
           <div className="flex-1 p-6 sm:p-10 md:p-16 pt-24 sm:pt-32 flex flex-col justify-start md:justify-between min-h-0 relative z-10">
-            <div className="mt-6 sm:mt-10 md:mt-16">
+            <div className="mt-6 sm:mt-10 md:mt-16 2xl:mt-20">
               <motion.h1
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
