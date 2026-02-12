@@ -68,7 +68,7 @@ type WorkItem = {
 export const works: WorkItem[] = [
   {
     title: "Nuddo",
-    subtitle: "Web & Mobile Development",
+    subtitle: "Web & Mobile App Development, UX/UI Design",
     image: "/images/cases/nuddo/frame2.webp",
     slug: "nuddo",
     task: "Develop a comprehensive circular fashion marketplace that connects people to buy and sell second-hand clothing with ease, security, and trust. Build both web application and mobile apps for iOS and Android, creating a seamless experience across all platforms. The platform needed to support not only second-hand sales but also provide a space for local fashion brands to showcase new clothing.",
@@ -132,7 +132,7 @@ export const works: WorkItem[] = [
   },
   {
     title: "CheckRTO",
-    subtitle: "Web Development",
+    subtitle: "Web Development, UX/UI Design",
     image: "/images/cases/checkrto/check4.webp",
     slug: "checkrto",
     task: "Build a comprehensive vehicle inspection platform that manages reviews, reports, certificates, and technical workflows. Create an intuitive system for inspectors and vehicle owners to track and manage inspection processes.",
@@ -163,7 +163,7 @@ export const works: WorkItem[] = [
   },
   {
     title: "Bausing",
-    subtitle: "Web Development",
+    subtitle: "Web Development, UX/UI Design",
     image: "/images/cases/bausing/desktop1-bausing.webp",
     slug: "bausing",
     task: "Develop a comprehensive e-commerce platform for a company based in Córdoba, Argentina that primarily sells mattresses and bed bases, with secondary products including home appliances. The platform needed to serve customers throughout Argentina, requiring a robust catalog system, location-based pricing, secure payment integration with MercadoPago, and a complete shopping experience from browsing to checkout.",
@@ -227,7 +227,7 @@ export const works: WorkItem[] = [
   },
   {
     title: "Provia Consulting",
-    subtitle: "Web Development",
+    subtitle: "Web Development, UX/UI Design",
     image: "/images/cases/provia/desktop1-provia.webp",
     slug: "provia-consulting",
     task: "Develop an institutional website for Provia Consulting, a strategic consulting firm specialized in road safety, vehicle technical inspection, and business development strategies. The website needed to communicate the company's expertise in working with companies, organizations, and municipalities, showcasing their services in process modernization, efficiency optimization, and sustainable growth.",
