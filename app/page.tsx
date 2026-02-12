@@ -19,7 +19,7 @@ const AnimatedTextLine = ({ words, className = "" }: { words: string[]; classNam
   const totalWidth = words.length * 150; // Aproximado del ancho total de una repetición
   
   return (
-    <div className={`overflow-hidden py-2 md:py-3 ${className}`}>
+    <div className={`overflow-hidden py-2 md:py-3 2xl:py-5 ${className}`}>
       <motion.div
         className="flex whitespace-nowrap"
         animate={{
@@ -32,7 +32,7 @@ const AnimatedTextLine = ({ words, className = "" }: { words: string[]; classNam
         }}
       >
         {repeatedWords.map((word, index) => (
-          <span key={index} className="text-xs md:text-sm font-bold uppercase tracking-wider text-black">
+          <span key={index} className="text-xs md:text-sm 2xl:text-base font-bold uppercase tracking-wider text-black">
             {word}
             <span className="mx-2 md:mx-3">-</span>
           </span>
