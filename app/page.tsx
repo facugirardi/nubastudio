@@ -254,7 +254,9 @@ export const works: WorkItem[] = [
       "/images/cases/provia/desktop5.webp",
       "/images/cases/provia/desktop6.webp"
     ],
-    links: {}
+    links: {
+      web: "https://proviaconsulting.com"
+    }
   },
 ];
 
