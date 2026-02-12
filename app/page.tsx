@@ -339,7 +339,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="text-[24vw] sm:text-[28vw] md:text-[180px] 2xl:text-[220px] font-bold text-black leading-none tracking-tight"
+                className="text-[24vw] sm:text-[28vw] md:text-[180px] 2xl:text-[210px] font-bold text-black leading-none tracking-tight"
               >
                 nuba
               </motion.h1>
@@ -347,7 +347,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                className="text-[24vw] sm:text-[28vw] md:text-[180px] 2xl:text-[220px] font-bold text-black leading-none tracking-tight"
+                className="text-[24vw] sm:text-[28vw] md:text-[180px] 2xl:text-[210px] font-bold text-black leading-none tracking-tight"
               >
                 studio
               </motion.h2>
@@ -359,7 +359,7 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="mt-2 sm:mt-3 md:mt-auto mb-20 sm:mb-24 md:mb-0 pb-0 md:pb-16 max-w-3xl"
             >
-              <p className="mt-6 sm:mt-8 text-sm sm:text-base md:text-lg lg:text-xl text-black leading-relaxed uppercase tracking-[0.08em]">
+              <p className="mt-6 sm:mt-8 text-sm sm:text-base md:text-lg lg:text-xl 2xl:text-2xl text-black leading-relaxed uppercase tracking-[0.08em]">
                 WE CREATE{" "}
                 <span className="relative inline-block">
                   SOLUTIONS
