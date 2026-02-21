@@ -3,6 +3,7 @@
 import { use } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { works } from "../../page";
 import Navbar from "../../components/Navbar";
 
@@ -157,10 +158,12 @@ export default function CasePage({ params }: Props) {
                 className="mt-12 sm:mt-16 md:mt-24 relative"
               >
                 <div className="relative w-full md:w-[80%] mx-auto aspect-[4/3] overflow-hidden shadow-2xl">
-                  <img
+                  <Image
                     src={work.images && work.images.length > 0 ? work.images[0] : work.image}
                     alt={work.title}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 80vw"
+                    className="object-cover"
                   />
                 </div>
               </motion.div>
@@ -222,10 +225,12 @@ export default function CasePage({ params }: Props) {
                       transition={{ duration: 0.8, delay: index * 0.2, ease: [0.22, 1, 0.36, 1] }}
                       className="relative aspect-[4/3] overflow-hidden shadow-xl"
                     >
-                      <img
+                      <Image
                         src={img}
                         alt={`${work.title} - Image ${index + 2}`}
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover"
                       />
                     </motion.div>
                   ))}
@@ -239,10 +244,12 @@ export default function CasePage({ params }: Props) {
                     transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                     className="relative aspect-[4/3] overflow-hidden shadow-xl"
                   >
-                    <img
+                    <Image
                       src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop"
                       alt="Process"
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover"
                     />
                   </motion.div>
                   <motion.div
@@ -252,10 +259,12 @@ export default function CasePage({ params }: Props) {
                     transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                     className="relative aspect-[4/3] overflow-hidden shadow-xl"
                   >
-                    <img
+                    <Image
                       src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop"
                       alt="Design"
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover"
                     />
                   </motion.div>
                 </div>
@@ -292,10 +301,12 @@ export default function CasePage({ params }: Props) {
                 className="relative"
               >
                 <div className="relative w-full aspect-[16/9] overflow-hidden shadow-2xl">
-                  <img
+                  <Image
                     src={work.images && work.images.length > 3 ? work.images[3] : (work.images && work.images.length > 0 ? work.images[0] : work.image)}
                     alt={work.title}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="100vw"
+                    className="object-cover"
                   />
                 </div>
               </motion.div>
@@ -333,10 +344,12 @@ export default function CasePage({ params }: Props) {
                       transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
                       className="relative aspect-[3/4] overflow-hidden shadow-2xl"
                     >
-                      <img
+                      <Image
                         src={img}
                         alt={`${work.title} - Result ${index + 1}`}
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover"
                       />
                     </motion.div>
                   ))}
@@ -350,10 +363,12 @@ export default function CasePage({ params }: Props) {
                     transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                     className="relative aspect-[3/4] overflow-hidden shadow-2xl"
                   >
-                    <img
+                    <Image
                       src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=600&h=800&fit=crop"
                       alt="Result 1"
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
                     />
                   </motion.div>
                   <motion.div
@@ -363,10 +378,12 @@ export default function CasePage({ params }: Props) {
                     transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                     className="relative aspect-[3/4] overflow-hidden shadow-2xl"
                   >
-                    <img
+                    <Image
                       src={work.image}
                       alt="Result 2"
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
                     />
                   </motion.div>
                   <motion.div
@@ -376,10 +393,12 @@ export default function CasePage({ params }: Props) {
                     transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                     className="relative aspect-[3/4] overflow-hidden shadow-2xl sm:col-span-2 md:col-span-1"
                   >
-                    <img
+                    <Image
                       src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=800&fit=crop"
                       alt="Result 3"
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
                     />
                   </motion.div>
                 </div>
