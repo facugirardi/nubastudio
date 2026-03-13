@@ -98,38 +98,38 @@ export const works: WorkItem[] = [
       ios: "https://apps.apple.com/ar/app/nuddo/id6753880733",
       android: "https://play.google.com/store/apps/details?id=com.nuddo.app"
     }
-  // },
-  // {
-  //   title: "Kennedy's Group",
-  //   subtitle: "Frontend Development",
-  //   image: "/images/cases/kennedys/ken1.webp",
-  //   slug: "kennedys-group",
-  //   task: "We were outsourced to develop the frontend for the company's institutional website. Create a professional, modern interface that includes property visualization, events display, and clear information about their services and values. This was a frontend-only project, focusing on building a responsive and visually appealing user interface with interactive property browsing and event showcases.",
-  //   solutions: "We crafted a clean, professional institutional website that effectively communicates the company's brand identity. As a frontend-only development team, we focused on creating an exceptional user experience with a responsive design, featuring interactive property visualization and events display. The website allows visitors to easily explore the vast array of ultra-luxury villas and bespoke concierge services offered by Kennedy's Group.",
-  //   description: "Kennedy's Group is an Enthusiastic Team of like-minded hospitality experts, whose main goal is to bring your dream holidays to life. Displaying a vast array of ultra-luxury villas and bespoke concierge services, we focus on matching each one of our selective guests with his/her ideal home-away-from-home, accompanied by all the amenities and services of a 7* exclusive resort. We are at our elite clientele's disposal 24/7, making sure that nothing is left to chance.",
-  //   process: "As an outsourced frontend development team, we focused exclusively on frontend development, creating a responsive and visually appealing website. The process involved understanding the company's brand identity, developing a clean and modern interface, and ensuring the site provides clear navigation that showcases the luxury villas and concierge services effectively.",
-  //   result: "The Kennedy's Group website successfully represents the company's professional image and luxury brand positioning while providing an intuitive user experience that helps visitors understand the company's ultra-luxury villa offerings and exclusive concierge services.",
-  //   features: [
-  //     "Property visualization",
-  //     "Events display",
-  //     "Responsive design",
-  //     "Modern UI/UX",
-  //     "Brand-focused design",
-  //     "Clear information architecture",
-  //     "Professional presentation",
-  //     "Service showcase"
-  //   ],
-  //   technologies: ["JavaScript", "Next.js", "Node.js"],
-  //   images: [
-  //     "/images/cases/kennedys/ken1.webp",
-  //     "/images/cases/kennedys/ken2.webp",
-  //     "/images/cases/kennedys/ken3.webp",
-  //     "/images/cases/kennedys/ken4.webp",
-  //     "/images/cases/kennedys/ken5.webp",
-  //     "/images/cases/kennedys/ken6.webp"
-  //   ],
-  //   links: {}
-  // },
+  },
+  {
+    title: "Kennedy's Group",
+    subtitle: "Frontend Development",
+    image: "/images/cases/kennedys/ken1.webp",
+    slug: "kennedys-group",
+    task: "We were outsourced to develop the frontend for the company's institutional website. Create a professional, modern interface that includes property visualization, events display, and clear information about their services and values. This was a frontend-only project, focusing on building a responsive and visually appealing user interface with interactive property browsing and event showcases.",
+    solutions: "We crafted a clean, professional institutional website that effectively communicates the company's brand identity. As a frontend-only development team, we focused on creating an exceptional user experience with a responsive design, featuring interactive property visualization and events display. The website allows visitors to easily explore the vast array of ultra-luxury villas and bespoke concierge services offered by Kennedy's Group.",
+    description: "Kennedy's Group is an Enthusiastic Team of like-minded hospitality experts, whose main goal is to bring your dream holidays to life. Displaying a vast array of ultra-luxury villas and bespoke concierge services, we focus on matching each one of our selective guests with his/her ideal home-away-from-home, accompanied by all the amenities and services of a 7* exclusive resort. We are at our elite clientele's disposal 24/7, making sure that nothing is left to chance.",
+    process: "As an outsourced frontend development team, we focused exclusively on frontend development, creating a responsive and visually appealing website. The process involved understanding the company's brand identity, developing a clean and modern interface, and ensuring the site provides clear navigation that showcases the luxury villas and concierge services effectively.",
+    result: "The Kennedy's Group website successfully represents the company's professional image and luxury brand positioning while providing an intuitive user experience that helps visitors understand the company's ultra-luxury villa offerings and exclusive concierge services.",
+    features: [
+      "Property visualization",
+      "Events display",
+      "Responsive design",
+      "Modern UI/UX",
+      "Brand-focused design",
+      "Clear information architecture",
+      "Professional presentation",
+      "Service showcase"
+    ],
+    technologies: ["JavaScript", "Next.js", "Node.js"],
+    images: [
+      "/images/cases/kennedys/ken1.webp",
+      "/images/cases/kennedys/ken2.webp",
+      "/images/cases/kennedys/ken3.webp",
+      "/images/cases/kennedys/ken4.webp",
+      "/images/cases/kennedys/ken5.webp",
+      "/images/cases/kennedys/ken6.webp"
+    ],
+    links: {}
+  },
   {
     title: "CheckRTO",
     subtitle: "Web Development, UX/UI Design",
