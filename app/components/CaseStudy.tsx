@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "./Navbar";
-import Grain from "./Grain";
 import { useLenis } from "./SmoothScroll";
 import { startCaseTransition } from "./caseTransition";
 import type { WorkItem } from "../data/works";
@@ -121,10 +120,18 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
 
   return (
     <div ref={rootRef} style={{ background: "#000", color: "#fff", position: "relative", overflow: "hidden" }}>
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: -1,
+          pointerEvents: "none",
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
+          backgroundSize: "55px 55px",
+        }}
+      />
       <Navbar visible view="list" setView={noop} showToggle={false} />
-      <div style={{ position: "fixed", inset: 0, zIndex: 60, pointerEvents: "none", overflow: "hidden" }}>
-        <Grain zIndex={60} />
-      </div>
 
       {/* ───────── Hero fullscreen (match con el final del morph) ───────── */}
       <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
