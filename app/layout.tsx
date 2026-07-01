@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
-import CustomCursor from "./components/CustomCursor";
+import CaseTransitionProvider from "./components/caseTransition";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "Nuba Studio - Creative Agency",
-  description: "Nuba Studio, is a creative agency that helps businesses grow and succeed. We are a team of designers, developers, and marketers who are passionate about creating beautiful and functional websites and apps.",
+  title: "Nuba Studio",
+  description: "Nuba Studio",
   icons: {
     icon: "/favicon.svg",
   },
@@ -24,11 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${dmSans.variable} antialiased`}
-      >
-        <CustomCursor />
+      <body className={`${outfit.variable} antialiased`}>
         {children}
+        <CaseTransitionProvider />
       </body>
     </html>
   );
