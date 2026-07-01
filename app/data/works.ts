@@ -86,15 +86,15 @@ export const works: WorkItem[] = [
     links: {},
   },
   {
-    title: "FFMates",
+    title: "F&F",
     subtitle: "UX/UI Design",
     image: "/images/cases/ffmates/ffmatesmock1.webp",
     slug: "ffmates",
     task: "Design an e-commerce platform with a focus on navigability, product visualization, and purchase flow. Create an intuitive shopping experience that guides users seamlessly from browsing to checkout.",
     solutions: "We designed an e-commerce platform centered on exceptional user experience. The design prioritizes easy navigation, clear product visualization, and a streamlined purchase flow, making online shopping intuitive and enjoyable for customers.",
-    description: "FFMates is an e-commerce platform designed with a strong focus on user experience. The project required a design that prioritizes navigability, effective product visualization, and a smooth purchase flow that guides users naturally from product discovery to checkout completion.",
+    description: "F&F is an e-commerce platform designed with a strong focus on user experience. The project required a design that prioritizes navigability, effective product visualization, and a smooth purchase flow that guides users naturally from product discovery to checkout completion.",
     process: "Our design process focused on creating an intuitive shopping experience. We conducted user research, developed wireframes, and created high-fidelity designs that emphasize easy navigation, clear product presentation, and a streamlined checkout process. Every design decision was made with the user journey in mind.",
-    result: "The FFMates design successfully creates an engaging and intuitive e-commerce experience. The design emphasizes user-friendly navigation, effective product visualization, and a purchase flow that reduces friction and encourages conversions.",
+    result: "The F&F design successfully creates an engaging and intuitive e-commerce experience. The design emphasizes user-friendly navigation, effective product visualization, and a purchase flow that reduces friction and encourages conversions.",
     features: [
       "Intuitive navigation system",
       "Enhanced product visualization",

@@ -17,7 +17,7 @@ const CARD_SCALE = 0.44; // escala constante de todas las cards (alfombras del m
 const WORKS = [
   { title: "Nuddo",      image: "/images/cases/nuddo/frame2.webp",         slug: "nuddo"      },
   { title: "Kennedy's",  image: "/images/cases/kennedys/ken1.webp",        slug: "kennedys"   },
-  { title: "FFMates",    image: "/images/cases/ffmates/ffmatesmock1.webp", slug: "ffmates"    },
+  { title: "F&F",        image: "/images/cases/ffmates/ffmatesmock1.webp", slug: "ffmates"    },
   { title: "CheckRTO",   image: "/images/cases/checkrto/check1.webp",      slug: "checkrto"   },
   { title: "Bausing",    image: "/images/cases/bausing/desktop1-bausing.webp",  slug: "bausing"    },
   { title: "PartidosYa", image: "/images/cases/partidosya/py1-min.webp",        slug: "partidosya" },
