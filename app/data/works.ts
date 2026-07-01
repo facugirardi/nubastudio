@@ -5,7 +5,6 @@ export type WorkItem = {
   slug: string;
   task?: string;
   solutions?: string;
-  // Case-specific information
   description?: string;
   process?: string;
   result?: string;
@@ -24,7 +23,7 @@ export type WorkItem = {
 export const works: WorkItem[] = [
   {
     title: "Nuddo",
-    subtitle: "Web & Mobile App Development, UX/UI Design",
+    subtitle: "Web & Mobile Development",
     image: "/images/cases/nuddo/frame2.webp",
     slug: "nuddo",
     task: "Develop a comprehensive circular fashion marketplace that connects people to buy and sell second-hand clothing with ease, security, and trust. Build both web application and mobile apps for iOS and Android, creating a seamless experience across all platforms. The platform needed to support not only second-hand sales but also provide a space for local fashion brands to showcase new clothing.",
@@ -38,31 +37,31 @@ export const works: WorkItem[] = [
       "Mercado Pago secure payments",
       "User reputation system",
       "Local brand showcase space",
-      "Multi-platform support (Web, iOS, Android)"
+      "Multi-platform support (Web, iOS, Android)",
     ],
-    technologies: ["Python", "JavaScript", "React Native", "Next.js", "Figma", "User Research", "Wireframing", "Prototyping"],
+    technologies: ["Python", "Flask", "JavaScript", "React Native", "Next.js", "Figma", "User Research", "Wireframing", "Prototyping"],
     images: [
       "/images/cases/nuddo/frame2.webp",
       "/images/cases/nuddo/frame3.webp",
       "/images/cases/nuddo/frame4.webp",
       "/images/cases/nuddo/nuddo4.webp",
       "/images/cases/nuddo/nuddo_mobile_1.png",
-      "/images/cases/nuddo/nuddo_mobile_3.png"
+      "/images/cases/nuddo/nuddo_mobile_3.png",
     ],
     links: {
       web: "https://www.nuddo.com.ar",
       ios: "https://apps.apple.com/ar/app/nuddo/id6753880733",
-      android: "https://play.google.com/store/apps/details?id=com.nuddo.app"
-    }
+      android: "https://play.google.com/store/apps/details?id=com.nuddo.app",
+    },
   },
   {
     title: "Kennedy's Group",
     subtitle: "Frontend Development",
     image: "/images/cases/kennedys/ken1.webp",
-    slug: "kennedys-group",
+    slug: "kennedys",
     task: "We were outsourced to develop the frontend for the company's institutional website. Create a professional, modern interface that includes property visualization, events display, and clear information about their services and values. This was a frontend-only project, focusing on building a responsive and visually appealing user interface with interactive property browsing and event showcases.",
     solutions: "We crafted a clean, professional institutional website that effectively communicates the company's brand identity. As a frontend-only development team, we focused on creating an exceptional user experience with a responsive design, featuring interactive property visualization and events display. The website allows visitors to easily explore the vast array of ultra-luxury villas and bespoke concierge services offered by Kennedy's Group.",
-    description: "Kennedy's Group is an Enthusiastic Team of like-minded hospitality experts, whose main goal is to bring your dream holidays to life. Displaying a vast array of ultra-luxury villas and bespoke concierge services, we focus on matching each one of our selective guests with his/her ideal home-away-from-home, accompanied by all the amenities and services of a 7* exclusive resort. We are at our elite clientele's disposal 24/7, making sure that nothing is left to chance.",
+    description: "Kennedy's Group is an enthusiastic team of like-minded hospitality experts, whose main goal is to bring your dream holidays to life. Displaying a vast array of ultra-luxury villas and bespoke concierge services, we focus on matching each one of our selective guests with his/her ideal home-away-from-home, accompanied by all the amenities and services of a 7* exclusive resort.",
     process: "As an outsourced frontend development team, we focused exclusively on frontend development, creating a responsive and visually appealing website. The process involved understanding the company's brand identity, developing a clean and modern interface, and ensuring the site provides clear navigation that showcases the luxury villas and concierge services effectively.",
     result: "The Kennedy's Group website successfully represents the company's professional image and luxury brand positioning while providing an intuitive user experience that helps visitors understand the company's ultra-luxury villa offerings and exclusive concierge services.",
     features: [
@@ -73,7 +72,7 @@ export const works: WorkItem[] = [
       "Brand-focused design",
       "Clear information architecture",
       "Professional presentation",
-      "Service showcase"
+      "Service showcase",
     ],
     technologies: ["JavaScript", "Next.js", "Node.js"],
     images: [
@@ -82,14 +81,45 @@ export const works: WorkItem[] = [
       "/images/cases/kennedys/ken3.webp",
       "/images/cases/kennedys/ken4.webp",
       "/images/cases/kennedys/ken5.webp",
-      "/images/cases/kennedys/ken6.webp"
+      "/images/cases/kennedys/ken6.webp",
     ],
-    links: {}
+    links: {},
+  },
+  {
+    title: "FFMates",
+    subtitle: "UX/UI Design",
+    image: "/images/cases/ffmates/ffmatesmock1.webp",
+    slug: "ffmates",
+    task: "Design an e-commerce platform with a focus on navigability, product visualization, and purchase flow. Create an intuitive shopping experience that guides users seamlessly from browsing to checkout.",
+    solutions: "We designed an e-commerce platform centered on exceptional user experience. The design prioritizes easy navigation, clear product visualization, and a streamlined purchase flow, making online shopping intuitive and enjoyable for customers.",
+    description: "FFMates is an e-commerce platform designed with a strong focus on user experience. The project required a design that prioritizes navigability, effective product visualization, and a smooth purchase flow that guides users naturally from product discovery to checkout completion.",
+    process: "Our design process focused on creating an intuitive shopping experience. We conducted user research, developed wireframes, and created high-fidelity designs that emphasize easy navigation, clear product presentation, and a streamlined checkout process. Every design decision was made with the user journey in mind.",
+    result: "The FFMates design successfully creates an engaging and intuitive e-commerce experience. The design emphasizes user-friendly navigation, effective product visualization, and a purchase flow that reduces friction and encourages conversions.",
+    features: [
+      "Intuitive navigation system",
+      "Enhanced product visualization",
+      "Streamlined checkout flow",
+      "User-centered design",
+      "Mobile-responsive layouts",
+      "Conversion-optimized UX",
+    ],
+    technologies: ["Figma", "User Research", "Wireframing", "Prototyping", "UI Design"],
+    images: [
+      "/images/cases/ffmates/ffmatesmock1.webp",
+      "/images/cases/ffmates/ffmatesmock2.webp",
+      "/images/cases/ffmates/ffmatesmock3.webp",
+      "/images/cases/ffmates/ffmatesm4.webp",
+      "/images/cases/ffmates/ffmatz5.webp",
+      "/images/cases/ffmates/ffmatesmock6.webp",
+    ],
+    links: {
+      behance: "https://www.behance.net/gallery/225646897/E-commerce-Design-UIUX",
+    },
   },
   {
     title: "CheckRTO",
-    subtitle: "Web Development, UX/UI Design",
-    image: "/images/cases/checkrto/check4.webp",
+    subtitle: "Web Development",
+    image: "/images/cases/checkrto/check1.webp",
     slug: "checkrto",
     task: "Build a comprehensive vehicle inspection platform that manages reviews, reports, certificates, and technical workflows. Create an intuitive system for inspectors and vehicle owners to track and manage inspection processes.",
     solutions: "We developed a robust platform that streamlines the entire vehicle inspection process. The system handles inspection reviews, generates detailed reports, issues certificates, and manages complex technical workflows, making vehicle inspections more efficient and transparent.",
@@ -102,58 +132,48 @@ export const works: WorkItem[] = [
       "Digital certificate issuance",
       "Technical workflow management",
       "Inspector and owner dashboards",
-      "Compliance tracking"
+      "Compliance tracking",
     ],
-    technologies: ["Python", "JavaScript", "Next.js", "Figma", "User Research", "Wireframing", "Prototyping"],
+    technologies: ["Python", "Flask", "JavaScript", "Next.js", "Figma", "User Research", "Wireframing", "Prototyping"],
     images: [
       "/images/cases/checkrto/check1.webp",
       "/images/cases/checkrto/2check.webp",
       "/images/cases/checkrto/check3.webp",
       "/images/cases/checkrto/check4.webp",
       "/images/cases/checkrto/check_5.webp",
-      "/images/cases/checkrto/check6.webp"
+      "/images/cases/checkrto/check6.webp",
     ],
     links: {
-      web: "https://www.checkrto.com"
-    }
+      web: "https://www.checkrto.com",
+    },
   },
   {
     title: "Bausing",
-    subtitle: "Web Development, UX/UI Design",
-    image: "/images/cases/bausing/desktop1-bausing.webp",
+    subtitle: "Web Development",
+    image: "https://images.unsplash.com/photo-1631049035182-249067d7618e?w=1600&h=1000&fit=crop",
     slug: "bausing",
-    task: "Develop a comprehensive e-commerce platform for a company based in Córdoba, Argentina that primarily sells mattresses and bed bases, with secondary products including home appliances. The platform needed to serve customers throughout Argentina, requiring a robust catalog system, location-based pricing, secure payment integration with MercadoPago, and a complete shopping experience from browsing to checkout.",
-    solutions: "We built a full-featured e-commerce platform with a sophisticated product catalog system supporting categories, variants, and location-based pricing. The platform includes an intuitive shopping experience with detailed product information, secure checkout with MercadoPago integration, cart management, order tracking, and a comprehensive admin panel for managing products, inventory, and orders. We implemented a locality detection system to automatically adjust prices based on the customer's location, ensuring accurate pricing across all of Argentina.",
-    description: "Bausing is an e-commerce platform for a Córdoba-based company specializing in mattresses and bed bases, with a secondary focus on home appliances. The platform serves customers throughout Argentina, offering a seamless online shopping experience with location-based pricing, secure payments, and comprehensive product management.",
-    process: "We developed a full-stack solution using Flask for the backend and Next.js for the frontend. The development process involved creating a flexible catalog system with categories and subcategories, implementing product variants with stock management, building a location-based pricing system, integrating MercadoPago for secure payments, and creating an admin panel for complete business management. We also implemented features like product reviews, blog functionality, and a digital wallet system.",
-    result: "Bausing is now live and successfully serving customers across Argentina. The platform provides a seamless shopping experience with accurate location-based pricing, secure payment processing, and comprehensive product information. The admin panel enables efficient management of the entire catalog, orders, and business operations.",
+    task: "Develop a comprehensive e-commerce platform for mattresses and a digital wallet for Argentine pesos (Bausing wallet). Create an intuitive online store that allows customers to browse, compare, and purchase mattresses with ease, along with a digital wallet system that enables users to manage their pesos digitally.",
+    solutions: "We developed a full-featured e-commerce platform specifically designed for mattress sales, along with a digital wallet system for Argentine pesos. The platform includes detailed product catalogs, easy navigation, secure checkout processes, and an intuitive shopping experience. Additionally, we built a digital wallet (Bausing wallet) that allows users to manage, transfer, and use pesos digitally within the platform.",
+    description: "Bausing is an e-commerce platform specializing in mattress sales, featuring a comprehensive online shopping experience with detailed product information, easy browsing, and secure purchasing options. Bausing also includes a digital wallet system for Argentine pesos, allowing users to manage their money digitally within the platform.",
+    process: "We built a full-stack web application with a focus on creating an exceptional shopping experience for mattress buyers and implementing a digital wallet system. The development process involved creating intuitive product browsing, implementing secure payment systems, building the digital wallet functionality for pesos, and developing user-friendly interfaces for both the e-commerce and wallet features.",
+    result: "Bausing successfully provides customers with a seamless online shopping experience for mattresses, along with a fully functional digital wallet for Argentine pesos. The platform enables customers to easily browse, compare, and purchase mattresses, while also managing their pesos digitally through the integrated wallet system.",
     features: [
-      "Comprehensive product catalog with categories and variants",
-      "Location-based pricing for all of Argentina",
-      "MercadoPago secure payment integration",
-      "Shopping cart and checkout flow",
-      "Order tracking and management",
-      "Product reviews and ratings",
-      "Blog functionality",
-      "Digital wallet system",
-      "Admin panel for business management",
-      "Mobile-responsive design"
+      "Product catalog and browsing",
+      "Detailed product specifications",
+      "Secure checkout process",
+      "Digital wallet for Argentine pesos",
+      "User-friendly interface",
+      "Mobile-responsive design",
+      "Product search and filtering",
+      "Wallet balance management",
     ],
-    technologies: ["Python", "PostgreSQL", "JavaScript", "Next.js", "TypeScript", "MercadoPago API"],
-    images: [
-      "/images/cases/bausing/desktop1-bausing.webp",
-      "/images/cases/bausing/desktop2-bausing.webp",
-      "/images/cases/bausing/desktop3-bausing.webp",
-      "/images/cases/bausing/desktop4-bausing.webp",
-      "/images/cases/bausing/foto5.webp",
-      "/images/cases/bausing/foto6.webp"
-    ],
-    links: {}
+    technologies: ["Python", "Flask", "JavaScript", "Next.js", "Figma", "User Research", "Wireframing", "Prototyping"],
+    links: {},
   },
   {
     title: "PartidosYa",
     subtitle: "UX/UI Design",
-    image: "/images/cases/partidosya/py1-min.webp",
+    image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1600&h=1000&fit=crop",
     slug: "partidosya",
     task: "Create a mobile application for booking sports fields with a focus on simplicity and speed. Design intuitive screens and interactions that allow users to quickly find and reserve available fields.",
     solutions: "We designed a mobile-first application that simplifies the process of booking sports fields. The design emphasizes speed and simplicity, with intuitive screen layouts and smooth interactions that enable users to make reservations in just a few taps.",
@@ -166,52 +186,20 @@ export const works: WorkItem[] = [
       "Intuitive screen layouts",
       "Fast interactions",
       "Mobile-optimized design",
-      "User-friendly interface"
+      "User-friendly interface",
     ],
     technologies: ["Figma", "User Research", "Wireframing", "Prototyping", "User Testing"],
-    images: [
-      "/images/cases/partidosya/py1-min.webp",
-      "/images/cases/partidosya/py2.webp",
-      "/images/cases/partidosya/py3-min.webp",
-      "/images/cases/partidosya/py4.webp",
-      "/images/cases/partidosya/py5-min.webp",
-      "/images/cases/partidosya/py6.webp"
-    ],
     links: {
-      behance: "https://www.behance.net/gallery/226945829/Mobile-App-Design-UIUX"
-    }
-  },
-  {
-    title: "Provia Consulting",
-    subtitle: "Web Development, UX/UI Design",
-    image: "/images/cases/provia/desktop1-provia.webp",
-    slug: "provia-consulting",
-    task: "Develop an institutional website for Provia Consulting, a strategic consulting firm specialized in road safety, vehicle technical inspection, and business development strategies. The website needed to communicate the company's expertise in working with companies, organizations, and municipalities, showcasing their services in process modernization, efficiency optimization, and sustainable growth.",
-    solutions: "We built a modern, professional institutional website using Astro framework that effectively presents Provia Consulting's services and expertise. The site features clear service descriptions, company information, and a professional design that reflects the consulting firm's credibility. The static site architecture ensures fast loading times and excellent performance, while maintaining a clean and professional aesthetic that builds trust with potential clients.",
-    description: "Provia Consulting is a comprehensive consulting firm specialized in road safety education, vehicle technical inspection, and business development strategies. The institutional website showcases their expertise in working with companies, organizations, and municipalities, helping them modernize processes, optimize operations, and achieve sustainable growth.",
-    process: "We developed a static website using Astro framework, focusing on creating a professional and informative institutional presence. The development process involved designing a clean layout that effectively communicates the company's services, creating responsive components for different sections, and ensuring optimal performance with Astro's static site generation capabilities.",
-    result: "The Provia Consulting website successfully presents the company as a trusted consulting partner. The site provides clear information about their services, expertise, and value proposition, helping potential clients understand how Provia can help modernize their operations and achieve their business goals.",
-    features: [
-      "Professional institutional design",
-      "Service showcase sections",
-      "Company information and expertise",
-      "Contact and inquiry forms",
-      "Responsive design",
-      "Fast static site performance",
-      "SEO optimized",
-      "Clean and professional aesthetic"
-    ],
-    technologies: ["Astro", "TypeScript", "Tailwind CSS"],
-    images: [
-      "/images/cases/provia/desktop1-provia.webp",
-      "/images/cases/provia/desktop2-provia.webp",
-      "/images/cases/provia/desktop3-provia.webp",
-      "/images/cases/provia/provia-4dekstop.webp",
-      "/images/cases/provia/desktop5.webp",
-      "/images/cases/provia/desktop6.webp"
-    ],
-    links: {
-      web: "https://proviaconsulting.com"
-    }
+      behance: "https://www.behance.net/gallery/226945829/Mobile-App-Design-UIUX",
+    },
   },
 ];
+
+export function getWork(slug: string): WorkItem | undefined {
+  return works.find((w) => w.slug === slug);
+}
+
+export function getNextWork(slug: string): WorkItem {
+  const i = works.findIndex((w) => w.slug === slug);
+  return works[(i + 1) % works.length];
+}

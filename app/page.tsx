@@ -1,28 +1,24 @@
-import type { Metadata } from "next";
-import HomePageClient from "./HomePageClient";
-import { siteConfig } from "@/lib/site";
-import { absoluteUrl, organizationJsonLd } from "@/lib/seo";
+"use client";
 
-export const metadata: Metadata = {
-  title: { absolute: siteConfig.name },
-  description: siteConfig.description,
-  alternates: { canonical: absoluteUrl("/") },
-  openGraph: {
-    url: absoluteUrl("/"),
-    title: siteConfig.name,
-    description: siteConfig.description,
-  },
-};
+import { useEffect, useState } from "react";
+import Navbar from "./components/Navbar";
+import Works from "./components/Works";
+import SmoothScroll from "./components/SmoothScroll";
 
-export default function HomePage() {
-  const jsonLd = organizationJsonLd();
+export default function Home() {
+  const [view, setView] = useState<"spiral" | "list">("spiral");
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("view") === "list") {
+      setView("list");
+    }
+  }, []);
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <HomePageClient />
-    </>
+    <SmoothScroll infinite>
+      <Navbar visible={true} view={view} setView={setView} />
+      <main>
+        <Works view={view} setView={setView} />
+      </main>
+    </SmoothScroll>
   );
 }
