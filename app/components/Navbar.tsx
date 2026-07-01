@@ -134,6 +134,46 @@ export default function Navbar({
     });
   };
 
+  const scatterNavChars = (el: HTMLElement, onDone: () => void) => {
+    const chars = el.querySelectorAll<HTMLElement>(".nav-char");
+    if (!chars.length) { onDone(); return; }
+    const tl = gsap.timeline({ overwrite: true, onComplete: onDone });
+    chars.forEach((char, i) => {
+      const rx = (Math.random() - 0.5) * 120;
+      const ry = (Math.random() - 0.5) * 80 - 20;
+      const rot = (Math.random() - 0.5) * 60;
+      tl.to(char, {
+        x: rx,
+        y: ry,
+        rotation: rot,
+        duration: 0.55,
+        ease: "power3.out",
+      }, i * 0.04);
+    });
+  };
+
+  const bounceNavChars = (el: HTMLElement) => {
+    const chars = el.querySelectorAll<HTMLElement>(".nav-char");
+    if (!chars.length) return;
+    const tl = gsap.timeline({ overwrite: true });
+    const offsets = [-6, -9, -5, -8, -4, -7, -6, -5];
+    const rotations = [5, -7, 8, -5, 6, -8, 4, -6];
+    chars.forEach((char, i) => {
+      tl.to(char, {
+        y: offsets[i % offsets.length],
+        rotation: rotations[i % rotations.length],
+        duration: 0.32,
+        ease: "power2.out",
+      }, i * 0.08)
+      .to(char, {
+        y: 0,
+        rotation: 0,
+        duration: 0.55,
+        ease: "elastic.out(1, 0.5)",
+      }, i * 0.08 + 0.32);
+    });
+  };
+
   // Posición x del thumb para la opción "list" (spiral = 0)
   const slotMax = () => {
     const c = toggleRef.current;
@@ -230,6 +270,7 @@ export default function Navbar({
       gsap.to(panel, { x: 0, y: 0, scaleX: 1, scaleY: 1, width: openW, height: openH, borderRadius: 24, duration: 0.7, ease: "power4.inOut", overwrite: true });
       gsap.to(label, { opacity: 0, duration: 0.2, ease: "power2.out", overwrite: true });
       gsap.to(content, { opacity: 1, duration: 0.45, delay: 0.3, ease: "power2.out", overwrite: true });
+      gsap.set(content.querySelectorAll(".nav-char"), { x: 0, y: 0, rotation: 0, opacity: 1 });
       gsap.fromTo(
         content.querySelectorAll("[data-stagger]"),
         { y: 20, opacity: 0 },
@@ -558,7 +599,7 @@ export default function Navbar({
                 data-stagger
                 href={link === "Work" ? undefined : link === "About" ? "/about" : link === "Services" ? "/services" : link === "Contact" ? "/contact" : `#${link.toLowerCase()}`}
                 className="menu-panel-link"
-                onMouseEnter={(e) => runScramble(e.currentTarget, link.toLowerCase())}
+                onMouseEnter={(e) => bounceNavChars(e.currentTarget)}
                 onClick={(e) => {
                   if (link === "Work") {
                     e.preventDefault();
@@ -590,15 +631,17 @@ export default function Navbar({
                   }
                 }}
               >
-                {link.toLowerCase()}
+                {link.toLowerCase().split("").map((char, i) => (
+                  <span key={i} className="nav-char" style={{ display: "inline-block" }}>{char}</span>
+                ))}
               </a>
             ))}
           </nav>
 
           {/* Footer */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-            <a data-stagger href="mailto:hello@nubastudio.com" className="menu-email">
-              hello@nubastudio.com
+            <a data-stagger href="mailto:hello@nuba.studio" className="menu-email">
+              hello@nuba.studio
             </a>
             <div data-stagger style={{ display: "flex", gap: "0.7rem" }}>
               {SOCIALS.map((s) => (

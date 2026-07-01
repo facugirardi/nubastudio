@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLenis } from "./SmoothScroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -62,44 +63,23 @@ const PROCESS = [
 const INTRO_WORDS = INTRO_TEXT.split(" ");
 
 export default function Services() {
+  const lenis = useLenis();
   const sectionRef = useRef<HTMLElement>(null);
   const introRef = useRef<HTMLParagraphElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
-  const revealRef = useRef<HTMLDivElement>(null);
-  const revealImgRef = useRef<HTMLImageElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const ctaCellsRef = useRef<HTMLDivElement>(null);
 
-  // Hover-reveal: imagen flotante que sigue el cursor sobre la lista de servicios
+  // Hover dim: al hacer hover en una fila, las demás se dimean
   useEffect(() => {
-    const reveal = revealRef.current;
-    const img = revealImgRef.current;
     const list = listRef.current;
-    if (!reveal || !img || !list) return;
-
-    const xTo = gsap.quickTo(reveal, "x", { duration: 0.55, ease: "power3.out" });
-    const yTo = gsap.quickTo(reveal, "y", { duration: 0.55, ease: "power3.out" });
-
-    const onMove = (e: MouseEvent) => {
-      xTo(e.clientX);
-      yTo(e.clientY);
-    };
-    list.addEventListener("mousemove", onMove);
+    if (!list) return;
 
     const rows = Array.from(list.querySelectorAll<HTMLLIElement>(".svc-row"));
     const enters: Array<() => void> = [];
 
-    const onListEnter = () => gsap.to(reveal, { autoAlpha: 1, scale: 1, duration: 0.4, ease: "power3.out" });
-    const onListLeave = () => gsap.to(reveal, { autoAlpha: 0, scale: 0.85, duration: 0.4, ease: "power3.out" });
-    list.addEventListener("mouseenter", onListEnter);
-    list.addEventListener("mouseleave", onListLeave);
-
     rows.forEach((row) => {
-      const src = row.dataset.image!;
-      const onEnter = () => {
-        img.src = src;
-        rows.forEach((r) => r.classList.toggle("is-dim", r !== row));
-      };
+      const onEnter = () => rows.forEach((r) => r.classList.toggle("is-dim", r !== row));
       const onLeave = () => rows.forEach((r) => r.classList.remove("is-dim"));
       row.addEventListener("mouseenter", onEnter);
       row.addEventListener("mouseleave", onLeave);
@@ -109,12 +89,7 @@ export default function Services() {
       });
     });
 
-    return () => {
-      list.removeEventListener("mousemove", onMove);
-      list.removeEventListener("mouseenter", onListEnter);
-      list.removeEventListener("mouseleave", onListLeave);
-      enters.forEach((fn) => fn());
-    };
+    return () => enters.forEach((fn) => fn());
   }, []);
 
   // Grid interactivo en el CTA: celdas de color al mover el cursor (igual que About)
@@ -283,24 +258,6 @@ export default function Services() {
         }
         .svc-row:hover .svc-arrow { opacity: 1; transform: translateX(0); color: var(--accent, #C6FF00); }
 
-        /* Imagen flotante que sigue el cursor */
-        .svc-reveal {
-          position: fixed;
-          top: 0; left: 0;
-          width: 320px;
-          height: 220px;
-          margin: -110px 0 0 -160px;
-          border-radius: 14px;
-          overflow: hidden;
-          pointer-events: none;
-          opacity: 0;
-          visibility: hidden;
-          transform: scale(0.85);
-          z-index: 50;
-          box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-        }
-        .svc-reveal img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
         /* Marquee de tecnologías */
         .svc-tech {
           border-top: 1px solid rgba(255,255,255,0.14);
@@ -468,7 +425,12 @@ export default function Services() {
         <div className="svc-list-wrap">
           <ul ref={listRef} className="svc-list">
             {SERVICES.map((s) => (
-              <li key={s.n} className="svc-row" data-image={s.image}>
+              <li key={s.n} className="svc-row" data-image={s.image}
+                role="button"
+                tabIndex={0}
+                onClick={() => lenis?.scrollTo("#svc-cta")}
+                onKeyDown={(e) => { if (e.key === "Enter") lenis?.scrollTo("#svc-cta"); }}
+              >
                 <span className="svc-n">{s.n}</span>
                 <h3 className="svc-title">{s.title}</h3>
                 <div className="svc-body">
@@ -516,15 +478,15 @@ export default function Services() {
         </div>
 
         {/* CTA */}
-        <div ref={ctaRef} className="svc-cta">
+        <div ref={ctaRef} id="svc-cta" className="svc-cta">
           <div className="svc-cta-grid" />
           <div ref={ctaCellsRef} className="svc-cta-cells" />
           <span className="svc-cta-label">Have a project in mind?</span>
           <h2 className="svc-cta-title">
             Let&apos;s build<br />something <span className="accent">real</span>
           </h2>
-          <a href="mailto:hello@nubastudio.com" className="svc-cta-mail">
-            hello@nubastudio.com
+          <a href="mailto:hello@nuba.studio" className="svc-cta-mail">
+            hello@nuba.studio
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
               <line x1="7" y1="17" x2="17" y2="7" />
               <polyline points="7 7 17 7 17 17" />
@@ -533,10 +495,6 @@ export default function Services() {
         </div>
       </section>
 
-      {/* Imagen flotante (fuera de la lista para poder seguir el cursor por todo el viewport) */}
-      <div ref={revealRef} className="svc-reveal">
-        <img ref={revealImgRef} alt="" />
-      </div>
     </>
   );
 }

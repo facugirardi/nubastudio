@@ -237,8 +237,8 @@ export default function Contact() {
           ))}
         </h1>
 
-        <a ref={emailRef} href="mailto:hello@nubastudio.com" className="contact-email">
-          hello@nubastudio.com
+        <a ref={emailRef} href="mailto:hello@nuba.studio" className="contact-email">
+          hello@nuba.studio
         </a>
 
         <div ref={secondaryRef} className="contact-secondary">

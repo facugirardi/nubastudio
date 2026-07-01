@@ -19,8 +19,8 @@ const WORKS = [
   { title: "Kennedy's",  image: "/images/cases/kennedys/ken1.webp",        slug: "kennedys"   },
   { title: "FFMates",    image: "/images/cases/ffmates/ffmatesmock1.webp", slug: "ffmates"    },
   { title: "CheckRTO",   image: "/images/cases/checkrto/check1.webp",      slug: "checkrto"   },
-  { title: "Bausing",    image: "https://images.unsplash.com/photo-1631049035182-249067d7618e?w=800&h=600&fit=crop", slug: "bausing"    },
-  { title: "PartidosYa", image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=600&fit=crop", slug: "partidosya" },
+  { title: "Bausing",    image: "/images/cases/bausing/desktop1-bausing.webp",  slug: "bausing"    },
+  { title: "PartidosYa", image: "/images/cases/partidosya/py1-min.webp",        slug: "partidosya" },
 ];
 
 const N = WORKS.length;
