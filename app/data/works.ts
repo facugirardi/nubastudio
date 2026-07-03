@@ -216,6 +216,40 @@ export const works: WorkItem[] = [
       behance: "https://www.behance.net/gallery/226945829/Mobile-App-Design-UIUX",
     },
   },
+  {
+    title: "Provia Consulting",
+    subtitle: "Web Development, UX/UI Design",
+    image: "/images/cases/provia/desktop1-provia.webp",
+    slug: "provia-consulting",
+    year: "2026",
+    task: "Develop an institutional website for Provia Consulting, a strategic consulting firm specialized in road safety, vehicle technical inspection, and business development strategies. The website needed to communicate the company's expertise in working with companies, organizations, and municipalities, showcasing their services in process modernization, efficiency optimization, and sustainable growth.",
+    solutions: "We built a modern, professional institutional website using Astro framework that effectively presents Provia Consulting's services and expertise. The site features clear service descriptions, company information, and a professional design that reflects the consulting firm's credibility. The static site architecture ensures fast loading times and excellent performance, while maintaining a clean and professional aesthetic that builds trust with potential clients.",
+    description: "Provia Consulting is a comprehensive consulting firm specialized in road safety education, vehicle technical inspection, and business development strategies. The institutional website showcases their expertise in working with companies, organizations, and municipalities, helping them modernize processes, optimize operations, and achieve sustainable growth.",
+    process: "We developed a static website using Astro framework, focusing on creating a professional and informative institutional presence. The development process involved designing a clean layout that effectively communicates the company's services, creating responsive components for different sections, and ensuring optimal performance with Astro's static site generation capabilities.",
+    result: "The Provia Consulting website successfully presents the company as a trusted consulting partner. The site provides clear information about their services, expertise, and value proposition, helping potential clients understand how Provia can help modernize their operations and achieve their business goals.",
+    features: [
+      "Professional institutional design",
+      "Service showcase sections",
+      "Company information and expertise",
+      "Contact and inquiry forms",
+      "Responsive design",
+      "Fast static site performance",
+      "SEO optimized",
+      "Clean and professional aesthetic",
+    ],
+    technologies: ["Astro", "TypeScript", "Tailwind CSS"],
+    images: [
+      "/images/cases/provia/desktop1-provia.webp",
+      "/images/cases/provia/desktop2-provia.webp",
+      "/images/cases/provia/desktop3-provia.webp",
+      "/images/cases/provia/provia-4dekstop.webp",
+      "/images/cases/provia/desktop5.webp",
+      "/images/cases/provia/desktop6.webp",
+    ],
+    links: {
+      web: "https://proviaconsulting.com",
+    },
+  },
 ];
 
 export function getWork(slug: string): WorkItem | undefined {
