@@ -13,7 +13,7 @@ const INTRO_TEXT =
 const SERVICES = [
   {
     n: "01",
-    title: "Web Design & Development",
+    title: "Web Development",
     desc: "Sites and platforms that load fast, feel alive and turn visitors into clients.",
     tags: ["Next.js", "React", "CMS", "Motion"],
     image: "/images/cases/checkrto/check1.webp",
@@ -485,7 +485,7 @@ export default function Services() {
           <h2 className="svc-cta-title">
             Let&apos;s build<br />something <span className="accent">real</span>
           </h2>
-          <a href="mailto:hello@nuba.studio" className="svc-cta-mail">
+          <a href="mailto:hello@nuba.studio" target="_blank" rel="noopener noreferrer" className="svc-cta-mail">
             hello@nuba.studio
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
               <line x1="7" y1="17" x2="17" y2="7" />

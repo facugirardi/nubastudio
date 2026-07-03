@@ -13,7 +13,7 @@ const CHIP_H = 40;
 const SOCIALS = [
   {
     label: "LinkedIn",
-    href: "https://linkedin.com",
+    href: "https://linkedin.com/company/nubastudio",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
@@ -36,11 +36,13 @@ export default function Navbar({
   view,
   setView,
   showToggle = true,
+  webglAvailable = true,
 }: {
   visible: boolean;
   view: "spiral" | "list";
   setView: (v: "spiral" | "list") => void;
   showToggle?: boolean;
+  webglAvailable?: boolean;
 }) {
   const navRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -54,6 +56,11 @@ export default function Navbar({
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
+
+  const chooseView = (next: "spiral" | "list") => {
+    if (next === "spiral" && !webglAvailable) return;
+    setView(next);
+  };
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth < 768);
@@ -238,7 +245,7 @@ export default function Navbar({
       const toList = Number(gsap.getProperty(thumbRef.current, "x")) > max / 2;
       gsap.to(thumbRef.current, { x: toList ? max : 0, duration: 0.4, ease: "back.out(2)", overwrite: true });
       const target = toList ? "list" : "spiral";
-      if (target !== view) setView(target);
+      if (target !== view) chooseView(target);
     }
   };
 
@@ -484,7 +491,7 @@ export default function Navbar({
               <button
                 key={opt}
                 className="view-opt"
-                onClick={() => { if (ignoreClickRef.current) return; setView(opt); }}
+                onClick={() => { if (ignoreClickRef.current) return; chooseView(opt); }}
                 style={{ color: view === opt ? "#000" : "rgba(255,255,255,0.6)" }}
               >
                 {opt}
@@ -640,7 +647,7 @@ export default function Navbar({
 
           {/* Footer */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-            <a data-stagger href="mailto:hello@nuba.studio" className="menu-email">
+            <a data-stagger href="mailto:hello@nuba.studio" target="_blank" rel="noopener noreferrer" className="menu-email">
               hello@nuba.studio
             </a>
             <div data-stagger style={{ display: "flex", gap: "0.7rem" }}>

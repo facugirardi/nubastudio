@@ -237,7 +237,7 @@ export default function Contact() {
           ))}
         </h1>
 
-        <a ref={emailRef} href="mailto:hello@nuba.studio" className="contact-email">
+        <a ref={emailRef} href="mailto:hello@nuba.studio" target="_blank" rel="noopener noreferrer" className="contact-email">
           hello@nuba.studio
         </a>
 
