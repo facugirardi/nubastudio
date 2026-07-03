@@ -15,7 +15,9 @@ export function isWebGLAvailable(): boolean {
       alpha: true,
       antialias: false,
       depth: true,
-      failIfMajorPerformanceCaveat: false,
+      // Sin aceleración por hardware (SwiftShader/software) el contexto falla:
+      // en esas máquinas la espiral no debe mostrarse.
+      failIfMajorPerformanceCaveat: true,
       powerPreference: "default",
     };
 

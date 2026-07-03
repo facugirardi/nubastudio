@@ -10,11 +10,13 @@ import { isWebGLAvailable } from "./lib/webglSupport";
 export default function Home() {
   const [view, setView] = useState<"spiral" | "list">("spiral");
   const [webglAvailable, setWebglAvailable] = useState<boolean | null>(null);
-  const [loaderDone, setLoaderDone] = useState(true);
+  // Arranca visible (también en el HTML del SSR) para que el contenido nunca
+  // pinte antes que el loader; si ya se mostró en la sesión se saltea al montar.
+  const [loaderDone, setLoaderDone] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.getItem("loader_shown") !== "1") {
-      setLoaderDone(false);
+    if (sessionStorage.getItem("loader_shown") === "1") {
+      setLoaderDone(true);
     }
   }, []);
 

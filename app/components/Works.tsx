@@ -319,7 +319,8 @@ export default function Works({
               alpha: true,
               antialias: !mobile,
               powerPreference: "default",
-              failIfMajorPerformanceCaveat: false,
+              // Sin GPU real el contexto falla → WebGLErrorBoundary → vista lista
+              failIfMajorPerformanceCaveat: true,
             }}
             camera={{ position: [0, 0, 8.0], fov: 50 }}
             style={{
