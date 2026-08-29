@@ -23,6 +23,38 @@ export type WorkItem = {
 
 export const works: WorkItem[] = [
   {
+    title: "Nubapay",
+    subtitle: "Product Design & Development",
+    image: "/images/cases/nubapay/m1.webp",
+    slug: "nubapay",
+    year: "2026",
+    task: "Massive events in Latin America still run on cash boxes: long lines, slow bars, lost sales, and no real-time control. Organizers needed a simple, scalable way for attendees to order, pay, and pick up from their phone—without downloading an app, without extra hardware, and without the chaos of traditional checkout.",
+    solutions: "We built Nubapay as the operating system for massive events. Attendees scan a QR, browse the digital menu, pay from their phone, and pick up with a unique one-time QR. Organizers get a live dashboard for sales, orders, and performance. Staff validates pickup from any device. We also designed Atendium, an AI that attends, recommends, and upsells 24/7, plus unickeys on Solana so every pickup QR is unique, single-use, and impossible to fake. An event can go live in under 20 minutes.",
+    description: "Nubapay ends the cash box, once and for all. It is a simple, scalable platform that lets people order, pay, and pick up from their phone—connecting attendees, bars, and organizers in a single system. No app to download. No line. No cash.",
+    process: "We designed and developed the full product end to end: a public storefront for attendees, an organizer workspace for catalogs, orders, staff, and pickup points, and a Flask API that holds the operation together. The experience is web-first so anyone can enter from a QR or a link. Payments run through Mercado Pago. Pickup QRs are single-use with antifraud validation, and tickets are hashed and recorded on Solana Mainnet. The same system serves festivals, clubs, stadiums, private parties, fairs, and food trucks.",
+    result: "Nubapay is live at nubapay.app. Attendees order and pay from their phone and pick up without waiting in line. Organizers see sales and orders in real time. Staff scans unique QRs from any device. Setup takes minutes, there are no fixed costs, and the platform scales from a food truck to a stadium without extra hardware.",
+    features: [
+      "Digital menu from a QR — no app to download",
+      "Mobile payments with Mercado Pago",
+      "One-time antifraud pickup QR",
+      "Organizer dashboard with live sales and orders",
+      "Multiple pickup points and product assignment",
+      "Staff scanner on any device",
+      "Atendium AI for instant answers and upselling",
+      "Solana-verified unickeys for every ticket",
+    ],
+    technologies: ["Next.js", "TypeScript", "Python", "Flask", "PostgreSQL", "Mercado Pago", "Solana", "Figma"],
+    images: [
+      "/images/cases/nubapay/m1.webp",
+      "/images/cases/nubapay/m2.webp",
+      "/images/cases/nubapay/m3.webp",
+      "/images/cases/nubapay/m4.webp",
+    ],
+    links: {
+      web: "https://www.nubapay.app",
+    },
+  },
+  {
     title: "Nuddo",
     subtitle: "Web & Mobile Development",
     image: "/images/cases/nuddo/frame2.webp",

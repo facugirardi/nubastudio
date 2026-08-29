@@ -11,6 +11,7 @@ const ABOUT_TEXT =
   "We merge branding, interaction, and code to build experiences that resonate deeply and inspire action.";
 
 const ROW1 = [
+  { image: "/images/cases/nubapay/m1.webp",           slug: "nubapay",    w: "38vw", h: "340px", mb: "8px"  },
   { image: "/images/cases/nuddo/frame2.webp",         slug: "nuddo",      w: "42vw", h: "340px", mb: "0px"  },
   { image: "/images/cases/kennedys/ken1.webp",        slug: "kennedys",   w: "20vw", h: "360px", mb: "30px" },
   { image: "/images/cases/ffmates/ffmatesmock1.webp", slug: "ffmates",    w: "16vw", h: "320px", mb: "10px" },
@@ -20,6 +21,7 @@ const ROW1 = [
 ];
 
 const ROW2 = [
+  { image: "/images/cases/nubapay/m2.webp",           slug: "nubapay",    w: "32vw"  },
   { image: "/images/cases/ffmates/ffmatesmock2.webp", slug: "ffmates",    w: "28vw"  },
   { image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=600&fit=crop", slug: "partidosya", w: "38vw"  },
   { image: "/images/cases/kennedys/ken2.webp",        slug: "kennedys",   w: "20vw"  },

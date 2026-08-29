@@ -23,6 +23,25 @@ export const DEFAULT_DISTORTION: DistortionConfig = {
 
 const H = 2.15; // altura del plano en unidades de mundo
 const SAMPLES = 9; // puntos de la curva muestreados a lo ancho de cada card (cinta literal)
+const MAX_TEXTURE = 1024; // las covers son 4500px; en GPU eso es ~50MB c/u
+
+function downscaleTexture(texture: THREE.Texture) {
+  const img = texture.image as CanvasImageSource & { width?: number; height?: number };
+  const width = img?.width ?? 0;
+  const height = img?.height ?? 0;
+  if (!width || !height) return;
+  const maxDim = Math.max(width, height);
+  if (maxDim <= MAX_TEXTURE) return;
+  const scale = MAX_TEXTURE / maxDim;
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(width * scale);
+  canvas.height = Math.round(height * scale);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  texture.image = canvas;
+  texture.needsUpdate = true;
+}
 
 const fract = (x: number) => x - Math.floor(x);
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
@@ -107,8 +126,11 @@ export default function ProjectImagePlane({
   }, [texture]);
 
   useMemo(() => {
+    downscaleTexture(texture);
     texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = 8;
+    texture.anisotropy = 4;
+    texture.generateMipmaps = true;
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
     texture.needsUpdate = true;
   }, [texture]);
 
@@ -284,6 +306,8 @@ export default function ProjectImagePlane({
     mesh.renderOrder = Math.round(_p.z * 1000);
     mesh.visible = opacity > 0.01;
 
+    if (!mesh.visible) return;
+
     _qInv.copy(mesh.quaternion).invert();
     _tanLocal.copy(_tan).applyQuaternion(_qInv).normalize(); // dirección del recorrido en local
 
@@ -356,7 +380,7 @@ export default function ProjectImagePlane({
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
     >
-      <planeGeometry args={[H * aspect, H, mobile ? 16 : 28, mobile ? 10 : 18]} />
+      <planeGeometry args={[H * aspect, H, mobile ? 12 : 16, mobile ? 8 : 10]} />
     </mesh>
   );
 }

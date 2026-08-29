@@ -1,9 +1,10 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { useMotionValue, type MotionValue } from "./motionValue";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Line } from "@react-three/drei";
+import { Line, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import ProjectImagePlane from "./ProjectImagePlane";
 import { useLenis } from "./SmoothScroll";
@@ -79,27 +80,8 @@ function Scene({
   onHoverStart: (title: string, image: string) => void;
   onHoverEnd: () => void;
 }) {
-  // Aspect REAL de cada imagen → el espaciado usa la card más ancha para que ninguna se solape
-  const [maxAspect, setMaxAspect] = useState(1.5);
-  useEffect(() => {
-    let alive = true;
-    Promise.all(
-      WORKS.map(
-        (w) =>
-          new Promise<number>((res) => {
-            const img = new window.Image();
-            img.onload = () => res(img.width / img.height);
-            img.onerror = () => res(1.5);
-            img.src = w.image;
-          })
-      )
-    ).then((aspects) => {
-      if (alive) setMaxAspect(Math.max(...aspects));
-    });
-    return () => {
-      alive = false;
-    };
-  }, []);
+  // Ancho de la card más ancha (Nubapay cover es ~16:9; el resto 3:2).
+  const maxAspect = 1.78;
 
   // Hélice / RESORTE horizontal: las cards avanzan en X mientras coilean en el plano Y-Z.
   // Centro (s=0.5) al frente (protagonista); hacia los lados giran y recedan al fondo.
@@ -153,6 +135,12 @@ function Scene({
     }
     return new THREE.CatmullRomCurve3(pts, false, "catmullrom", 0.5);
   }, [mobile]);
+
+  useEffect(() => {
+    return () => {
+      for (const w of WORKS) useTexture.clear(w.image);
+    };
+  }, []);
 
   // ── Espaciado PEGADO POR ARCO (alfombras una al lado de la otra, mismo tamaño) ──
   // Cada card ocupa un tramo de la curva igual a su ancho en el mundo. getPointAt ya está
@@ -221,6 +209,11 @@ export default function Works({
   const [labelOpen, setLabelOpen] = useState(false);  // dispara el slide del label
   const [hovered, setHovered] = useState<number | null>(null); // work activo en la lista
   const [listMode, setListMode] = useState<"grid" | "list" | "feed">("list"); // sub-vista dentro de list
+  // El Canvas no se oculta con opacity: sigue en GPU (~360MB de texturas 4500px + CSS filter).
+  // Lo desmontamos al pasar a lista, con un margen para el fade-out.
+  const [canvasMounted, setCanvasMounted] = useState(
+    () => webglAvailable && view === "spiral"
+  );
 
   useEffect(() => {
     const update = () => setMobile(window.innerWidth < 768);
@@ -254,6 +247,15 @@ export default function Works({
     }
     prevViewRef.current = effectiveView;
   }, [effectiveView, lenis]);
+
+  useEffect(() => {
+    if (effectiveView === "spiral" && webglAvailable) {
+      setCanvasMounted(true);
+      return;
+    }
+    const t = setTimeout(() => setCanvasMounted(false), 500);
+    return () => clearTimeout(t);
+  }, [effectiveView, webglAvailable]);
 
   useEffect(() => {
     if (effectiveView !== "spiral") return;
@@ -305,21 +307,20 @@ export default function Works({
     return () => cancelAnimationFrame(raf);
   }, [lenis, offset, impulse, effectiveView]);
 
-  // Canvas memoizado: el hover de la lista NO debe re-renderizar la escena 3D
-  // (reconciliar R3F en cada hover bloquea el main thread y traba las transiciones).
+  // Canvas: solo existe en spiral (y 500ms de fade-out). En list no debe quedar
+  // un WebGL context + texturas 4500px + filter:blur ocupando GPU.
   const canvas = useMemo(
     () =>
-      webglAvailable ? (
+      webglAvailable && canvasMounted ? (
         <WebGLErrorBoundary onError={onWebGLFailed}>
           <Canvas
             frameloop={effectiveView === "spiral" && inView ? "always" : "never"}
-            dpr={[1, 1.5]}
+            dpr={[1, 1.25]}
             performance={{ min: 0.5 }}
             gl={{
               alpha: true,
-              antialias: !mobile,
+              antialias: false,
               powerPreference: "default",
-              // Sin GPU real el contexto falla → WebGLErrorBoundary → vista lista
               failIfMajorPerformanceCaveat: true,
             }}
             camera={{ position: [0, 0, 8.0], fov: 50 }}
@@ -328,21 +329,13 @@ export default function Works({
               inset: 0,
               zIndex: 3,
               opacity: effectiveView === "spiral" ? 1 : 0,
-              transform: effectiveView === "spiral" ? "scale(1)" : "scale(0.9)",
-              filter:
-                effectiveView === "spiral"
-                  ? "drop-shadow(0 28px 42px rgba(0,0,0,0.7)) blur(0px)"
-                  : "drop-shadow(0 28px 42px rgba(0,0,0,0.7)) blur(14px)",
+              transform: effectiveView === "spiral" ? "scale(1)" : "scale(0.96)",
               pointerEvents: effectiveView === "spiral" ? "auto" : "none",
               touchAction: effectiveView === "spiral" ? "pan-y" : "auto",
               transition:
                 effectiveView === "spiral"
-                  ? // entra (list → spiral): el transform NO transiciona (snapea a scale(1) al instante)
-                    // porque R3F mide el canvas con getBoundingClientRect y un scale intermedio
-                    // lo deja mal dimensionado → espiral descentrada. Solo animan opacity y blur.
-                    "opacity 0.8s ease 0.15s, filter 0.8s ease 0.15s"
-                  : // sale (spiral → list): más rápido
-                    "opacity 0.45s ease, transform 0.5s ease, filter 0.45s ease",
+                  ? "opacity 0.8s ease 0.15s"
+                  : "opacity 0.45s ease, transform 0.5s ease",
             }}
           >
             <Suspense fallback={null}>
@@ -367,7 +360,7 @@ export default function Works({
         </WebGLErrorBoundary>
       ) : null,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [effectiveView, inView, mobile, webglAvailable, onWebGLFailed]
+    [effectiveView, inView, mobile, webglAvailable, canvasMounted, onWebGLFailed]
   );
 
   // Abre el caso con la transición saliendo desde el thumbnail del item clickeado
@@ -491,6 +484,7 @@ export default function Works({
           aspect-ratio: 4 / 3;
           overflow: hidden;
           border-radius: 2px;
+          position: relative;
         }
         .works-list-thumb img {
           width: 100%;
@@ -550,6 +544,7 @@ export default function Works({
           aspect-ratio: 4 / 3;
           overflow: hidden;
           border-radius: 2px;
+          position: relative;
         }
         .works-grid-thumb img {
           width: 100%;
@@ -606,6 +601,7 @@ export default function Works({
           aspect-ratio: 16 / 10;
           overflow: hidden;
           border-radius: 2px;
+          position: relative;
         }
         .works-feed-thumb img {
           width: 100%;
@@ -808,22 +804,14 @@ export default function Works({
           </>
         )}
 
-        {/* Vista lista: índice editorial numerado */}
+        {/* Vista lista: no montar thumbs en spiral (si no, el browser decodifica 7×4500px). */}
+        {effectiveView === "list" && (
         <div
-          className={`works-list${effectiveView === "list" && hovered !== null ? " is-dim" : ""}`}
+          className={`works-list${hovered !== null ? " is-dim" : ""}`}
           style={{
             position: "relative",
             zIndex: 9,
-            pointerEvents: effectiveView === "list" ? "auto" : "none",
-            opacity: effectiveView === "list" ? 1 : 0,
-            transform:
-              effectiveView === "list"
-                ? "translateY(0)"
-                : "translateY(24px)",
-            transition:
-              effectiveView === "list"
-                ? "opacity 0.55s ease 0.1s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s"
-                : "opacity 0.35s ease, transform 0.45s ease",
+            pointerEvents: "auto",
           }}
         >
           <header className="works-list-head">
@@ -869,8 +857,7 @@ export default function Works({
                 }}
               >
                 <div className="works-list-thumb">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={w.image} alt="" loading="lazy" decoding="async" />
+                  <Image src={w.image} alt="" fill sizes="148px" />
                 </div>
                 <div className="works-list-meta">
                   <span className="works-list-title">{w.title}</span>
@@ -894,8 +881,7 @@ export default function Works({
                   onMouseLeave={() => setHovered(null)}
                 >
                   <div className="works-grid-thumb">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={w.image} alt="" loading="lazy" decoding="async" />
+                    <Image src={w.image} alt="" fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" />
                   </div>
                   <div className="works-grid-caption">
                     <span className="works-grid-title">{w.title}</span>
@@ -917,8 +903,7 @@ export default function Works({
                   onMouseLeave={() => setHovered(null)}
                 >
                   <div className="works-feed-thumb">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={w.image} alt="" loading="lazy" decoding="async" />
+                    <Image src={w.image} alt="" fill sizes="(max-width: 900px) 100vw, 900px" />
                   </div>
                   <div className="works-feed-caption">
                     <span>
@@ -932,6 +917,7 @@ export default function Works({
             </div>
           )}
         </div>
+        )}
       </div>
     </section>
   );

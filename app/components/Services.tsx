@@ -30,7 +30,7 @@ const SERVICES = [
     title: "Marketplaces & Platforms",
     desc: "Two-sided products with payments, dashboards and infrastructure built to scale.",
     tags: ["Payments", "Dashboards", "Auth", "APIs"],
-    image: "/images/cases/ffmates/ffmatesmock1.webp",
+    image: "/images/cases/nubapay/m1.webp",
   },
   {
     n: "04",
