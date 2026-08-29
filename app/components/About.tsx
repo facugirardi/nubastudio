@@ -15,6 +15,7 @@ const ROW1 = [
   { image: "/images/cases/nuddo/frame2.webp",         slug: "nuddo",      w: "42vw", h: "340px", mb: "0px"  },
   { image: "/images/cases/kennedys/ken1.webp",        slug: "kennedys",   w: "20vw", h: "360px", mb: "30px" },
   { image: "/images/cases/ffmates/ffmatesmock1.webp", slug: "ffmates",    w: "16vw", h: "320px", mb: "10px" },
+  { image: "/images/cases/mes/m1.webp",               slug: "mes",        w: "28vw", h: "340px", mb: "18px" },
   { image: "/images/cases/checkrto/check1.webp",      slug: "checkrto",   w: "34vw", h: "350px", mb: "40px" },
   { image: "https://images.unsplash.com/photo-1631049035182-249067d7618e?w=800&h=600&fit=crop", slug: "bausing",    w: "26vw", h: "330px", mb: "20px" },
   { image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=600&fit=crop", slug: "partidosya", w: "30vw", h: "360px", mb: "5px"  },
@@ -23,6 +24,7 @@ const ROW1 = [
 const ROW2 = [
   { image: "/images/cases/nubapay/m2.webp",           slug: "nubapay",    w: "32vw"  },
   { image: "/images/cases/ffmates/ffmatesmock2.webp", slug: "ffmates",    w: "28vw"  },
+  { image: "/images/cases/mes/m2.webp",               slug: "mes",        w: "30vw"  },
   { image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=600&fit=crop", slug: "partidosya", w: "38vw"  },
   { image: "/images/cases/kennedys/ken2.webp",        slug: "kennedys",   w: "20vw"  },
   { image: "/images/cases/checkrto/check3.webp",      slug: "checkrto",   w: "36vw"  },
