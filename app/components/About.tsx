@@ -18,6 +18,7 @@ const ROW1 = [
   { image: "/images/cases/mes/m1.webp",               slug: "mes",        w: "28vw", h: "340px", mb: "18px" },
   { image: "/images/cases/checkrto/check1.webp",      slug: "checkrto",   w: "34vw", h: "350px", mb: "40px" },
   { image: "/images/cases/unickeys/m1.webp",          slug: "unickeys",   w: "24vw", h: "330px", mb: "22px" },
+  { image: "/images/cases/ushuaia360/m1.webp",        slug: "ushuaia360", w: "22vw", h: "360px", mb: "12px" },
   { image: "https://images.unsplash.com/photo-1631049035182-249067d7618e?w=800&h=600&fit=crop", slug: "bausing",    w: "26vw", h: "330px", mb: "20px" },
   { image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&h=600&fit=crop", slug: "partidosya", w: "30vw", h: "360px", mb: "5px"  },
 ];
@@ -31,6 +32,7 @@ const ROW2 = [
   { image: "/images/cases/checkrto/check3.webp",      slug: "checkrto",   w: "36vw"  },
   { image: "/images/cases/nuddo/nuddo4.webp",         slug: "nuddo",      w: "24vw"  },
   { image: "/images/cases/unickeys/m2.webp",          slug: "unickeys",   w: "26vw"  },
+  { image: "/images/cases/ushuaia360/m2.webp",        slug: "ushuaia360", w: "28vw"  },
   { image: "https://images.unsplash.com/photo-1631049035182-249067d7618e?w=800&h=600&fit=crop", slug: "bausing",    w: "30vw"  },
 ];
 
