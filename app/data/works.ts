@@ -339,7 +339,7 @@ export const works: WorkItem[] = [
   {
     title: "Provia Consulting",
     subtitle: "Web Development, UX/UI Design",
-    image: "/images/cases/provia/desktop1-provia.webp",
+    image: "/images/cases/provia/mock1-provia.png",
     slug: "provia-consulting",
     year: "2026",
     task: "Develop an institutional website for Provia Consulting, a strategic consulting firm specialized in road safety, vehicle technical inspection, and business development strategies. The website needed to communicate the company's expertise in working with companies, organizations, and municipalities, showcasing their services in process modernization, efficiency optimization, and sustainable growth.",
@@ -359,12 +359,10 @@ export const works: WorkItem[] = [
     ],
     technologies: ["Astro", "TypeScript", "Tailwind CSS"],
     images: [
-      "/images/cases/provia/desktop1-provia.webp",
-      "/images/cases/provia/desktop2-provia.webp",
-      "/images/cases/provia/desktop3-provia.webp",
-      "/images/cases/provia/provia-4dekstop.webp",
-      "/images/cases/provia/desktop5.webp",
-      "/images/cases/provia/desktop6.webp",
+      "/images/cases/provia/mock1-provia.png",
+      "/images/cases/provia/mock2pro.png",
+      "/images/cases/provia/mock3.png",
+      "/images/cases/provia/mock4.png",
     ],
     links: {
       web: "https://proviaconsulting.com",
