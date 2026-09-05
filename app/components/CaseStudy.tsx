@@ -56,10 +56,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
     work.slug === "nuddo"
       ? (work.images ?? []).filter((src) => src.endsWith(".png"))
       : [];
-  const devices =
-    work.slug === "nuddo"
-      ? []
-      : (work.images ?? []).filter((src) => src.endsWith(".png"));
+  const devices: string[] = [];
   const gallery = (work.images ?? [work.image]).filter(
     (src) => !devices.includes(src) && !pairImages.includes(src)
   );

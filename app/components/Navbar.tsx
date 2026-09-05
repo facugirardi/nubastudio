@@ -647,8 +647,8 @@ export default function Navbar({
 
           {/* Footer */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-            <a data-stagger href="mailto:hello@nuba.studio" target="_blank" rel="noopener noreferrer" className="menu-email">
-              hello@nuba.studio
+            <a data-stagger href="tel:+5493513471844" className="menu-email">
+              +54 9 351 347 1844
             </a>
             <div data-stagger style={{ display: "flex", gap: "0.7rem" }}>
               {SOCIALS.map((s) => (

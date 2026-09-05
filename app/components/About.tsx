@@ -485,8 +485,8 @@ export default function About() {
           <h2 className="social-title social-reveal">
             Let&apos;s build something <em>great</em>.
           </h2>
-          <a href="mailto:hello@nuba.studio" target="_blank" rel="noopener noreferrer" className="social-email social-reveal">
-            hello@nuba.studio
+          <a href="tel:+5493513471844" className="social-email social-reveal">
+            +54 9 351 347 1844
             <span className="arrow">&rarr;</span>
           </a>
           <div className="social-secondary social-reveal">

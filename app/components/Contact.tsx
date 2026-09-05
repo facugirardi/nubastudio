@@ -237,8 +237,8 @@ export default function Contact() {
           ))}
         </h1>
 
-        <a ref={emailRef} href="mailto:hello@nuba.studio" target="_blank" rel="noopener noreferrer" className="contact-email">
-          hello@nuba.studio
+        <a ref={emailRef} href="tel:+5493513471844" className="contact-email">
+          +54 9 351 347 1844
         </a>
 
         <div ref={secondaryRef} className="contact-secondary">
