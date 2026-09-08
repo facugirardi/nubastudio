@@ -4,8 +4,10 @@ const MODEL = "gemini-flash-lite-latest";
 const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 const MAX_INPUT = 2000;
-const RATE_LIMIT = 8;
 const RATE_WINDOW = 60_000;
+const RATE_LIMIT = 8;
+const GLOBAL_LIMIT = 60;
+const MAX_TRACKED = 2000;
 
 const SYSTEM_PROMPT = `You help visitors of Nuba Studio (a digital product agency that builds websites, apps and marketplaces) turn rough notes into a clear first message to send on WhatsApp.
 
@@ -24,13 +26,37 @@ const EMOJI = new RegExp(
 );
 
 const hits = new Map<string, number[]>();
+let globalHits: number[] = [];
 
-function rateLimited(ip: string) {
+const fresh = (times: number[], now: number) => times.filter((t) => now - t < RATE_WINDOW);
+
+function sweep(now: number) {
+  for (const [key, times] of hits) {
+    const recent = fresh(times, now);
+    if (recent.length) hits.set(key, recent);
+    else hits.delete(key);
+  }
+}
+
+function rateLimited(client: string) {
   const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW);
+
+  // Techo global: es el unico limite que no se puede eludir rotando cabeceras,
+  // y el que de verdad protege la cuota de Gemini y el pool de conexiones.
+  globalHits = fresh(globalHits, now);
+  if (globalHits.length >= GLOBAL_LIMIT) return true;
+  globalHits.push(now);
+
+  // Sin esto el Map crece sin techo: una cabecera distinta por request
+  // deja una entrada que nunca se borraba.
+  if (hits.size >= MAX_TRACKED) sweep(now);
+  if (hits.size >= MAX_TRACKED) return true;
+
+  const recent = fresh(hits.get(client) ?? [], now);
+  hits.set(client, recent);
+  if (recent.length >= RATE_LIMIT) return true;
   recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > RATE_LIMIT;
+  return false;
 }
 
 export async function POST(req: Request) {
@@ -39,11 +65,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "AI not configured" }, { status: 503 });
   }
 
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+  // x-real-ip lo pone la plataforma; x-forwarded-for lo puede falsificar el
+  // cliente, asi que solo sirve de reparto aproximado, no de barrera.
+  const client =
     req.headers.get("x-real-ip") ||
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     "unknown";
-  if (rateLimited(ip)) {
+  if (rateLimited(client)) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
