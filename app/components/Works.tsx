@@ -712,7 +712,7 @@ export default function Works({
         />
 
 
-        {/* Canvas único con la curva de cards (drop-shadow real) — memoizado */}
+        {/* Canvas único con la curva de cards (drop-shadow real), memoizado */}
         {canvas}
 
         {/* Vignette */}

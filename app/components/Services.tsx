@@ -8,7 +8,7 @@ import { useLenis } from "./SmoothScroll";
 gsap.registerPlugin(ScrollTrigger);
 
 const INTRO_TEXT =
-  "We design and build digital products end to end — from the first idea to the moment they ship.";
+  "We design and build digital products end to end, from the first idea to the moment they ship.";
 
 const SERVICES = [
   {
@@ -42,7 +42,7 @@ const SERVICES = [
   {
     n: "05",
     title: "Product Strategy & MVP",
-    desc: "From raw idea to a shipped MVP — validated, scoped and built to grow.",
+    desc: "From raw idea to a shipped MVP, validated, scoped and built to grow.",
     tags: ["Discovery", "Prototyping", "Roadmap"],
     image: "/images/cases/nuddo/nuddo4.webp",
   },
@@ -56,7 +56,7 @@ const TECH = [
 const PROCESS = [
   { n: "01", title: "Discovery", desc: "We dig into your goals, your users and the constraints that shape the work." },
   { n: "02", title: "Design", desc: "From wireframes to polished UI, iterated fast and in the open." },
-  { n: "03", title: "Build", desc: "Clean, scalable code shipped in tight loops — no black boxes." },
+  { n: "03", title: "Build", desc: "Clean, scalable code shipped in tight loops, no black boxes." },
   { n: "04", title: "Launch & Iterate", desc: "We ship, measure what matters and keep improving after go-live." },
 ];
 
@@ -286,11 +286,9 @@ export default function Services() {
           align-items: center;
           gap: 3.5rem;
         }
-        .svc-tech-item::after {
-          content: "";
-          width: 7px; height: 7px;
-          border-radius: 50%;
-          background: var(--accent, #C6FF00);
+        .svc-tech-star {
+          color: var(--accent, #C6FF00);
+          font-size: 0.9em;
         }
 
         /* Process */
@@ -456,7 +454,10 @@ export default function Services() {
         <div className="svc-tech">
           <div className="svc-tech-row">
             {[...TECH, ...TECH].map((t, i) => (
-              <span key={i} className="svc-tech-item">{t}</span>
+              <span key={i} className="svc-tech-item">
+                {t}
+                <span className="svc-tech-star">✦</span>
+              </span>
             ))}
           </div>
         </div>

@@ -187,7 +187,7 @@ export default function Navbar({
     return c ? c.clientWidth / 2 - 4 : 0;
   };
 
-  // Sincroniza el thumb con la vista (cuando NO se está arrastrando) — con overshoot
+  // Sincroniza el thumb con la vista (cuando NO se está arrastrando), con overshoot
   useEffect(() => {
     if (dragRef.current.active) return;
     gsap.to(thumbRef.current, {
@@ -470,13 +470,13 @@ export default function Navbar({
         {/* Logo */}
         <a
           href="/"
-          aria-label="Nuba Studio — inicio"
+          aria-label="Nuba Studio, inicio"
           style={{ display: "flex", alignItems: "center" }}
         >
           <LogoMark play={visible} />
         </a>
 
-        {/* Spiral / List toggle (centro) — thumb arrastrable */}
+        {/* Spiral / List toggle (centro), thumb arrastrable */}
         {showToggle ? (
           <div
             className="view-toggle"

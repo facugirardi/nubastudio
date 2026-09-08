@@ -55,7 +55,7 @@ export default function Hero({ visible }: { visible: boolean }) {
       {/* Grain */}
       <Grain />
 
-      {/* Scroll indicator — centro */}
+      {/* Scroll indicator, centro */}
       <div
         ref={scrollLabelRef}
         style={{

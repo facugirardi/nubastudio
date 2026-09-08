@@ -219,7 +219,7 @@ export default function ProjectImagePlane({
         .replace(
           "#include <map_fragment>",
           `#ifdef USE_MAP
-             // 5-tap cross blur (sin diagonales — 44% menos fetches que el 9-tap)
+             // 5-tap cross blur (sin diagonales, 44% menos fetches que el 9-tap)
              float b = uBlur + (gl_FrontFacing ? 0.0 : uBackBlur);
              vec4 _t = vec4(0.0);
              _t += texture2D( map, vMapUv );

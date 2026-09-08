@@ -7,8 +7,10 @@ import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ABOUT_TEXT =
-  "We merge branding, interaction, and code to build experiences that resonate deeply and inspire action.";
+const ROTATING_WORDS = ["branding", "interaction", "code"];
+
+const ABOUT_SUB =
+  "Three disciplines, one process. Nothing is handed off, so every experience holds together, and every detail earns its place.";
 
 const ROW1 = [
   { image: "/images/cases/nubapay/m1.webp",           slug: "nubapay",    w: "38vw", h: "340px", mb: "8px"  },
@@ -36,16 +38,14 @@ const ROW2 = [
   { image: "/images/cases/bausing/m2.webp",          slug: "bausing",    w: "30vw"  },
 ];
 
-const ABOUT_WORDS_LIST = ABOUT_TEXT.split(" ");
-
 const SOCIALS = [
   { label: "Whatsapp",  href: "https://wa.me/5493513471844" },
   { label: "LinkedIn",  href: "https://linkedin.com/company/nubastudio" },
 ];
 
 export default function About() {
-  const pinRef    = useRef<HTMLDivElement>(null);
-  const textRef   = useRef<HTMLParagraphElement>(null);
+  const stmtRef   = useRef<HTMLDivElement>(null);
+  const rotRef    = useRef<HTMLSpanElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const row1Ref   = useRef<HTMLDivElement>(null);
   const row2Ref   = useRef<HTMLDivElement>(null);
@@ -62,41 +62,57 @@ export default function About() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // entrada al montar: las palabras suben con fade + desenfoque, escalonadas
-      const words = textRef.current?.querySelectorAll<HTMLSpanElement>(".about-word-group");
-      if (words && words.length) {
+      // entrada: cada linea sube desde su mascara
+      const reveals = stmtRef.current?.querySelectorAll<HTMLElement>(".stmt-reveal");
+      if (reveals && reveals.length) {
         gsap.fromTo(
-          words,
+          reveals,
           { yPercent: 110, autoAlpha: 0, filter: "blur(10px)" },
           {
             yPercent: 0,
             autoAlpha: 1,
             filter: "blur(0px)",
-            duration: 1,
+            duration: 1.1,
             ease: "power4.out",
-            stagger: 0.05,
-            delay: 0.2,
+            stagger: 0.09,
+            delay: 0.15,
           }
         );
       }
 
-      // paint text
-      const letters = textRef.current?.querySelectorAll<HTMLSpanElement>(".about-char");
-      if (letters && letters.length) {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: pinRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 1,
-          },
+      // rotacion de la palabra clave
+      const rotWords = rotRef.current?.querySelectorAll<HTMLElement>(".rot-word");
+      if (rotWords && rotWords.length > 1) {
+        gsap.set(rotWords, { yPercent: 110, autoAlpha: 0, filter: "blur(10px)" });
+        gsap.to(rotWords[0], {
+          yPercent: 0,
+          autoAlpha: 1,
+          filter: "blur(0px)",
+          duration: 1.1,
+          ease: "power4.out",
+          delay: 0.24,
         });
-        letters.forEach((char) => {
-          tl.fromTo(
-            char,
-            { color: "rgba(255,255,255,0.1)" },
-            { color: "#ffffff", ease: "none", duration: 1 },
-            "<0.18"
+
+        const tl = gsap.timeline({ repeat: -1, delay: 1.35 });
+        rotWords.forEach((_, i) => {
+          const current = rotWords[i];
+          const next = rotWords[(i + 1) % rotWords.length];
+          tl.to(
+            current,
+            { yPercent: -110, autoAlpha: 0, filter: "blur(8px)", duration: 0.6, ease: "power3.in" },
+            "+=1.8"
+          ).fromTo(
+            next,
+            { yPercent: 110, autoAlpha: 0, filter: "blur(8px)" },
+            {
+              yPercent: 0,
+              autoAlpha: 1,
+              filter: "blur(0px)",
+              duration: 0.7,
+              ease: "power3.out",
+              immediateRender: false,
+            },
+            "<0.1"
           );
         });
       }
@@ -174,45 +190,70 @@ export default function About() {
           color: #fff;
         }
 
-        /* sticky pin */
-        .about-pin-zone {
-          position: relative;
-          height: 300vh;
-        }
-        .about-sticky {
-          position: sticky;
-          top: 0;
-          height: 100vh;
+        /* statement */
+        .about-statement {
+          min-height: 100vh;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 6rem 4rem;
+          padding: 8rem 4rem 5rem;
           box-sizing: border-box;
+        }
+        .stmt-inner {
+          width: 100%;
+          max-width: 1400px;
+          text-align: center;
+        }
+        .stmt-heading {
+          margin: 0;
+          font-size: clamp(2.6rem, 6.4vw, 6.2rem);
+          font-weight: 500;
+          line-height: 1.02;
+          letter-spacing: -0.045em;
+        }
+        .stmt-line-mask {
+          display: block;
+          overflow: hidden;
+          padding-bottom: 0.08em;
+        }
+        .stmt-line { display: inline-block; will-change: transform, opacity, filter; }
+        .stmt-rot {
+          position: relative;
+          display: block;
+          height: 1.16em;
           overflow: hidden;
         }
-        .about-paint-text {
-          font-size: clamp(3rem, 7vw, 6.5rem);
-          font-weight: 400;
-          line-height: 1.18;
-          letter-spacing: -0.03em;
-          text-align: center;
-          margin: 0;
-          max-width: 900px;
-          word-wrap: break-word;
-          transform: translateY(-120px);
-        }
-        .about-word-group {
-          display: inline-block;
+        .rot-word {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          line-height: 1.16;
+          color: #C6FF00;
           white-space: nowrap;
           opacity: 0;
-          transform: translateY(110%);
-          filter: blur(10px);
+          visibility: hidden;
           will-change: transform, opacity, filter;
         }
-        .about-char {
-          display: inline;
-          color: rgba(255,255,255,0.1);
-          will-change: color;
+        .stmt-foot {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1.75rem;
+          margin-top: 3.25rem;
+        }
+        .stmt-rule {
+          flex-shrink: 0;
+          width: clamp(60px, 8vw, 110px);
+          height: 1px;
+          background: rgba(255,255,255,0.25);
+        }
+        .stmt-sub {
+          margin: 0;
+          max-width: 46ch;
+          font-size: clamp(0.95rem, 1.35vw, 1.2rem);
+          line-height: 1.6;
+          color: rgba(255,255,255,0.55);
         }
 
         /* marquee */
@@ -423,8 +464,10 @@ export default function About() {
         }
 
         @media (max-width: 700px) {
-          .about-sticky { padding: 5rem 1.5rem; }
-          .about-paint-text { font-size: clamp(2rem, 8vw, 3.5rem); }
+          .about-statement { padding: 7rem 1.5rem 3rem; min-height: 85vh; }
+          .stmt-heading { font-size: clamp(2.1rem, 11vw, 3.6rem); }
+          .stmt-foot { gap: 1.25rem; margin-top: 2.5rem; }
+          .stmt-rule { width: 60px; }
           .about-marquee-wrap { padding: 3.5rem 0 4.5rem; gap: 0.75rem; }
           .marquee-row { gap: 0.75rem; }
           .about-social-inner { gap: 1.75rem; }
@@ -436,20 +479,29 @@ export default function About() {
       `}</style>
 
       <section id="about" ref={sectionRef} className="about-section">
-        <div ref={pinRef} className="about-pin-zone">
-          <div className="about-sticky">
-            <p ref={textRef} className="about-paint-text">
-              {ABOUT_WORDS_LIST.map((word, wi) => (
-                <Fragment key={wi}>
-                  <span className="about-word-group">
-                    {Array.from(word).map((char, ci) => (
-                      <span key={ci} className="about-char">{char}</span>
-                    ))}
-                  </span>
-                  {wi < ABOUT_WORDS_LIST.length - 1 && " "}
-                </Fragment>
-              ))}
-            </p>
+        <div ref={stmtRef} className="about-statement">
+          <div className="stmt-inner">
+            <h2 className="stmt-heading">
+              <span className="stmt-line-mask">
+                <span className="stmt-line stmt-reveal">We turn</span>
+              </span>
+              <span ref={rotRef} className="stmt-rot">
+                {ROTATING_WORDS.map((word) => (
+                  <span key={word} className="rot-word">{word}</span>
+                ))}
+              </span>
+              <span className="stmt-line-mask">
+                <span className="stmt-line stmt-reveal">into experiences</span>
+              </span>
+              <span className="stmt-line-mask">
+                <span className="stmt-line stmt-reveal">that move people.</span>
+              </span>
+            </h2>
+
+            <div className="stmt-foot">
+              <span className="stmt-rule stmt-reveal" />
+              <p className="stmt-sub stmt-reveal">{ABOUT_SUB}</p>
+            </div>
           </div>
         </div>
 

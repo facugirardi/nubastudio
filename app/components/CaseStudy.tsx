@@ -322,7 +322,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
                 <img
                   data-parallax
                   src={src}
-                  alt={`${work.title} — ${i + 1}`}
+                  alt={`${work.title}, ${i + 1}`}
                   loading="lazy"
                   decoding="async"
                   style={{ width: "100%", height: "120%", objectFit: "cover", display: "block" }}
@@ -337,7 +337,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={src}
-                    alt={`${work.title} — ${i + 1}`}
+                    alt={`${work.title}, ${i + 1}`}
                     loading="lazy"
                     decoding="async"
                   />
