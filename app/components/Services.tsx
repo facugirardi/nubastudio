@@ -386,6 +386,29 @@ export default function Services() {
           transition: color 0.3s ease, border-color 0.3s ease;
         }
         .svc-cta-mail:hover { color: var(--accent, #C6FF00); border-color: var(--accent, #C6FF00); }
+        .svc-cta-social {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          gap: 1.1rem;
+          margin-top: 0.5rem;
+        }
+        .svc-cta-social-link {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 46px;
+          height: 46px;
+          border: 1px solid rgba(255,255,255,0.25);
+          border-radius: 50%;
+          color: rgba(255,255,255,0.7);
+          transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+        }
+        .svc-cta-social-link:hover {
+          color: var(--accent, #C6FF00);
+          border-color: var(--accent, #C6FF00);
+          transform: translateY(-3px);
+        }
 
         @media (max-width: 900px) {
           .svc-row {
@@ -493,6 +516,30 @@ export default function Services() {
               <polyline points="7 7 17 7 17 17" />
             </svg>
           </a>
+          <div className="svc-cta-social">
+            <a
+              href="https://linkedin.com/company/nubastudio"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="svc-cta-social-link"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V9.87H5.56v8.47h2.78zM6.95 8.62a1.61 1.61 0 1 0 0-3.22 1.61 1.61 0 0 0 0 3.22zm11.39 9.72v-4.64c0-2.5-1.34-3.66-3.12-3.66a2.7 2.7 0 0 0-2.44 1.34V9.87h-2.78c.04.79 0 8.47 0 8.47h2.78v-4.73c0-.25.02-.5.09-.68.2-.5.66-1.01 1.42-1.01 1 0 1.4.76 1.4 1.88v4.54h2.87z" />
+              </svg>
+            </a>
+            <a
+              href="https://wa.me/5493513471844"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp"
+              className="svc-cta-social-link"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.2-1.36a9.9 9.9 0 0 0 4.84 1.24h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04A9.9 9.9 0 0 0 12.04 2zm0 1.67c2.2 0 4.28.86 5.84 2.42a8.2 8.2 0 0 1 2.42 5.84c0 4.56-3.7 8.26-8.27 8.26a8.2 8.2 0 0 1-4.2-1.15l-.3-.18-3.1.8.83-3-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.56 3.7-8.26 8.27-8.26zm-3.6 4.4c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1s.9 2.44 1.03 2.6c.13.18 1.77 2.7 4.3 3.78.6.26 1.07.42 1.43.53.6.2 1.15.17 1.58.1.48-.07 1.48-.6 1.69-1.19.2-.58.2-1.08.15-1.19-.06-.1-.23-.16-.48-.29-.25-.12-1.48-.73-1.71-.81-.23-.09-.4-.13-.56.13-.17.25-.65.8-.8.97-.14.17-.29.19-.54.06-.25-.13-1.05-.39-2-1.23a7.5 7.5 0 0 1-1.38-1.72c-.14-.25-.01-.38.11-.5.11-.12.25-.29.37-.44.13-.15.17-.25.25-.42.09-.17.05-.31-.02-.44-.06-.12-.55-1.37-.77-1.87-.2-.48-.4-.42-.55-.42-.14-.01-.31-.01-.48-.01z" />
+              </svg>
+            </a>
+          </div>
         </div>
       </section>
 
