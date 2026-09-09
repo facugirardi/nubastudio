@@ -374,7 +374,7 @@ export default function Navbar({
 
         .menu-panel-link {
           display: block;
-          font-size: clamp(2.2rem, min(5.5vw, 7.5vh), 4.4rem);
+          font-size: clamp(3rem, min(7.2vw, 9.6vh), 6rem);
           line-height: 1.06;
           font-weight: 400;
           letter-spacing: -0.025em;
@@ -599,7 +599,7 @@ export default function Navbar({
           </div>
 
           {/* Links */}
-          <nav style={{ marginTop: "auto", marginBottom: "auto", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+          <nav style={{ marginTop: "auto", marginBottom: "auto", display: "flex", flexDirection: "column", gap: "calc(0.4rem + 10px)" }}>
             {NAV_LINKS.map((link) => (
               <a
                 key={link}

@@ -456,12 +456,13 @@ export default function Contact() {
           }
           .contact-bar-meta, .contact-undo { padding-left: 0.4rem; }
           .contact-actions { width: 100%; margin-left: 0; }
-          .contact-actions .contact-btn {
+          .contact-actions .contact-btn--ghost {
             flex: 1;
             padding-left: 0.7rem;
             padding-right: 0.7rem;
             text-align: center;
           }
+          .contact-actions .contact-btn--send { flex: 0 0 auto; }
           .contact-direct { margin-top: 1.6rem; padding-top: 1.3rem; }
         }
 
