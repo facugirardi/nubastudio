@@ -1,5 +1,21 @@
 import type { WorkItem } from "../data/works";
-import { CONTACT, SITE_DESCRIPTION, SITE_NAME, SITE_URL, absoluteUrl } from "./seo";
+import {
+  CONTACT,
+  FOUNDED,
+  PROFILES,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+  TEAM_MEMBERS,
+  absoluteUrl,
+} from "./seo";
+
+/** Quita claves vacías para no emitir campos huecos en el JSON-LD. */
+function compact<T extends object>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => v !== "" && v !== undefined && v !== null)
+  ) as T;
+}
 
 const ORG_ID = `${SITE_URL}/#organization`;
 const SITE_ID = `${SITE_URL}/#website`;
@@ -17,12 +33,32 @@ export function organizationJsonLd() {
     description: SITE_DESCRIPTION,
     slogan: "We turn ideas into digital products",
     telephone: CONTACT.phone,
-    address: {
+    foundingDate: FOUNDED,
+    knowsLanguage: ["en", "es"],
+    ...(CONTACT.email ? { email: CONTACT.email } : {}),
+    address: compact({
       "@type": "PostalAddress",
+      streetAddress: CONTACT.street,
       addressLocality: CONTACT.city,
       addressRegion: CONTACT.region,
+      postalCode: CONTACT.postalCode,
       addressCountry: CONTACT.country,
-    },
+    }),
+    ...(CONTACT.latitude && CONTACT.longitude
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: CONTACT.latitude,
+            longitude: CONTACT.longitude,
+          },
+        }
+      : {}),
+    employee: TEAM_MEMBERS.map((m) => ({
+      "@type": "Person",
+      name: m.name,
+      jobTitle: m.role,
+      worksFor: { "@id": ORG_ID },
+    })),
     areaServed: [
       { "@type": "Country", name: "Argentina" },
       { "@type": "Place", name: "Latin America" },
@@ -37,12 +73,13 @@ export function organizationJsonLd() {
       "UI/UX design",
       "Brand identity",
     ],
-    sameAs: [CONTACT.linkedin],
+    sameAs: PROFILES,
     contactPoint: [
       {
         "@type": "ContactPoint",
         contactType: "sales",
         telephone: CONTACT.phone,
+        ...(CONTACT.email ? { email: CONTACT.email } : {}),
         url: CONTACT.whatsapp,
         availableLanguage: ["en", "es"],
       },

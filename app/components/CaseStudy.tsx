@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "./Navbar";
@@ -57,8 +59,10 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
       ? (work.images ?? []).filter((src) => src.endsWith(".png"))
       : [];
   const devices: string[] = [];
-  const gallery = (work.images ?? [work.image]).filter(
-    (src) => !devices.includes(src) && !pairImages.includes(src)
+  // El hero ya muestra work.image a pantalla completa: repetirla como primera
+  // pieza de la galeria la descargaba dos veces en los 11 casos.
+  const gallery = (work.images ?? []).filter(
+    (src) => src !== work.image && !devices.includes(src) && !pairImages.includes(src)
   );
 
   useEffect(() => {
@@ -161,13 +165,13 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
       {/* ───────── Hero fullscreen (match con el final del morph) ───────── */}
       <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
         <div ref={heroImgRef} style={{ position: "absolute", inset: "-10% 0", zIndex: 0 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={work.image}
             alt={`${work.title} — ${work.subtitle} case study by Nuba Studio`}
-            fetchPriority="high"
-            decoding="async"
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectFit: "cover", display: "block" }}
           />
         </div>
         <div
@@ -304,9 +308,9 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
         ))}
 
       {/* ───────── Galería con parallax alternado ───────── */}
-      {(gallery.length > 1 || pairImages.length > 0) && (
+      {(gallery.length > 0 || pairImages.length > 0) && (
         <section style={{ padding: "clamp(2rem, 6vw, 5rem) 6vw", display: "flex", flexDirection: "column", gap: "clamp(4rem, 9vw, 8rem)" }}>
-          {gallery.length > 1 &&
+          {gallery.length > 0 &&
             gallery.map((src, i) => (
               <figure
                 key={src}
@@ -317,16 +321,16 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
                   alignSelf: i % 3 === 0 ? "stretch" : i % 3 === 1 ? "flex-end" : "flex-start",
                   width: i % 3 === 0 ? "100%" : "min(78%, 1000px)",
                   aspectRatio: "16 / 10",
+                  position: "relative",
                 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   data-parallax
                   src={src}
                   alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
-                  loading="lazy"
-                  decoding="async"
-                  style={{ width: "100%", height: "120%", objectFit: "cover", display: "block" }}
+                  fill
+                  sizes="(max-width: 900px) 100vw, 1000px"
+                  style={{ height: "120%", objectFit: "cover", display: "block" }}
                 />
               </figure>
             ))}
@@ -335,12 +339,12 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
             <div className="cs-pair-row">
               {pairImages.map((src, i) => (
                 <figure key={src} className="cs-pair-figure">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={src}
                     alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
-                    loading="lazy"
-                    decoding="async"
+                    width={2400}
+                    height={1600}
+                    sizes="(max-width: 900px) 100vw, 50vw"
                   />
                 </figure>
               ))}
@@ -455,19 +459,25 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
       )}
 
       {/* ───────── Next case ───────── */}
-      <section
-        onClick={goNext}
-        style={{ position: "relative", height: "70vh", overflow: "hidden", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+      <Link
+        href={`/cases/${next.slug}`}
+        onClick={(e) => {
+          // Deja pasar cmd/ctrl/shift-click y el boton del medio al navegador.
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          e.preventDefault();
+          goNext();
+        }}
+        style={{ position: "relative", height: "70vh", overflow: "hidden", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", color: "inherit" }}
         className="cs-next"
+        aria-label={`Next project: ${next.title} — ${next.subtitle}`}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           ref={nextImgRef}
           src={next.image}
           alt={`${next.title} — ${next.subtitle}`}
-          loading="lazy"
-          decoding="async"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.35, transition: "opacity 0.5s ease, transform 0.8s ease" }}
+          fill
+          sizes="100vw"
+          style={{ objectFit: "cover", opacity: 0.35, transition: "opacity 0.5s ease, transform 0.8s ease" }}
         />
         <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} />
         <div style={{ position: "relative", zIndex: 2, textAlign: "center" }}>
@@ -478,7 +488,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
             {next.title}
           </div>
         </div>
-      </section>
+      </Link>
 
       <style>{`
         .cs-pair-row {

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import Image from "next/image";
 import { works } from "../data/works";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -689,11 +690,11 @@ export default function About() {
                     : { width: item.w, height: item.h, marginBottom: item.mb }
                 }
               >
-                <img
+                <Image
                   src={item.image}
                   alt={`${works.find((w) => w.slug === item.slug)?.title ?? item.slug} case study by Nuba Studio`}
-                  loading="lazy"
-                  decoding="async"
+                  fill
+                  sizes="(max-width: 900px) 50vw, 40vw"
                 />
                 <div className="mq-overlay">
                   <span className="mq-label">View more</span>
@@ -735,7 +736,7 @@ export default function About() {
               <div key={i} className="team-card about-reveal">
                 <div className="team-photo">
                   {m.photo ? (
-                    <img src={m.photo} alt={m.name} loading="lazy" decoding="async" />
+                    <Image src={m.photo} alt={m.name} fill sizes="(max-width: 900px) 45vw, 260px" />
                   ) : (
                     <span className="team-initials">
                       {m.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}

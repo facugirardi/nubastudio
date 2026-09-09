@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useMotionValue, type MotionValue } from "./motionValue";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Line, useTexture } from "@react-three/drei";
@@ -366,7 +367,10 @@ export default function Works({
   // Abre el caso con la transición saliendo desde el thumbnail del item clickeado
   const openWork =
     (w: { slug: string; image: string }) =>
-    (e: React.MouseEvent<HTMLButtonElement>) => {
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      // Deja pasar cmd/ctrl/shift-click al navegador para abrir en pestana nueva.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
       const preview = e.currentTarget.querySelector("img");
       const src = preview ?? e.currentTarget;
       const r = src.getBoundingClientRect();
@@ -453,6 +457,12 @@ export default function Works({
           vertical-align: super;
           letter-spacing: 0;
           margin-left: 0.15em;
+        }
+        .works-list-row,
+        .works-grid-item,
+        .works-feed-item {
+          text-decoration: none;
+          color: inherit;
         }
         .works-list-row {
           width: 100%;
@@ -837,9 +847,9 @@ export default function Works({
           {WORKS.map((w, i) => {
             const isActive = effectiveView === "list" && hovered === i;
             return (
-              <button
+              <Link
                 key={w.slug}
-                type="button"
+                href={`/cases/${w.slug}`}
                 className={`works-list-row${isActive ? " is-active" : ""}`}
                 onClick={openWork(w)}
                 onMouseEnter={() => {
@@ -864,7 +874,7 @@ export default function Works({
                   <span className="works-list-cat">{w.subtitle}</span>
                 </div>
                 <span className="works-list-year">{w.year}</span>
-              </button>
+              </Link>
             );
           })}
           </div>
@@ -872,9 +882,9 @@ export default function Works({
           {listMode === "grid" && (
             <div key="grid" className="works-grid works-body-anim">
               {WORKS.map((w, i) => (
-                <button
+                <Link
                   key={w.slug}
-                  type="button"
+                  href={`/cases/${w.slug}`}
                   className={`works-grid-item${hovered === i ? " is-active" : ""}`}
                   onClick={openWork(w)}
                   onMouseEnter={() => setHovered(i)}
@@ -887,16 +897,16 @@ export default function Works({
                     <span className="works-grid-title">{w.title}</span>
                     <span className="works-grid-year">{w.year}</span>
                   </div>
-                </button>
+                </Link>
               ))}
             </div>
           )}
           {listMode === "feed" && (
             <div key="feed" className="works-feed works-body-anim">
               {WORKS.map((w, i) => (
-                <button
+                <Link
                   key={w.slug}
-                  type="button"
+                  href={`/cases/${w.slug}`}
                   className={`works-feed-item${hovered === i ? " is-active" : ""}`}
                   onClick={openWork(w)}
                   onMouseEnter={() => setHovered(i)}
@@ -912,7 +922,7 @@ export default function Works({
                     </span>
                     <span className="works-feed-year">{w.year}</span>
                   </div>
-                </button>
+                </Link>
               ))}
             </div>
           )}

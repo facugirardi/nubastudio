@@ -17,7 +17,31 @@ export const CONTACT = {
   city: "Córdoba",
   region: "Córdoba",
   country: "AR",
+  // ── Completar para cerrar las señales de entidad y SEO local ──
+  // Todo lo de abajo se omite del JSON-LD mientras esté vacío, así que
+  // el markup sigue siendo válido; solo pierde fuerza.
+  email: "",        // ej. "hola@nuba.studio" — hoy no hay email público en el sitio
+  street: "",       // ej. "Av. Colón 1234, Piso 2" — necesario para el local pack
+  postalCode: "",   // ej. "X5000"
+  latitude: "",     // coordenadas del estudio, para geo
+  longitude: "",
 };
+
+/** Perfiles públicos del estudio. Alimentan `sameAs`: cuantos más, mejor
+ *  desambigua la entidad "Nuba Studio" para Google y para los LLMs. */
+export const PROFILES: string[] = [
+  "https://linkedin.com/company/nubastudio",
+  // Agregar los que existan: Instagram, perfil de Behance del estudio,
+  // Clutch, Google Business Profile, GitHub, Dribbble.
+];
+
+export const FOUNDED = "2024";
+
+export const TEAM_MEMBERS = [
+  { name: "Alejo Vaquero", role: "Design" },
+  { name: "Facundo Girardi", role: "Development" },
+  { name: "Ángel Vaquero", role: "Strategy" },
+];
 
 export function absoluteUrl(path = "/"): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
