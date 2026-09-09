@@ -34,13 +34,13 @@ const SOCIALS = [
 export default function Navbar({
   visible,
   view,
-  setView,
+  setView = () => {},
   showToggle = true,
   webglAvailable = true,
 }: {
   visible: boolean;
   view: "spiral" | "list";
-  setView: (v: "spiral" | "list") => void;
+  setView?: (v: "spiral" | "list") => void;
   showToggle?: boolean;
   webglAvailable?: boolean;
 }) {

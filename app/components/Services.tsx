@@ -65,7 +65,7 @@ const INTRO_WORDS = INTRO_TEXT.split(" ");
 export default function Services() {
   const lenis = useLenis();
   const sectionRef = useRef<HTMLElement>(null);
-  const introRef = useRef<HTMLParagraphElement>(null);
+  const introRef = useRef<HTMLHeadingElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const ctaCellsRef = useRef<HTMLDivElement>(null);
@@ -432,14 +432,14 @@ export default function Services() {
       <section id="services" ref={sectionRef} className="svc">
         {/* Intro */}
         <div className="svc-intro">
-          <p ref={introRef} className="svc-intro-text">
+          <h1 ref={introRef} className="svc-intro-text">
             {INTRO_WORDS.map((word, i) => (
               <Fragment key={i}>
                 <span className={`svc-word${word === "products" ? " accent" : ""}`}>{word}</span>
                 {i < INTRO_WORDS.length - 1 && " "}
               </Fragment>
             ))}
-          </p>
+          </h1>
         </div>
 
         {/* Lista de servicios */}
@@ -453,7 +453,7 @@ export default function Services() {
                 onKeyDown={(e) => { if (e.key === "Enter") lenis?.scrollTo("#svc-cta"); }}
               >
                 <span className="svc-n">{s.n}</span>
-                <h3 className="svc-title">{s.title}</h3>
+                <h2 className="svc-title">{s.title}</h2>
                 <div className="svc-body">
                   <p className="svc-desc">{s.desc}</p>
                   <div className="svc-tags">

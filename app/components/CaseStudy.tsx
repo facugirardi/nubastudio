@@ -164,7 +164,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={work.image}
-            alt={work.title}
+            alt={`${work.title} — ${work.subtitle} case study by Nuba Studio`}
             fetchPriority="high"
             decoding="async"
             style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
@@ -259,10 +259,11 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
         </div>
       </section>
 
-      {/* ───────── Challenge / Solution (sticky bicolumna) ───────── */}
+      {/* ───────── Challenge / Solution / Process (sticky bicolumna) ───────── */}
       {[
         { label: "The Challenge", body: work.task },
         { label: "The Solution", body: work.solutions },
+        { label: "The Process", body: work.process },
       ]
         .filter((b) => b.body)
         .map((b) => (
@@ -322,7 +323,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
                 <img
                   data-parallax
                   src={src}
-                  alt={`${work.title}, ${i + 1}`}
+                  alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
                   loading="lazy"
                   decoding="async"
                   style={{ width: "100%", height: "120%", objectFit: "cover", display: "block" }}
@@ -337,7 +338,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={src}
-                    alt={`${work.title}, ${i + 1}`}
+                    alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
                     loading="lazy"
                     decoding="async"
                   />
@@ -370,7 +371,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
                 }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt={`${work.title} mobile ${i + 1}`} loading="lazy" decoding="async" style={{ width: "100%", display: "block" }} />
+                <img src={src} alt={`${work.title} mobile app screen ${i + 1}`} loading="lazy" decoding="async" style={{ width: "100%", display: "block" }} />
               </div>
             ))}
           </div>
@@ -463,7 +464,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
         <img
           ref={nextImgRef}
           src={next.image}
-          alt={next.title}
+          alt={`${next.title} — ${next.subtitle}`}
           loading="lazy"
           decoding="async"
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.35, transition: "opacity 0.5s ease, transform 0.8s ease" }}

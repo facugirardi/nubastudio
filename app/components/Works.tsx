@@ -857,7 +857,7 @@ export default function Works({
                 }}
               >
                 <div className="works-list-thumb">
-                  <Image src={w.image} alt="" fill sizes="148px" />
+                  <Image src={w.image} alt={`${w.title} — ${w.subtitle}`} fill sizes="148px" />
                 </div>
                 <div className="works-list-meta">
                   <span className="works-list-title">{w.title}</span>

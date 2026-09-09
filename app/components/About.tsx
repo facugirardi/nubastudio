@@ -652,7 +652,7 @@ export default function About() {
       <section id="about" ref={sectionRef} className="about-section">
         <div ref={stmtRef} className="about-statement">
           <div className="stmt-inner">
-            <h2 className="stmt-heading">
+            <h1 className="stmt-heading">
               <span className="stmt-line-mask">
                 <span className="stmt-line stmt-reveal">We turn</span>
               </span>
@@ -667,7 +667,7 @@ export default function About() {
               <span className="stmt-line-mask">
                 <span className="stmt-line stmt-reveal">that move people.</span>
               </span>
-            </h2>
+            </h1>
 
             <div className="stmt-foot">
               <span className="stmt-rule stmt-reveal" />
@@ -689,7 +689,12 @@ export default function About() {
                     : { width: item.w, height: item.h, marginBottom: item.mb }
                 }
               >
-                <img src={item.image} alt="" loading="lazy" decoding="async" />
+                <img
+                  src={item.image}
+                  alt={`${works.find((w) => w.slug === item.slug)?.title ?? item.slug} case study by Nuba Studio`}
+                  loading="lazy"
+                  decoding="async"
+                />
                 <div className="mq-overlay">
                   <span className="mq-label">View more</span>
                 </div>
