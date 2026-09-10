@@ -10,6 +10,11 @@ gsap.registerPlugin(ScrollTrigger);
 const LenisContext = createContext<Lenis | null>(null);
 export const useLenis = () => useContext(LenisContext);
 
+// El overlay de transición vive en el layout raíz, fuera de este provider:
+// necesita frenar el scroll durante el morph sin pasar por el contexto.
+let activeLenis: Lenis | null = null;
+export const getLenis = () => activeLenis;
+
 export default function SmoothScroll({
   children,
   infinite = false,
@@ -34,6 +39,7 @@ export default function SmoothScroll({
     });
     // eslint-disable-next-line react-hooks/set-state-in-effect -- instancia creada solo en cliente tras montar
     setLenis(instance);
+    activeLenis = instance;
 
     instance.on("scroll", ScrollTrigger.update);
 
@@ -50,6 +56,7 @@ export default function SmoothScroll({
       window.visualViewport?.removeEventListener("resize", onResize);
       gsap.ticker.remove(raf);
       instance.destroy();
+      if (activeLenis === instance) activeLenis = null;
       setLenis(null);
     };
   }, [infinite]);

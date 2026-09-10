@@ -8,7 +8,12 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "./Navbar";
 import { useLenis } from "./SmoothScroll";
-import { startCaseTransition } from "./caseTransition";
+import {
+  HERO_OVERSCAN,
+  consumeCaseEntryDelay,
+  markCaseHeroReady,
+  startCaseTransition,
+} from "./caseTransition";
 import type { WorkItem } from "../data/works";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -67,6 +72,24 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
   useEffect(() => {
     window.scrollTo(0, 0);
     lenis?.scrollTo(0, { immediate: true });
+
+    // El overlay del morph se retira recién cuando el hero terminó de decodificar.
+    const heroImg = heroImgRef.current?.querySelector("img");
+    if (!heroImg) {
+      markCaseHeroReady();
+    } else if (heroImg.complete) {
+      (heroImg.decode?.() ?? Promise.resolve()).then(markCaseHeroReady, markCaseHeroReady);
+    } else {
+      heroImg.addEventListener("load", markCaseHeroReady, { once: true });
+      heroImg.addEventListener("error", markCaseHeroReady, { once: true });
+    }
+
+    // Precarga la imagen cruda del próximo caso: es la que usa el overlay.
+    const preload = new window.Image();
+    preload.src = next.image;
+
+    const entryDelay = consumeCaseEntryDelay();
+
     const ctx = gsap.context(() => {
       // Hero: título + meta entran (el overlay de transición ya reveló la imagen)
       gsap.from("[data-hero]", {
@@ -75,15 +98,25 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
         duration: 1,
         ease: "power3.out",
         stagger: 0.12,
-        delay: 0.35,
+        delay: entryDelay,
       });
 
-      // Parallax del hero
+      // Parallax del hero: scrub numérico → la imagen persigue al scroll con
+      // inercia propia en vez de pegarse frame a frame.
       if (heroImgRef.current) {
         gsap.to(heroImgRef.current, {
-          yPercent: 18,
+          yPercent: HERO_OVERSCAN * 100 * 0.75,
           ease: "none",
-          scrollTrigger: { trigger: heroImgRef.current, start: "top top", end: "bottom top", scrub: true },
+          force3D: true,
+          scrollTrigger: {
+            // La sección, no el box: el box nace 10% por encima del viewport y
+            // el progreso arrancaría ya empezado, desalineando el fin del morph.
+            trigger: heroImgRef.current.parentElement,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.8,
+            invalidateOnRefresh: true,
+          },
         });
       }
 
@@ -113,11 +146,19 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
       gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el, i) => {
         gsap.fromTo(
           el,
-          { yPercent: i % 2 === 0 ? 10 : 16 },
+          // El wrapper sobra 16% arriba y abajo: el recorrido se queda dentro.
+          { yPercent: i % 2 === 0 ? 8 : 12 },
           {
-            yPercent: i % 2 === 0 ? -10 : -16,
+            yPercent: i % 2 === 0 ? -8 : -12,
             ease: "none",
-            scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true },
+            force3D: true,
+            scrollTrigger: {
+              trigger: el.parentElement,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
           }
         );
       });
@@ -129,8 +170,12 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
       }
     }, rootRef);
 
-    return () => ctx.revert();
-  }, [work.slug, lenis]);
+    return () => {
+      heroImg?.removeEventListener("load", markCaseHeroReady);
+      heroImg?.removeEventListener("error", markCaseHeroReady);
+      ctx.revert();
+    };
+  }, [work.slug, next.image, lenis]);
 
   const goNext = () => {
     const el = nextImgRef.current;
@@ -163,7 +208,16 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
 
       {/* ───────── Hero fullscreen (match con el final del morph) ───────── */}
       <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
-        <div ref={heroImgRef} style={{ position: "absolute", inset: "-10% 0", zIndex: 0 }}>
+        {/* El box mide 120vh centrado: el overlay del morph aterriza en este mismo encuadre. */}
+        <div
+          ref={heroImgRef}
+          style={{
+            position: "absolute",
+            inset: `${(-HERO_OVERSCAN / 2) * 100}% 0`,
+            zIndex: 0,
+            willChange: "transform",
+          }}
+        >
           <Image
             src={work.image}
             alt={`${work.title} — ${work.subtitle} case study by Nuba Studio`}
@@ -210,8 +264,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
             </ol>
           </nav>
 
-          <div data-hero style={{ display: "flex", alignItems: "center", gap: "0.9rem", marginBottom: "1.4rem" }}>
-            <span style={{ height: 1, width: 46, background: ACCENT }} />
+          <div data-hero style={{ display: "flex", alignItems: "center", marginBottom: "1.4rem" }}>
             <span style={{ textTransform: "uppercase", letterSpacing: "0.22em", fontSize: "0.72rem", color: ACCENT }}>
               {work.subtitle}
             </span>
@@ -342,14 +395,20 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
                   position: "relative",
                 }}
               >
-                <Image
+                {/* El sobreancho vertical vive en el wrapper: la Image con fill
+                    no admite height propio y el transform va sobre el div. */}
+                <div
                   data-parallax
-                  src={src}
-                  alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
-                  fill
-                  sizes="(max-width: 900px) 100vw, 1000px"
-                  style={{ height: "120%", objectFit: "cover", display: "block" }}
-                />
+                  style={{ position: "absolute", inset: "-16% 0", willChange: "transform" }}
+                >
+                  <Image
+                    src={src}
+                    alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
+                    fill
+                    sizes="(max-width: 900px) 100vw, 1000px"
+                    style={{ objectFit: "cover", display: "block" }}
+                  />
+                </div>
               </figure>
             ))}
 

@@ -5,6 +5,7 @@ import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import type { MotionValue } from "./motionValue";
+import { prefetchCase } from "./caseTransition";
 
 /* ───────── Config de la deformación (todo ajustable) ───────── */
 export type DistortionConfig = {
@@ -361,6 +362,8 @@ export default function ProjectImagePlane({
     if (awayRef.current > maxAway) return; // sólo la central y sus costados
     e.stopPropagation();
     hoveredRef.current = true;
+    // Calienta la ruta: el mount del caso deja de robarle frames al morph.
+    prefetchCase(slug);
     onHoverStart(title, imageUrl);
     document.body.style.cursor = "pointer";
   };
