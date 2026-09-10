@@ -58,11 +58,10 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
     work.slug === "nuddo"
       ? (work.images ?? []).filter((src) => src.endsWith(".png"))
       : [];
-  const devices: string[] = [];
   // El hero ya muestra work.image a pantalla completa: repetirla como primera
   // pieza de la galeria la descargaba dos veces en los 11 casos.
   const gallery = (work.images ?? []).filter(
-    (src) => src !== work.image && !devices.includes(src) && !pairImages.includes(src)
+    (src) => src !== work.image && !pairImages.includes(src)
   );
 
   useEffect(() => {
@@ -192,6 +191,25 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
             padding: "0 6vw 6vh",
           }}
         >
+          {/* Breadcrumb visible que refleja el BreadcrumbList del JSON-LD. */}
+          <nav
+            data-hero
+            aria-label="Breadcrumb"
+            style={{ marginBottom: "1rem", fontSize: "0.72rem", letterSpacing: "0.12em", textTransform: "uppercase" }}
+          >
+            <ol style={{ display: "flex", alignItems: "center", gap: "0.55rem", listStyle: "none", margin: 0, padding: 0 }}>
+              <li>
+                <Link href="/" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
+                  Home
+                </Link>
+              </li>
+              <li aria-hidden style={{ color: "rgba(255,255,255,0.28)" }}>/</li>
+              <li aria-current="page" style={{ color: "rgba(255,255,255,0.72)" }}>
+                {work.title}
+              </li>
+            </ol>
+          </nav>
+
           <div data-hero style={{ display: "flex", alignItems: "center", gap: "0.9rem", marginBottom: "1.4rem" }}>
             <span style={{ height: 1, width: 46, background: ACCENT }} />
             <span style={{ textTransform: "uppercase", letterSpacing: "0.22em", fontSize: "0.72rem", color: ACCENT }}>
@@ -350,35 +368,6 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
               ))}
             </div>
           )}
-        </section>
-      )}
-
-      {/* ───────── Mockups mobile (device block) ───────── */}
-      {devices.length > 0 && (
-        <section style={{ padding: "clamp(3rem, 8vw, 7rem) 6vw" }}>
-          <div
-            style={{
-              display: "flex",
-              gap: "clamp(1.5rem, 4vw, 4rem)",
-              justifyContent: "center",
-              flexWrap: "wrap",
-              alignItems: "flex-end",
-            }}
-          >
-            {devices.map((src, i) => (
-              <div
-                key={src}
-                data-reveal
-                style={{
-                  width: "min(260px, 42vw)",
-                  transform: i % 2 === 0 ? "translateY(0)" : "translateY(-6%)",
-                }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt={`${work.title} mobile app screen ${i + 1}`} loading="lazy" decoding="async" style={{ width: "100%", display: "block" }} />
-              </div>
-            ))}
-          </div>
         </section>
       )}
 
