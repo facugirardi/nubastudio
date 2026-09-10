@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
+import Image from "next/image";
 import { getWork } from "../data/works";
 
 const WHATSAPP_NUMBER = "5493513471844";
@@ -437,45 +438,96 @@ export default function Contact() {
 
         .contact-work {
           margin-top: clamp(3rem, 7vw, 5rem);
-          padding-top: clamp(1.6rem, 3vw, 2.2rem);
+          padding-top: clamp(1.8rem, 3vw, 2.4rem);
           border-top: 1px solid rgba(255,255,255,0.1);
         }
         .contact-work-label {
           display: block;
-          font-size: 0.68rem;
-          letter-spacing: 0.22em;
+          font-size: 0.66rem;
+          letter-spacing: 0.24em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.35);
-          margin-bottom: 1.1rem;
+          color: rgba(255,255,255,0.3);
+          margin-bottom: 1.5rem;
         }
         .contact-work-list {
           list-style: none;
           margin: 0;
           padding: 0;
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 1rem 2.2rem;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1.1rem;
         }
         .contact-work-link {
           display: flex;
           flex-direction: column;
-          align-items: center;
-          gap: 0.15rem;
+          gap: 0.7rem;
           text-decoration: none;
           color: inherit;
+          text-align: left;
+        }
+        .contact-work-thumb {
+          position: relative;
+          display: block;
+          width: 100%;
+          aspect-ratio: 16 / 10;
+          overflow: hidden;
+          border-radius: 8px;
+          border: 1px solid rgba(255,255,255,0.1);
+          background: rgba(255,255,255,0.03);
+        }
+        .contact-work-thumb img {
+          object-fit: cover;
+          filter: grayscale(1) brightness(0.72);
+          transform: scale(1.02);
+          transition: filter 0.45s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .contact-work-link:hover .contact-work-thumb img {
+          filter: grayscale(0) brightness(1);
+          transform: scale(1.06);
+        }
+        .contact-work-link:hover .contact-work-thumb {
+          border-color: rgba(198,255,0,0.45);
+        }
+        .contact-work-text {
+          display: flex;
+          flex-direction: column;
+          gap: 0.15rem;
+          min-width: 0;
         }
         .contact-work-title {
-          font-size: 1rem;
-          color: rgba(255,255,255,0.8);
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          font-size: 0.95rem;
+          color: rgba(255,255,255,0.85);
           transition: color 0.25s ease;
         }
+        .contact-work-arrow {
+          width: 11px;
+          height: 11px;
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 2;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          opacity: 0;
+          transform: translate(-3px, 3px);
+          transition: opacity 0.25s ease, transform 0.25s ease;
+        }
         .contact-work-meta {
-          font-size: 0.72rem;
-          letter-spacing: 0.06em;
-          color: rgba(255,255,255,0.38);
+          font-size: 0.7rem;
+          letter-spacing: 0.04em;
+          color: rgba(255,255,255,0.4);
         }
         .contact-work-link:hover .contact-work-title { color: var(--accent, #C6FF00); }
+        .contact-work-link:hover .contact-work-arrow {
+          opacity: 1;
+          transform: translate(0, 0);
+        }
+        @media (max-width: 640px) {
+          .contact-work-list { grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+          .contact-work-list li:last-child { display: none; }
+        }
         .contact-footer {
           position: absolute;
           bottom: 1.6rem;
@@ -634,9 +686,25 @@ export default function Contact() {
               return (
                 <li key={slug}>
                   <Link href={`/cases/${slug}`} className="contact-work-link">
-                    <span className="contact-work-title">{work.title}</span>
-                    <span className="contact-work-meta">
-                      {work.seoTitle ?? work.subtitle}
+                    <span className="contact-work-thumb">
+                      <Image
+                        src={work.image}
+                        alt={`${work.title} — ${work.seoTitle ?? work.subtitle}`}
+                        fill
+                        sizes="220px"
+                      />
+                    </span>
+                    <span className="contact-work-text">
+                      <span className="contact-work-title">
+                        {work.title}
+                        <svg className="contact-work-arrow" viewBox="0 0 24 24" aria-hidden>
+                          <line x1="7" y1="17" x2="17" y2="7" />
+                          <polyline points="7 7 17 7 17 17" />
+                        </svg>
+                      </span>
+                      <span className="contact-work-meta">
+                        {work.seoTitle ?? work.subtitle}
+                      </span>
                     </span>
                   </Link>
                 </li>

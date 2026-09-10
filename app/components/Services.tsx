@@ -264,7 +264,7 @@ export default function Services() {
         .svc-case-link {
           color: rgba(255,255,255,0.72);
           text-decoration: none;
-          border-bottom: 1px solid rgba(198,255,0,0.35);
+          border-bottom: 1px solid #fff;
           padding-bottom: 1px;
           transition: color 0.25s ease, border-color 0.25s ease;
         }
