@@ -13,7 +13,7 @@ const CHIP_H = 40;
 const SOCIALS = [
   {
     label: "LinkedIn",
-    href: "https://linkedin.com",
+    href: "https://linkedin.com/company/nubastudio",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
@@ -34,13 +34,15 @@ const SOCIALS = [
 export default function Navbar({
   visible,
   view,
-  setView,
+  setView = () => {},
   showToggle = true,
+  webglAvailable = true,
 }: {
   visible: boolean;
   view: "spiral" | "list";
-  setView: (v: "spiral" | "list") => void;
+  setView?: (v: "spiral" | "list") => void;
   showToggle?: boolean;
+  webglAvailable?: boolean;
 }) {
   const navRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -54,6 +56,11 @@ export default function Navbar({
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
+
+  const chooseView = (next: "spiral" | "list") => {
+    if (next === "spiral" && !webglAvailable) return;
+    setView(next);
+  };
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth < 768);
@@ -134,13 +141,53 @@ export default function Navbar({
     });
   };
 
+  const scatterNavChars = (el: HTMLElement, onDone: () => void) => {
+    const chars = el.querySelectorAll<HTMLElement>(".nav-char");
+    if (!chars.length) { onDone(); return; }
+    const tl = gsap.timeline({ overwrite: true, onComplete: onDone });
+    chars.forEach((char, i) => {
+      const rx = (Math.random() - 0.5) * 120;
+      const ry = (Math.random() - 0.5) * 80 - 20;
+      const rot = (Math.random() - 0.5) * 60;
+      tl.to(char, {
+        x: rx,
+        y: ry,
+        rotation: rot,
+        duration: 0.55,
+        ease: "power3.out",
+      }, i * 0.04);
+    });
+  };
+
+  const bounceNavChars = (el: HTMLElement) => {
+    const chars = el.querySelectorAll<HTMLElement>(".nav-char");
+    if (!chars.length) return;
+    const tl = gsap.timeline({ overwrite: true });
+    const offsets = [-6, -9, -5, -8, -4, -7, -6, -5];
+    const rotations = [5, -7, 8, -5, 6, -8, 4, -6];
+    chars.forEach((char, i) => {
+      tl.to(char, {
+        y: offsets[i % offsets.length],
+        rotation: rotations[i % rotations.length],
+        duration: 0.32,
+        ease: "power2.out",
+      }, i * 0.08)
+      .to(char, {
+        y: 0,
+        rotation: 0,
+        duration: 0.55,
+        ease: "elastic.out(1, 0.5)",
+      }, i * 0.08 + 0.32);
+    });
+  };
+
   // Posición x del thumb para la opción "list" (spiral = 0)
   const slotMax = () => {
     const c = toggleRef.current;
     return c ? c.clientWidth / 2 - 4 : 0;
   };
 
-  // Sincroniza el thumb con la vista (cuando NO se está arrastrando) — con overshoot
+  // Sincroniza el thumb con la vista (cuando NO se está arrastrando), con overshoot
   useEffect(() => {
     if (dragRef.current.active) return;
     gsap.to(thumbRef.current, {
@@ -198,7 +245,7 @@ export default function Navbar({
       const toList = Number(gsap.getProperty(thumbRef.current, "x")) > max / 2;
       gsap.to(thumbRef.current, { x: toList ? max : 0, duration: 0.4, ease: "back.out(2)", overwrite: true });
       const target = toList ? "list" : "spiral";
-      if (target !== view) setView(target);
+      if (target !== view) chooseView(target);
     }
   };
 
@@ -230,6 +277,7 @@ export default function Navbar({
       gsap.to(panel, { x: 0, y: 0, scaleX: 1, scaleY: 1, width: openW, height: openH, borderRadius: 24, duration: 0.7, ease: "power4.inOut", overwrite: true });
       gsap.to(label, { opacity: 0, duration: 0.2, ease: "power2.out", overwrite: true });
       gsap.to(content, { opacity: 1, duration: 0.45, delay: 0.3, ease: "power2.out", overwrite: true });
+      gsap.set(content.querySelectorAll(".nav-char"), { x: 0, y: 0, rotation: 0, opacity: 1 });
       gsap.fromTo(
         content.querySelectorAll("[data-stagger]"),
         { y: 20, opacity: 0 },
@@ -326,7 +374,7 @@ export default function Navbar({
 
         .menu-panel-link {
           display: block;
-          font-size: clamp(2.2rem, min(5.5vw, 7.5vh), 4.4rem);
+          font-size: clamp(3rem, min(7.2vw, 9.6vh), 6rem);
           line-height: 1.06;
           font-weight: 400;
           letter-spacing: -0.025em;
@@ -422,13 +470,13 @@ export default function Navbar({
         {/* Logo */}
         <a
           href="/"
-          aria-label="Nuba Studio — inicio"
+          aria-label="Nuba Studio, inicio"
           style={{ display: "flex", alignItems: "center" }}
         >
           <LogoMark play={visible} />
         </a>
 
-        {/* Spiral / List toggle (centro) — thumb arrastrable */}
+        {/* Spiral / List toggle (centro), thumb arrastrable */}
         {showToggle ? (
           <div
             className="view-toggle"
@@ -443,7 +491,7 @@ export default function Navbar({
               <button
                 key={opt}
                 className="view-opt"
-                onClick={() => { if (ignoreClickRef.current) return; setView(opt); }}
+                onClick={() => { if (ignoreClickRef.current) return; chooseView(opt); }}
                 style={{ color: view === opt ? "#000" : "rgba(255,255,255,0.6)" }}
               >
                 {opt}
@@ -551,14 +599,14 @@ export default function Navbar({
           </div>
 
           {/* Links */}
-          <nav style={{ marginTop: "auto", marginBottom: "auto", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+          <nav style={{ marginTop: "auto", marginBottom: "auto", display: "flex", flexDirection: "column", gap: "calc(0.4rem + 10px)" }}>
             {NAV_LINKS.map((link) => (
               <a
                 key={link}
                 data-stagger
                 href={link === "Work" ? undefined : link === "About" ? "/about" : link === "Services" ? "/services" : link === "Contact" ? "/contact" : `#${link.toLowerCase()}`}
                 className="menu-panel-link"
-                onMouseEnter={(e) => runScramble(e.currentTarget, link.toLowerCase())}
+                onMouseEnter={(e) => bounceNavChars(e.currentTarget)}
                 onClick={(e) => {
                   if (link === "Work") {
                     e.preventDefault();
@@ -590,15 +638,17 @@ export default function Navbar({
                   }
                 }}
               >
-                {link.toLowerCase()}
+                {link.toLowerCase().split("").map((char, i) => (
+                  <span key={i} className="nav-char" style={{ display: "inline-block" }}>{char}</span>
+                ))}
               </a>
             ))}
           </nav>
 
           {/* Footer */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-            <a data-stagger href="mailto:hello@nubastudio.com" className="menu-email">
-              hello@nubastudio.com
+            <a data-stagger href="tel:+5493513471844" className="menu-email">
+              +54 9 351 347 1844
             </a>
             <div data-stagger style={{ display: "flex", gap: "0.7rem" }}>
               {SOCIALS.map((s) => (

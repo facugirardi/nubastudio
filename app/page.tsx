@@ -1,24 +1,26 @@
-"use client";
+import type { Metadata } from "next";
+import HomeClient from "./components/HomeClient";
+import HomeSeoContent from "./components/HomeSeoContent";
+import { works } from "./data/works";
+import { JsonLd, worksCollectionJsonLd } from "./lib/jsonLd";
+import { SITE_DESCRIPTION, SITE_NAME } from "./lib/seo";
 
-import { useEffect, useState } from "react";
-import Navbar from "./components/Navbar";
-import Works from "./components/Works";
-import SmoothScroll from "./components/SmoothScroll";
+export const metadata: Metadata = {
+  title: `${SITE_NAME} — Digital product studio in Córdoba, Argentina`,
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    url: "/",
+    title: `${SITE_NAME} — Digital product studio`,
+    description: SITE_DESCRIPTION,
+  },
+};
 
 export default function Home() {
-  const [view, setView] = useState<"spiral" | "list">("spiral");
-
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("view") === "list") {
-      setView("list");
-    }
-  }, []);
   return (
-    <SmoothScroll infinite>
-      <Navbar visible={true} view={view} setView={setView} />
-      <main>
-        <Works view={view} setView={setView} />
-      </main>
-    </SmoothScroll>
+    <>
+      <JsonLd data={worksCollectionJsonLd(works)} />
+      <HomeClient seoFallback={<HomeSeoContent />} />
+    </>
   );
 }

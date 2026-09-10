@@ -2,10 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "./Navbar";
-import Grain from "./Grain";
 import { useLenis } from "./SmoothScroll";
 import { startCaseTransition } from "./caseTransition";
 import type { WorkItem } from "../data/works";
@@ -14,6 +15,25 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ACCENT = "#C6FF00";
 const noop = () => {};
+
+function ExternalLinkIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <line x1="7" y1="17" x2="17" y2="7" />
+      <polyline points="7 7 17 7 17 17" />
+    </svg>
+  );
+}
 
 function platforms(links?: WorkItem["links"]) {
   if (!links) return [];
@@ -34,8 +54,16 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
   const nextImgRef = useRef<HTMLImageElement>(null);
 
   const links = platforms(work.links);
-  const gallery = (work.images ?? [work.image]).filter((src) => !src.endsWith(".png"));
-  const devices = (work.images ?? []).filter((src) => src.endsWith(".png"));
+  const pairImages =
+    work.slug === "nuddo"
+      ? (work.images ?? []).filter((src) => src.endsWith(".png"))
+      : [];
+  const devices: string[] = [];
+  // El hero ya muestra work.image a pantalla completa: repetirla como primera
+  // pieza de la galeria la descargaba dos veces en los 11 casos.
+  const gallery = (work.images ?? []).filter(
+    (src) => src !== work.image && !devices.includes(src) && !pairImages.includes(src)
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -121,21 +149,29 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
 
   return (
     <div ref={rootRef} style={{ background: "#000", color: "#fff", position: "relative", overflow: "hidden" }}>
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: -1,
+          pointerEvents: "none",
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
+          backgroundSize: "55px 55px",
+        }}
+      />
       <Navbar visible view="list" setView={noop} showToggle={false} />
-      <div style={{ position: "fixed", inset: 0, zIndex: 60, pointerEvents: "none", overflow: "hidden" }}>
-        <Grain zIndex={60} />
-      </div>
 
       {/* ───────── Hero fullscreen (match con el final del morph) ───────── */}
       <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
         <div ref={heroImgRef} style={{ position: "absolute", inset: "-10% 0", zIndex: 0 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={work.image}
-            alt={work.title}
-            fetchPriority="high"
-            decoding="async"
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            alt={`${work.title} — ${work.subtitle} case study by Nuba Studio`}
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectFit: "cover", display: "block" }}
           />
         </div>
         <div
@@ -227,10 +263,11 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
         </div>
       </section>
 
-      {/* ───────── Challenge / Solution (sticky bicolumna) ───────── */}
+      {/* ───────── Challenge / Solution / Process (sticky bicolumna) ───────── */}
       {[
         { label: "The Challenge", body: work.task },
         { label: "The Solution", body: work.solutions },
+        { label: "The Process", body: work.process },
       ]
         .filter((b) => b.body)
         .map((b) => (
@@ -271,31 +308,48 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
         ))}
 
       {/* ───────── Galería con parallax alternado ───────── */}
-      {gallery.length > 1 && (
+      {(gallery.length > 0 || pairImages.length > 0) && (
         <section style={{ padding: "clamp(2rem, 6vw, 5rem) 6vw", display: "flex", flexDirection: "column", gap: "clamp(4rem, 9vw, 8rem)" }}>
-          {gallery.map((src, i) => (
-            <figure
-              key={src}
-              style={{
-                margin: 0,
-                overflow: "hidden",
-                borderRadius: 16,
-                alignSelf: i % 3 === 0 ? "stretch" : i % 3 === 1 ? "flex-end" : "flex-start",
-                width: i % 3 === 0 ? "100%" : "min(78%, 1000px)",
-                aspectRatio: "16 / 10",
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                data-parallax
-                src={src}
-                alt={`${work.title} — ${i + 1}`}
-                loading="lazy"
-                decoding="async"
-                style={{ width: "100%", height: "120%", objectFit: "cover", display: "block" }}
-              />
-            </figure>
-          ))}
+          {gallery.length > 0 &&
+            gallery.map((src, i) => (
+              <figure
+                key={src}
+                style={{
+                  margin: 0,
+                  overflow: "hidden",
+                  borderRadius: 16,
+                  alignSelf: i % 3 === 0 ? "stretch" : i % 3 === 1 ? "flex-end" : "flex-start",
+                  width: i % 3 === 0 ? "100%" : "min(78%, 1000px)",
+                  aspectRatio: "16 / 10",
+                  position: "relative",
+                }}
+              >
+                <Image
+                  data-parallax
+                  src={src}
+                  alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
+                  fill
+                  sizes="(max-width: 900px) 100vw, 1000px"
+                  style={{ height: "120%", objectFit: "cover", display: "block" }}
+                />
+              </figure>
+            ))}
+
+          {pairImages.length > 0 && (
+            <div className="cs-pair-row">
+              {pairImages.map((src, i) => (
+                <figure key={src} className="cs-pair-figure">
+                  <Image
+                    src={src}
+                    alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
+                    width={2400}
+                    height={1600}
+                    sizes="(max-width: 900px) 100vw, 50vw"
+                  />
+                </figure>
+              ))}
+            </div>
+          )}
         </section>
       )}
 
@@ -316,12 +370,12 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
                 key={src}
                 data-reveal
                 style={{
-                  width: "min(240px, 40vw)",
+                  width: "min(260px, 42vw)",
                   transform: i % 2 === 0 ? "translateY(0)" : "translateY(-6%)",
                 }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt={`${work.title} mobile ${i + 1}`} loading="lazy" decoding="async" style={{ width: "100%", display: "block" }} />
+                <img src={src} alt={`${work.title} mobile app screen ${i + 1}`} loading="lazy" decoding="async" style={{ width: "100%", display: "block" }} />
               </div>
             ))}
           </div>
@@ -381,7 +435,8 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
                     textDecoration: "none",
                   }}
                 >
-                  {l.label} <span aria-hidden>↗</span>
+                  {l.label}
+                  <ExternalLinkIcon />
                 </a>
               ))}
             </div>
@@ -404,19 +459,25 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
       )}
 
       {/* ───────── Next case ───────── */}
-      <section
-        onClick={goNext}
-        style={{ position: "relative", height: "70vh", overflow: "hidden", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+      <Link
+        href={`/cases/${next.slug}`}
+        onClick={(e) => {
+          // Deja pasar cmd/ctrl/shift-click y el boton del medio al navegador.
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          e.preventDefault();
+          goNext();
+        }}
+        style={{ position: "relative", height: "70vh", overflow: "hidden", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", color: "inherit" }}
         className="cs-next"
+        aria-label={`Next project: ${next.title} — ${next.subtitle}`}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           ref={nextImgRef}
           src={next.image}
-          alt={next.title}
-          loading="lazy"
-          decoding="async"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.35, transition: "opacity 0.5s ease, transform 0.8s ease" }}
+          alt={`${next.title} — ${next.subtitle}`}
+          fill
+          sizes="100vw"
+          style={{ objectFit: "cover", opacity: 0.35, transition: "opacity 0.5s ease, transform 0.8s ease" }}
         />
         <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} />
         <div style={{ position: "relative", zIndex: 2, textAlign: "center" }}>
@@ -427,12 +488,48 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
             {next.title}
           </div>
         </div>
-      </section>
+      </Link>
 
       <style>{`
+        .cs-pair-row {
+          display: flex;
+          gap: clamp(1rem, 2.5vw, 2rem);
+          justify-content: center;
+          align-items: flex-start;
+          width: 100%;
+          max-width: 1100px;
+          margin: 0 auto;
+        }
+        .cs-pair-figure {
+          margin: 0;
+          flex: 1 1 calc(50% - 1rem);
+          max-width: 520px;
+          min-width: 0;
+          border-radius: 16;
+          overflow: hidden;
+        }
+        .cs-pair-figure img {
+          width: 100%;
+          height: auto;
+          display: block;
+          object-fit: contain;
+        }
         @media (min-width: 900px) {
           .cs-intro-grid { grid-template-columns: 280px 1fr !important; gap: 5rem !important; }
           .cs-two-col { grid-template-columns: 1fr 1fr !important; gap: 5rem !important; }
+        }
+        @media (max-width: 699px) {
+          .cs-pair-row {
+            flex-direction: column;
+            align-items: center;
+            max-width: 100%;
+          }
+          .cs-pair-row figure,
+          .cs-pair-figure {
+            flex: 1 1 100%;
+            max-width: min(520px, 100%) !important;
+            width: 100%;
+          }
         }
         .cs-cta { transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), background 0.3s ease; }
         .cs-cta:hover { transform: translateY(-3px); background: #d4ff33; }
