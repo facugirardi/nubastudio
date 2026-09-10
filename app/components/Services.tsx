@@ -4,6 +4,7 @@ import { Fragment, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import { useLenis } from "./SmoothScroll";
 import { getWork } from "../data/works";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -69,6 +70,7 @@ const PROCESS = [
 const INTRO_WORDS = INTRO_TEXT.split(" ");
 
 export default function Services() {
+  const lenis = useLenis();
   const sectionRef = useRef<HTMLElement>(null);
   const introRef = useRef<HTMLHeadingElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
@@ -281,14 +283,22 @@ export default function Services() {
           border-radius: 999px;
           padding: 0.28rem 0.7rem;
         }
+        .svc-row { cursor: pointer; }
         .svc-arrow {
           justify-self: end;
+          border: none;
+          background: none;
+          padding: 0;
+          cursor: pointer;
+          display: inline-flex;
           color: rgba(255,255,255,0.35);
           transform: translateX(-8px);
           opacity: 0;
           transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease, color 0.35s ease;
         }
-        .svc-row:hover .svc-arrow { opacity: 1; transform: translateX(0); color: var(--accent, #C6FF00); }
+        .svc-row:hover .svc-arrow,
+        .svc-arrow:focus-visible { opacity: 1; transform: translateX(0); color: var(--accent, #C6FF00); }
+        .svc-arrow:focus-visible { outline: 2px solid var(--accent, #C6FF00); outline-offset: 4px; border-radius: 4px; }
 
         /* Marquee de tecnologías */
         .svc-tech {
@@ -478,7 +488,12 @@ export default function Services() {
         <div className="svc-list-wrap">
           <ul ref={listRef} className="svc-list">
             {SERVICES.map((s) => (
-              <li key={s.n} className="svc-row" data-image={s.image}>
+              <li
+                key={s.n}
+                className="svc-row"
+                data-image={s.image}
+                onClick={() => lenis?.scrollTo("#svc-cta")}
+              >
                 <span className="svc-n">{s.n}</span>
                 <h2 className="svc-title">{s.title}</h2>
                 <div className="svc-body">
@@ -501,6 +516,7 @@ export default function Services() {
                               href={`/cases/${slug}`}
                               className="svc-case-link"
                               title={`${work.title} — ${work.seoTitle ?? work.subtitle}`}
+                              onClick={(e) => e.stopPropagation()}
                             >
                               {work.title}
                             </Link>
@@ -510,12 +526,20 @@ export default function Services() {
                     </p>
                   )}
                 </div>
-                <span className="svc-arrow" aria-hidden>
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <button
+                  type="button"
+                  className="svc-arrow"
+                  aria-label={`${s.title}: start a project`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    lenis?.scrollTo("#svc-cta");
+                  }}
+                >
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                     <line x1="7" y1="17" x2="17" y2="7" />
                     <polyline points="7 7 17 7 17 17" />
                   </svg>
-                </span>
+                </button>
               </li>
             ))}
           </ul>
