@@ -14,6 +14,7 @@ Sitio institucional de **Nuba Studio**, una agencia digital que hace páginas we
 | Token | Valor |
 |---|---|
 | Negro | `#000000` |
+
 | Blanco | `#ffffff` |
 | Acento lima | `#C6FF00` |
 
