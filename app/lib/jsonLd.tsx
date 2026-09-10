@@ -176,6 +176,18 @@ export function servicesJsonLd(
   };
 }
 
+export function faqJsonLd(items: { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+}
+
 export function JsonLd({ data }: { data: object | object[] }) {
   const json = JSON.stringify(data).replace(/</g, "\\u003c");
   return (

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Services from "../components/Services";
 import Navbar from "../components/Navbar";
 import SmoothScroll from "../components/SmoothScroll";
-import { JsonLd, breadcrumbJsonLd, servicesJsonLd } from "../lib/jsonLd";
+import { JsonLd, breadcrumbJsonLd, faqJsonLd, servicesJsonLd } from "../lib/jsonLd";
+import { FAQ } from "../data/faq";
 import { SITE_NAME } from "../lib/seo";
 
 const description =
@@ -53,6 +54,7 @@ export default function ServicesPage() {
       <JsonLd
         data={[
           servicesJsonLd(SERVICES),
+          faqJsonLd(FAQ),
           breadcrumbJsonLd([
             { name: "Home", path: "/" },
             { name: "Services", path: "/services" },

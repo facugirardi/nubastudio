@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { useLenis } from "./SmoothScroll";
 import { getWork } from "../data/works";
+import { FAQ } from "../data/faq";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -76,6 +77,45 @@ export default function Services() {
   const listRef = useRef<HTMLUListElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const ctaCellsRef = useRef<HTMLDivElement>(null);
+
+  // <details> abre y cierra de golpe: interceptamos el toggle y animamos la
+  // altura a mano. Al cerrar, el atributo `open` se quita recien al terminar,
+  // para que el contenido no desaparezca antes de tiempo.
+  const toggleFaq = (e: React.MouseEvent<HTMLElement>) => {
+    const summary = e.currentTarget;
+    const details = summary.parentElement as HTMLDetailsElement | null;
+    const body = details?.querySelector<HTMLElement>(".svc-faq-body");
+    if (!details || !body) return;
+
+    e.preventDefault();
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      details.open = !details.open;
+      return;
+    }
+
+    gsap.killTweensOf(body);
+
+    if (details.open) {
+      gsap.to(body, {
+        height: 0,
+        opacity: 0,
+        duration: 0.32,
+        ease: "power2.inOut",
+        onComplete: () => {
+          details.open = false;
+          gsap.set(body, { height: "auto", opacity: 1 });
+        },
+      });
+    } else {
+      details.open = true;
+      gsap.fromTo(
+        body,
+        { height: 0, opacity: 0 },
+        { height: "auto", opacity: 1, duration: 0.45, ease: "power3.out" }
+      );
+    }
+  };
 
   // Hover dim: al hacer hover en una fila, las demás se dimean
   useEffect(() => {
@@ -359,6 +399,69 @@ export default function Services() {
         .svc-step-desc { font-size: 0.92rem; line-height: 1.5; color: rgba(255,255,255,0.55); }
 
         /* CTA */
+        /* FAQ */
+        .svc-faq { max-width: 1400px; margin: 0 auto; padding: 0 0 14vh; }
+        .svc-faq-head {
+          font-size: clamp(1.8rem, 4vw, 3.4rem);
+          font-weight: 400;
+          letter-spacing: -0.03em;
+          margin-bottom: clamp(2rem, 4vw, 3rem);
+        }
+        .svc-faq-head .accent { color: var(--accent, #C6FF00); }
+        .svc-faq-list { border-top: 1px solid rgba(255,255,255,0.14); }
+        .svc-faq-item { border-bottom: 1px solid rgba(255,255,255,0.14); }
+        .svc-faq-q {
+          list-style: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1.5rem;
+          padding: 1.6rem 0.5rem;
+          font-size: clamp(1rem, 1.8vw, 1.35rem);
+          letter-spacing: -0.01em;
+          color: rgba(255,255,255,0.9);
+          transition: color 0.3s ease, padding-left 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        .svc-faq-q::-webkit-details-marker { display: none; }
+        .svc-faq-item:hover .svc-faq-q,
+        .svc-faq-item[open] .svc-faq-q { color: var(--accent, #C6FF00); }
+        .svc-faq-item:hover .svc-faq-q { padding-left: 1rem; }
+        .svc-faq-icon {
+          position: relative;
+          flex: 0 0 auto;
+          width: 14px;
+          height: 14px;
+        }
+        .svc-faq-icon::before,
+        .svc-faq-icon::after {
+          content: "";
+          position: absolute;
+          background: currentColor;
+          transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease;
+        }
+        .svc-faq-icon::before { top: 6px; left: 0; width: 14px; height: 1.5px; }
+        .svc-faq-icon::after { left: 6px; top: 0; width: 1.5px; height: 14px; }
+        .svc-faq-item[open] .svc-faq-icon::after { transform: rotate(90deg); opacity: 0; }
+        .svc-faq-item[open] .svc-faq-icon::before { transform: rotate(180deg); }
+        .svc-faq-body { overflow: hidden; will-change: height; }
+        .svc-faq-a {
+          padding: 0 3rem 1.8rem 0.5rem;
+          max-width: 68ch;
+          font-size: 0.98rem;
+          line-height: 1.65;
+          color: rgba(255,255,255,0.55);
+        }
+        .svc-faq-q:focus-visible {
+          outline: 2px solid var(--accent, #C6FF00);
+          outline-offset: -2px;
+          border-radius: 4px;
+        }
+        @media (max-width: 700px) {
+          .svc-faq-a { padding-right: 0.5rem; }
+          .svc-faq-item:hover .svc-faq-q { padding-left: 0.5rem; }
+        }
+
         .svc-cta {
           position: relative;
           min-height: 100vh;
@@ -569,6 +672,27 @@ export default function Services() {
                 <h4 className="svc-step-title">{p.title}</h4>
                 <p className="svc-step-desc">{p.desc}</p>
               </div>
+            ))}
+          </div>
+        </div>
+
+        {/* FAQ: <details> nativo — accesible por teclado, sin JS, y el texto
+            queda en el HTML aunque este cerrado, asi que el crawler lo lee. */}
+        <div className="svc-faq">
+          <h2 className="svc-faq-head">
+            Frequently <span className="accent">asked</span>
+          </h2>
+          <div className="svc-faq-list">
+            {FAQ.map((item) => (
+              <details key={item.question} className="svc-faq-item">
+                <summary className="svc-faq-q" onClick={toggleFaq}>
+                  <span>{item.question}</span>
+                  <span className="svc-faq-icon" aria-hidden />
+                </summary>
+                <div className="svc-faq-body">
+                  <p className="svc-faq-a">{item.answer}</p>
+                </div>
+              </details>
             ))}
           </div>
         </div>
