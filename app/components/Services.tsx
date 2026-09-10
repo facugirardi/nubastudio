@@ -3,7 +3,8 @@
 import { Fragment, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useLenis } from "./SmoothScroll";
+import Link from "next/link";
+import { getWork } from "../data/works";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,6 +17,7 @@ const SERVICES = [
     title: "Web Development",
     desc: "Sites and platforms that load fast, feel alive and turn visitors into clients.",
     tags: ["Next.js", "React", "CMS", "Motion"],
+    cases: ["checkrto", "mes", "provia-consulting"],
     image: "/images/cases/checkrto/check1.webp",
   },
   {
@@ -23,6 +25,7 @@ const SERVICES = [
     title: "Mobile Apps",
     desc: "Native-feeling iOS & Android products people actually want to open.",
     tags: ["React Native", "Expo", "iOS", "Android"],
+    cases: ["nuddo", "ushuaia360"],
     image: "/images/cases/nuddo/frame2.webp",
   },
   {
@@ -30,6 +33,7 @@ const SERVICES = [
     title: "Marketplaces & Platforms",
     desc: "Two-sided products with payments, dashboards and infrastructure built to scale.",
     tags: ["Payments", "Dashboards", "Auth", "APIs"],
+    cases: ["nubapay", "nuddo", "unickeys"],
     image: "/images/cases/nubapay/m1.webp",
   },
   {
@@ -37,6 +41,7 @@ const SERVICES = [
     title: "Branding & Identity",
     desc: "Visual systems that make you unmistakable across every touchpoint.",
     tags: ["Identity", "Art Direction", "Systems"],
+    cases: [],
     image: "/images/cases/kennedys/ken1.webp",
   },
   {
@@ -44,6 +49,7 @@ const SERVICES = [
     title: "Product Strategy & MVP",
     desc: "From raw idea to a shipped MVP, validated, scoped and built to grow.",
     tags: ["Discovery", "Prototyping", "Roadmap"],
+    cases: ["nubapay", "unickeys"],
     image: "/images/cases/nuddo/nuddo4.webp",
   },
 ];
@@ -63,7 +69,6 @@ const PROCESS = [
 const INTRO_WORDS = INTRO_TEXT.split(" ");
 
 export default function Services() {
-  const lenis = useLenis();
   const sectionRef = useRef<HTMLElement>(null);
   const introRef = useRef<HTMLHeadingElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
@@ -239,6 +244,33 @@ export default function Services() {
           flex-wrap: wrap;
           gap: 0.4rem;
           margin-top: 0.9rem;
+        }
+        .svc-cases {
+          margin-top: 1.1rem;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: baseline;
+          gap: 0.5rem;
+          font-size: 0.9rem;
+        }
+        .svc-cases-label {
+          font-size: 0.68rem;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.38);
+          margin-right: 0.2rem;
+        }
+        .svc-cases-sep { color: rgba(255,255,255,0.25); }
+        .svc-case-link {
+          color: rgba(255,255,255,0.72);
+          text-decoration: none;
+          border-bottom: 1px solid rgba(198,255,0,0.35);
+          padding-bottom: 1px;
+          transition: color 0.25s ease, border-color 0.25s ease;
+        }
+        .svc-case-link:hover {
+          color: var(--accent, #C6FF00);
+          border-color: var(--accent, #C6FF00);
         }
         .svc-tag {
           font-size: 0.68rem;
@@ -446,12 +478,7 @@ export default function Services() {
         <div className="svc-list-wrap">
           <ul ref={listRef} className="svc-list">
             {SERVICES.map((s) => (
-              <li key={s.n} className="svc-row" data-image={s.image}
-                role="button"
-                tabIndex={0}
-                onClick={() => lenis?.scrollTo("#svc-cta")}
-                onKeyDown={(e) => { if (e.key === "Enter") lenis?.scrollTo("#svc-cta"); }}
-              >
+              <li key={s.n} className="svc-row" data-image={s.image}>
                 <span className="svc-n">{s.n}</span>
                 <h2 className="svc-title">{s.title}</h2>
                 <div className="svc-body">
@@ -461,8 +488,29 @@ export default function Services() {
                       <span key={t} className="svc-tag">{t}</span>
                     ))}
                   </div>
+                  {s.cases.length > 0 && (
+                    <p className="svc-cases">
+                      <span className="svc-cases-label">Related work</span>
+                      {s.cases.map((slug, i) => {
+                        const work = getWork(slug);
+                        if (!work) return null;
+                        return (
+                          <Fragment key={slug}>
+                            {i > 0 && <span className="svc-cases-sep">·</span>}
+                            <Link
+                              href={`/cases/${slug}`}
+                              className="svc-case-link"
+                              title={`${work.title} — ${work.seoTitle ?? work.subtitle}`}
+                            >
+                              {work.title}
+                            </Link>
+                          </Fragment>
+                        );
+                      })}
+                    </p>
+                  )}
                 </div>
-                <span className="svc-arrow">
+                <span className="svc-arrow" aria-hidden>
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="7" y1="17" x2="17" y2="7" />
                     <polyline points="7 7 17 7 17 17" />

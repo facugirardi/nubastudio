@@ -2,8 +2,14 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import Link from "next/link";
+import { getWork } from "../data/works";
 
 const WHATSAPP_NUMBER = "5493513471844";
+
+// Tres casos recientes y variados (pagos, marketplace, mobile): entran en una
+// sola fila y pesan mas que una lista larga junto al CTA.
+const RECENT_WORK = ["nubapay", "nuddo", "ushuaia360"];
 const MAX_CHARS = 2000;
 
 const HEADLINE = "Let's build something together.";
@@ -428,6 +434,48 @@ export default function Contact() {
         .contact-direct-link:hover { color: #fff; }
         .contact-place { color: rgba(255,255,255,0.3); }
 
+
+        .contact-work {
+          margin-top: clamp(3rem, 7vw, 5rem);
+          padding-top: clamp(1.6rem, 3vw, 2.2rem);
+          border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .contact-work-label {
+          display: block;
+          font-size: 0.68rem;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.35);
+          margin-bottom: 1.1rem;
+        }
+        .contact-work-list {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 1rem 2.2rem;
+        }
+        .contact-work-link {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.15rem;
+          text-decoration: none;
+          color: inherit;
+        }
+        .contact-work-title {
+          font-size: 1rem;
+          color: rgba(255,255,255,0.8);
+          transition: color 0.25s ease;
+        }
+        .contact-work-meta {
+          font-size: 0.72rem;
+          letter-spacing: 0.06em;
+          color: rgba(255,255,255,0.38);
+        }
+        .contact-work-link:hover .contact-work-title { color: var(--accent, #C6FF00); }
         .contact-footer {
           position: absolute;
           bottom: 1.6rem;
@@ -574,6 +622,28 @@ export default function Contact() {
           ))}
           <span className="contact-place">Córdoba, Argentina</span>
         </div>
+
+        {/* Ultima prueba antes de escribir: va despues del CTA para no competir
+            con el composer, y saca a /contact de sus 87 palabras. */}
+        <nav className="contact-work" aria-label="Recent work">
+          <span className="contact-work-label">Recent work</span>
+          <ul className="contact-work-list">
+            {RECENT_WORK.map((slug) => {
+              const work = getWork(slug);
+              if (!work) return null;
+              return (
+                <li key={slug}>
+                  <Link href={`/cases/${slug}`} className="contact-work-link">
+                    <span className="contact-work-title">{work.title}</span>
+                    <span className="contact-work-meta">
+                      {work.seoTitle ?? work.subtitle}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
       </div>
 
       <footer className="contact-footer">
