@@ -223,8 +223,8 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
             alt={`${work.title} — ${work.subtitle} case study by Nuba Studio`}
             fill
             priority
-            quality={90}
-            sizes="100vw"
+            quality={95}
+            sizes="(max-aspect-ratio: 9/5) 180vh, 100vw"
             style={{ objectFit: "cover", display: "block" }}
           />
         </div>
@@ -406,8 +406,8 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
                     src={src}
                     alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
                     fill
-                    quality={90}
-                    sizes="(max-width: 900px) 100vw, 1000px"
+                    quality={95}
+                    sizes={i % 3 === 0 ? "110vw" : "(max-width: 1460px) 86vw, 1240px"}
                     style={{ objectFit: "cover", display: "block" }}
                   />
                 </div>
@@ -423,7 +423,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
                     alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
                     width={2400}
                     height={1600}
-                    quality={90}
+                    quality={95}
                     sizes="(max-width: 900px) 100vw, 50vw"
                   />
                 </figure>

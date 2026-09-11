@@ -4,8 +4,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   images: {
-    formats: ["image/avif", "image/webp"],
-    qualities: [75, 90],
+    formats: ["image/webp"],
+    qualities: [90, 95],
     minimumCacheTTL: 60 * 60 * 24 * 30,
   },
   async headers() {
