@@ -7,7 +7,8 @@ import { useMotionValue, type MotionValue } from "./motionValue";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Line, useTexture } from "@react-three/drei";
 import * as THREE from "three";
-import ProjectImagePlane from "./ProjectImagePlane";
+import ProjectImagePlane, { cardTextureSrc } from "./ProjectImagePlane";
+import { optimizedSrc } from "../lib/optimizedImage";
 import { useLenis } from "./SmoothScroll";
 import { startCaseTransition } from "./caseTransition";
 import WebGLErrorBoundary from "./WebGLErrorBoundary";
@@ -139,7 +140,7 @@ function Scene({
 
   useEffect(() => {
     return () => {
-      for (const w of WORKS) useTexture.clear(w.image);
+      for (const w of WORKS) useTexture.clear(cardTextureSrc(w.image));
     };
   }, []);
 
@@ -778,7 +779,7 @@ export default function Works({
           >
             {labelImage && (
               <img
-                src={labelImage}
+                src={optimizedSrc(labelImage, 64)}
                 alt=""
                 style={{
                   height: mobile ? "1.9rem" : "2.4rem",

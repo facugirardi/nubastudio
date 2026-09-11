@@ -6,6 +6,7 @@ import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import type { MotionValue } from "./motionValue";
 import { prefetchCase } from "./caseTransition";
+import { optimizedSrc } from "../lib/optimizedImage";
 
 /* ───────── Config de la deformación (todo ajustable) ───────── */
 export type DistortionConfig = {
@@ -24,7 +25,10 @@ export const DEFAULT_DISTORTION: DistortionConfig = {
 
 const H = 2.15; // altura del plano en unidades de mundo
 const SAMPLES = 9; // puntos de la curva muestreados a lo ancho de cada card (cinta literal)
-const MAX_TEXTURE = 1024; // las covers son 4500px; en GPU eso es ~50MB c/u
+const MAX_TEXTURE = 1024; // las covers originales son 3840px; en GPU eso es ~35MB c/u
+
+// La textura baja la variante optimizada de ~1080px, no el original.
+export const cardTextureSrc = (src: string) => optimizedSrc(src, MAX_TEXTURE / 2);
 
 function downscaleTexture(texture: THREE.Texture) {
   const img = texture.image as CanvasImageSource & { width?: number; height?: number };
@@ -102,7 +106,7 @@ export default function ProjectImagePlane({
   onHoverEnd: () => void;
   config?: DistortionConfig;
 }) {
-  const texture = useTexture(imageUrl);
+  const texture = useTexture(cardTextureSrc(imageUrl));
   const meshRef = useRef<THREE.Mesh>(null);
   const camera = useThree((s) => s.camera);
   const gl = useThree((s) => s.gl);

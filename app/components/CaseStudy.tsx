@@ -15,6 +15,7 @@ import {
   startCaseTransition,
 } from "./caseTransition";
 import type { WorkItem } from "../data/works";
+import { HERO_QUALITY, HERO_SIZES, heroImageSet } from "../lib/optimizedImage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -84,9 +85,12 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
       heroImg.addEventListener("error", markCaseHeroReady, { once: true });
     }
 
-    // Precarga la imagen cruda del próximo caso: es la que usa el overlay.
+    // Precarga la variante optimizada del próximo caso: la misma que usa el overlay.
     const preload = new window.Image();
-    preload.src = next.image;
+    const nextSet = heroImageSet(next.image);
+    preload.sizes = nextSet.sizes;
+    preload.srcset = nextSet.srcSet;
+    preload.src = nextSet.src;
 
     const entryDelay = consumeCaseEntryDelay();
 
@@ -223,8 +227,8 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
             alt={`${work.title} — ${work.subtitle} case study by Nuba Studio`}
             fill
             priority
-            quality={95}
-            sizes="(max-aspect-ratio: 9/5) 180vh, 100vw"
+            quality={HERO_QUALITY}
+            sizes={HERO_SIZES}
             style={{ objectFit: "cover", display: "block" }}
           />
         </div>

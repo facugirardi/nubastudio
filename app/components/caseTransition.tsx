@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import { getLenis } from "./SmoothScroll";
+import { heroImageSet } from "../lib/optimizedImage";
 
 /* ───────── Store de módulo: sobrevive la navegación SPA de Next ───────── */
 export type CaseTransitionPayload = {
@@ -131,7 +132,14 @@ export default function CaseTransitionProvider() {
         clipPath: clipFrom,
       };
 
-      if (img.src !== new URL(p.image, location.href).href) img.src = p.image;
+      // Misma variante que el hero: el relevo reusa la descarga en vez de bajar el original.
+      if (img.dataset.src !== p.image) {
+        const set = heroImageSet(p.image);
+        img.dataset.src = p.image;
+        img.sizes = set.sizes;
+        img.srcset = set.srcSet;
+        img.src = set.src;
+      }
 
       gsap.set(root, { opacity: 1, pointerEvents: "auto" });
       gsap.set(backdrop, { opacity: 0 });
