@@ -28,7 +28,7 @@ const SERVICES = [
     desc: "Native-feeling iOS & Android products people actually want to open.",
     tags: ["React Native", "Expo", "iOS", "Android"],
     cases: ["nuddo", "ushuaia360"],
-    image: "/images/cases/nuddo/frame2.webp",
+    image: "/images/cases/nuddo/nuddo1.webp",
   },
   {
     n: "03",
@@ -36,7 +36,7 @@ const SERVICES = [
     desc: "Two-sided products with payments, dashboards and infrastructure built to scale.",
     tags: ["Payments", "Dashboards", "Auth", "APIs"],
     cases: ["nubapay", "nuddo", "unickeys"],
-    image: "/images/cases/nubapay/m1.webp",
+    image: "/images/cases/nubapay/nuba1.webp",
   },
   {
     n: "04",

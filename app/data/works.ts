@@ -30,7 +30,7 @@ export const works: WorkItem[] = [
   {
     title: "Nubapay",
     subtitle: "Product Design & Development",
-    image: "/images/cases/nubapay/m1.webp",
+    image: "/images/cases/nubapay/nuba1.webp",
     slug: "nubapay",
     year: "2026",
     task: "Massive events in Latin America still run on cash boxes: long lines, slow bars, lost sales, and no real-time control. Organizers needed a simple, scalable way for attendees to order, pay, and pick up from their phone, without downloading an app, without extra hardware, and without the chaos of traditional checkout.",
@@ -52,7 +52,7 @@ export const works: WorkItem[] = [
     ],
     technologies: ["Next.js", "TypeScript", "Python", "Flask", "PostgreSQL", "Mercado Pago", "Solana", "Figma"],
     images: [
-      "/images/cases/nubapay/m1.webp",
+      "/images/cases/nubapay/nuba1.webp",
       "/images/cases/nubapay/m2.webp",
       "/images/cases/nubapay/m3.webp",
       "/images/cases/nubapay/m4.webp",
@@ -64,7 +64,7 @@ export const works: WorkItem[] = [
   {
     title: "Nuddo",
     subtitle: "Web & Mobile Development",
-    image: "/images/cases/nuddo/frame2.webp",
+    image: "/images/cases/nuddo/nuddo1.webp",
     slug: "nuddo",
     year: "2025",
     task: "Selling a garment you no longer wear should take minutes, but resale tends to collapse at three points: publishing is tedious enough that the item never gets listed, paying a stranger feels unsafe from both sides, and arranging the handoff kills the deal after it was already agreed. Nuddo had to solve all three at once, on web, iOS, and Android, and leave room for local fashion brands to sell new collections in the same place.",
@@ -84,7 +84,7 @@ export const works: WorkItem[] = [
     ],
     technologies: ["Python", "Flask", "JavaScript", "React Native", "Next.js", "Figma", "User Research", "Wireframing", "Prototyping"],
     images: [
-      "/images/cases/nuddo/frame2.webp",
+      "/images/cases/nuddo/nuddo1.webp",
       "/images/cases/nuddo/frame3.webp",
       "/images/cases/nuddo/frame4.webp",
       "/images/cases/nuddo/nuddo4.webp",
