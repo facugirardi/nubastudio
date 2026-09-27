@@ -10,6 +10,7 @@ import { isWebGLAvailable } from "../lib/webglSupport";
 export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactNode }) {
   const [view, setView] = useState<"spiral" | "list">("spiral");
   const [webglAvailable, setWebglAvailable] = useState<boolean | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   // Arranca visible (también en el HTML del SSR) para que el contenido nunca
   // pinte antes que el loader; si ya se mostró en la sesión se saltea al montar.
   const [loaderDone, setLoaderDone] = useState(false);
@@ -34,11 +35,13 @@ export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactN
     const params = new URLSearchParams(window.location.search);
     const wantsList = params.get("view") === "list";
     const webglOk = isWebGLAvailable();
+    const mobile = window.innerWidth < 768;
     setWebglAvailable(webglOk);
-    if (!webglOk || wantsList) setView("list");
+    setIsMobile(mobile);
+    if (!webglOk || wantsList || mobile) setView("list");
   }, []);
 
-  const showSpiralToggle = webglAvailable === true;
+  const showSpiralToggle = webglAvailable === true && !isMobile;
 
   return (
     <>

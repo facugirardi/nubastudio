@@ -292,7 +292,7 @@ export default function ProjectImagePlane({
     mesh.quaternion.copy(_qPath);
 
     // ── 3. Escala: base constante, la card central se achica un poco (prox máximo en t≈0.5)
-    const scale = cardScale * (1 - prox * 0.12) * lerp(0.6, 1, intro);
+    const scale = cardScale * (1 - prox * 0.05) * lerp(0.6, 1, intro);
     mesh.scale.setScalar(scale);
 
     // Fade muy al borde: las cards giradas (que muestran el reverso) siguen visibles más tiempo
@@ -329,7 +329,7 @@ export default function ProjectImagePlane({
     const W = H * aspect * scale;          // ancho de la card en el mundo
     const rangeT = W / curveLen;           // porción de t que abarca la card
     // Deformación marcada que sigue la curva → efecto TÚNEL (las cards se comban con el recorrido)
-    const bendGain = (mobile ? 0.36 : 0.52) * (0.4 + 0.6 * turn);
+    const bendGain = (mobile ? 0.5 : 0.72) * (0.4 + 0.6 * turn);
     for (let i = 0; i < SAMPLES; i++) {
       const ti = THREE.MathUtils.clamp(t + (i / (SAMPLES - 1) - 0.5) * rangeT, 0, 1);
       curve.getPointAt(ti, _ptmp);

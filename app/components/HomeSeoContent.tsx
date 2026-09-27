@@ -4,7 +4,7 @@ import { works } from "../data/works";
 export default function HomeSeoContent() {
   return (
     <section className="sr-only" aria-label="About Nuba Studio and selected work">
-      <h1>Nuba Studio — digital product studio in Córdoba, Argentina</h1>
+      <h1>Nuba Studio - digital product studio in Córdoba, Argentina</h1>
       <p>
         Nuba Studio is a digital product studio based in Córdoba, Argentina. We design
         and build websites, mobile apps, marketplaces and digital products end to end —

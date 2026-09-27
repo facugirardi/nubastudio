@@ -6,12 +6,12 @@ import { JsonLd, worksCollectionJsonLd } from "./lib/jsonLd";
 import { SITE_DESCRIPTION, SITE_NAME } from "./lib/seo";
 
 export const metadata: Metadata = {
-  title: `${SITE_NAME} — Digital product studio in Córdoba, Argentina`,
+  title: `${SITE_NAME} - Digital product studio in Córdoba, Argentina`,
   description: SITE_DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
     url: "/",
-    title: `${SITE_NAME} — Digital product studio`,
+    title: `${SITE_NAME} - Digital product studio`,
     description: SITE_DESCRIPTION,
   },
 };

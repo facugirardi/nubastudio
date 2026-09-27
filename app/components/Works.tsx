@@ -151,7 +151,7 @@ function Scene({
   const { remap, count } = useMemo(() => {
     const CARD_W = 2.15 * maxAspect;     // ancho de la card MÁS ANCHA en el mundo (aspect real)
     const SC = CARD_SCALE;              // escala constante (= a la de la card)
-    const GAP_W = 0;                   // sin separación: alfombras borde a borde
+    const GAP_W = -0.12;                // solape leve: menos separación que borde a borde
     const cardArc = CARD_W * SC + GAP_W;
     const len = curve.getLength();
     const count = Math.max(3, Math.round(len / cardArc));
@@ -268,7 +268,7 @@ export default function Works({
   }, [effectiveView]);
 
   const impulse = useMotionValue(0);   // skew por inercia del scroll (se suaviza, vuelve a 0 al frenar)
-  const FACTOR = 0.00002;        // sensibilidad scroll → ciclos de recorrido (más lento)
+  const FACTOR = 0.00004;        // sensibilidad scroll → ciclos de recorrido (más rápido)
   const DIR = -1;                // invertido
   const IMPULSE = 0.0015;        // intensidad del efecto de impulso
   const AUTO_SPEED = 0.006;      // rotación automática: ciclos de recorrido por segundo (muy lento)
