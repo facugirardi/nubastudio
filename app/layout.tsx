@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import CaseTransitionProvider from "./components/caseTransition";
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "./lib/jsonLd";
+import { LanguageProvider } from "./lib/i18n";
 import {
   KEYWORDS,
   SITE_DESCRIPTION,
@@ -87,8 +88,10 @@ export default function RootLayout({
         <JsonLd data={[organizationJsonLd(), webSiteJsonLd()]} />
       </head>
       <body className={`${outfit.variable} antialiased`}>
-        {children}
-        <CaseTransitionProvider />
+        <LanguageProvider>
+          {children}
+          <CaseTransitionProvider />
+        </LanguageProvider>
       </body>
     </html>
   );

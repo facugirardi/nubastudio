@@ -1,10 +1,13 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
 import Image from "next/image";
 import { getWork } from "../data/works";
+import { localizeWork } from "../lib/localizeWork";
+import { useLanguage } from "../lib/i18n";
+import { getUiText } from "../lib/uiText";
 
 const WHATSAPP_NUMBER = "5493513471844";
 
@@ -13,16 +16,6 @@ const WHATSAPP_NUMBER = "5493513471844";
 const RECENT_WORK = ["nubapay", "nuddo", "ushuaia360"];
 const MAX_CHARS = 2000;
 
-const HEADLINE = "Let's build something together.";
-const HEADLINE_WORDS = HEADLINE.split(" ");
-
-const SEEDS = [
-  { label: "a website", text: "I need a website for " },
-  { label: "a mobile app", text: "I need a mobile app for " },
-  { label: "a marketplace", text: "I want to build a marketplace for " },
-  { label: "not sure yet", text: "I have an idea but I'm not sure where to start. " },
-];
-
 const CHANNELS = [
   { label: "WhatsApp", href: `https://wa.me/${WHATSAPP_NUMBER}` },
   { label: "LinkedIn", href: "https://linkedin.com/company/nubastudio" },
@@ -30,15 +23,17 @@ const CHANNELS = [
 
 type Status = "idle" | "polishing" | "polished" | "error";
 
-const STATUS_COPY: Partial<Record<Status, string>> = {
-  polishing: "Writing your draft",
-  error: "AI unavailable",
-};
-
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const cellsRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { lang } = useLanguage();
+  const t = getUiText(lang);
+  const HEADLINE_WORDS = useMemo(() => t.contact.headline.split(" "), [t]);
+  const STATUS_COPY: Partial<Record<Status, string>> = {
+    polishing: t.contact.polishing,
+    error: t.contact.error,
+  };
 
   const [text, setText] = useState("");
   const [beforePolish, setBeforePolish] = useState<string | null>(null);
@@ -585,10 +580,7 @@ export default function Contact() {
           ))}
         </h1>
 
-        <p className="contact-sub">
-          Write what you need, however rough. We&apos;ll tidy it into a proper message and
-          open it in WhatsApp.
-        </p>
+        <p className="contact-sub">{t.contact.sub}</p>
 
         <div className="contact-composer">
           <textarea
@@ -600,7 +592,7 @@ export default function Contact() {
               setText(e.target.value);
               if (status === "error") setStatus("idle");
             }}
-            placeholder="A website for my coffee shop, with online booking. Ready before December."
+            placeholder={t.contact.placeholder}
             maxLength={MAX_CHARS}
           />
           <div className="contact-bar">
@@ -611,7 +603,7 @@ export default function Contact() {
               </span>
             ) : beforePolish !== null && status === "polished" ? (
               <button type="button" className="contact-undo" onClick={undoPolish}>
-                Undo
+                {t.contact.undo}
               </button>
             ) : nearLimit ? (
               <span className="contact-bar-meta">
@@ -625,7 +617,7 @@ export default function Contact() {
                 onClick={polish}
                 disabled={!filled || status === "polishing"}
               >
-                {status === "polishing" ? "Polishing" : "Polish with AI"}
+                {status === "polishing" ? t.contact.polishBusy : t.contact.polish}
               </button>
               <button
                 type="button"
@@ -633,7 +625,7 @@ export default function Contact() {
                 onClick={send}
                 disabled={!filled}
               >
-                Send
+                {t.contact.send}
                 <span className="contact-send-badge">
                   <svg className="contact-send-icon" viewBox="0 0 16 16" aria-hidden="true">
                     <path d="M8 13.5V3M8 3 3.2 7.8M8 3l4.8 4.8" />
@@ -645,7 +637,7 @@ export default function Contact() {
         </div>
 
         <div className="contact-seeds">
-          {SEEDS.map((seed) => (
+          {t.contact.seeds.map((seed) => (
             <button
               key={seed.label}
               type="button"
@@ -672,24 +664,26 @@ export default function Contact() {
               {c.label}
             </a>
           ))}
-          <span className="contact-place">Córdoba, Argentina</span>
+          <span className="contact-place">{t.contact.place}</span>
         </div>
 
         {/* Ultima prueba antes de escribir: va despues del CTA para no competir
             con el composer, y saca a /contact de sus 87 palabras. */}
         <nav className="contact-work" aria-label="Recent work">
-          <span className="contact-work-label">Recent work</span>
+          <span className="contact-work-label">{t.contact.recentWork}</span>
           <ul className="contact-work-list">
             {RECENT_WORK.map((slug) => {
-              const work = getWork(slug);
-              if (!work) return null;
+              const raw = getWork(slug);
+              if (!raw) return null;
+              const work = localizeWork(raw, lang);
+              const meta = lang === "es" ? work.subtitle : work.seoTitle ?? work.subtitle;
               return (
                 <li key={slug}>
                   <Link href={`/cases/${slug}`} className="contact-work-link">
                     <span className="contact-work-thumb">
                       <Image
                         src={work.image}
-                        alt={`${work.title} — ${work.seoTitle ?? work.subtitle}`}
+                        alt={`${work.title} — ${meta}`}
                         fill
                         sizes="220px"
                       />
@@ -702,9 +696,7 @@ export default function Contact() {
                           <polyline points="7 7 17 7 17 17" />
                         </svg>
                       </span>
-                      <span className="contact-work-meta">
-                        {work.seoTitle ?? work.subtitle}
-                      </span>
+                      <span className="contact-work-meta">{meta}</span>
                     </span>
                   </Link>
                 </li>

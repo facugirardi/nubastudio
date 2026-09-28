@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import LogoMark from "./LogoMark";
+import { useLanguage } from "../lib/i18n";
+import { getUiText } from "../lib/uiText";
 
-const NAV_LINKS = ["Work", "About", "Services", "Contact"];
+const NAV_IDS = ["work", "about", "services", "contact"] as const;
 
 const CHIP_W = 92;
 const CHIP_H = 40;
@@ -56,6 +58,8 @@ export default function Navbar({
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
+  const { lang, toggleLang } = useLanguage();
+  const t = getUiText(lang);
 
   const chooseView = (next: "spiral" | "list") => {
     if (next === "spiral" && !webglAvailable) return;
@@ -449,6 +453,25 @@ export default function Navbar({
         @media (max-width: 767px) {
           .view-opt { width: 4.4rem; font-size: 0.72rem; }
         }
+
+        .lang-toggle {
+          font-family: var(--font-outfit), sans-serif;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          background: #fff;
+          color: #000;
+          border-radius: 999px;
+          cursor: pointer;
+          font-size: 0.78rem;
+          font-weight: 500;
+          letter-spacing: 0.01em;
+          box-shadow: 0 18px 60px rgba(0,0,0,0.3);
+          transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        .lang-toggle:hover { transform: scale(1.06); }
+        .lang-toggle:active { transform: scale(0.94); }
       `}</style>
 
       <nav
@@ -494,7 +517,7 @@ export default function Navbar({
                 onClick={() => { if (ignoreClickRef.current) return; chooseView(opt); }}
                 style={{ color: view === opt ? "#000" : "rgba(255,255,255,0.6)" }}
               >
-                {opt}
+                {opt === "spiral" ? t.nav.viewSpiral : t.nav.viewList}
               </button>
             ))}
           </div>
@@ -505,6 +528,24 @@ export default function Navbar({
         {/* Espaciador para mantener el layout (el morph va por fuera del nav) */}
         <span style={{ width: chipW, height: CHIP_H, display: "block" }} />
       </nav>
+
+      {/* Botón de idioma, a la izquierda del chip de menú */}
+      <button
+        type="button"
+        className="lang-toggle"
+        onClick={toggleLang}
+        aria-label={t.nav.langToggleLabel}
+        style={{
+          position: "fixed",
+          top: "1.5rem",
+          right: `calc(${padX} + ${chipW}px + 0.6rem)`,
+          zIndex: 1002,
+          width: isMobile ? 40 : 46,
+          height: CHIP_H,
+        }}
+      >
+        {lang === "en" ? "EN" : "ES"}
+      </button>
 
       {/* Overlay */}
       <div
@@ -559,7 +600,7 @@ export default function Navbar({
               <line x1="4" y1="17" x2="20" y2="17" />
             </svg>
           ) : (
-            "menu".split("").map((char, i) => (
+            t.nav.menuWord.split("").map((char, i) => (
               <span key={i} className="menu-char" style={{ display: "inline-block" }}>{char}</span>
             ))
           )}
@@ -588,7 +629,7 @@ export default function Navbar({
               onClick={(e) => { e.stopPropagation(); setOpen(false); }}
               aria-label="Close menu"
             >
-              close
+              {t.nav.close}
               <span className="x">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <line x1="6" y1="6" x2="18" y2="18" />
@@ -600,15 +641,15 @@ export default function Navbar({
 
           {/* Links */}
           <nav style={{ marginTop: "auto", marginBottom: "auto", display: "flex", flexDirection: "column", gap: "calc(0.4rem + 10px)" }}>
-            {NAV_LINKS.map((link) => (
+            {NAV_IDS.map((id) => (
               <a
-                key={link}
+                key={id}
                 data-stagger
-                href={link === "Work" ? undefined : link === "About" ? "/about" : link === "Services" ? "/services" : link === "Contact" ? "/contact" : `#${link.toLowerCase()}`}
+                href={id === "work" ? undefined : `/${id}`}
                 className="menu-panel-link"
                 onMouseEnter={(e) => bounceNavChars(e.currentTarget)}
                 onClick={(e) => {
-                  if (link === "Work") {
+                  if (id === "work") {
                     e.preventDefault();
                     setOpen(false);
                     if (pathname !== "/") {
@@ -621,24 +662,14 @@ export default function Navbar({
                         document.getElementById("work")?.scrollIntoView({ behavior: "smooth" });
                       }, 50);
                     }
-                  } else if (link === "About") {
-                    e.preventDefault();
-                    setOpen(false);
-                    window.location.href = "/about";
-                  } else if (link === "Services") {
-                    e.preventDefault();
-                    setOpen(false);
-                    window.location.href = "/services";
-                  } else if (link === "Contact") {
-                    e.preventDefault();
-                    setOpen(false);
-                    window.location.href = "/contact";
                   } else {
+                    e.preventDefault();
                     setOpen(false);
+                    window.location.href = `/${id}`;
                   }
                 }}
               >
-                {link.toLowerCase().split("").map((char, i) => (
+                {t.nav[id].toLowerCase().split("").map((char, i) => (
                   <span key={i} className="nav-char" style={{ display: "inline-block" }}>{char}</span>
                 ))}
               </a>

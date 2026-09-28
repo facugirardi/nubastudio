@@ -6,54 +6,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { useLenis } from "./SmoothScroll";
 import { getWork } from "../data/works";
-import { FAQ } from "../data/faq";
+import { useLanguage } from "../lib/i18n";
+import { getUiText } from "../lib/uiText";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const INTRO_TEXT =
-  "We design and build digital products end to end, from the first idea to the moment they ship.";
-
-const SERVICES = [
-  {
-    n: "01",
-    title: "Web Development",
-    desc: "Sites and platforms that load fast, feel alive and turn visitors into clients.",
-    tags: ["Next.js", "React", "CMS", "Motion"],
-    cases: ["checkrto", "mes", "provia-consulting"],
-    image: "/images/cases/checkrto/check1.webp",
-  },
-  {
-    n: "02",
-    title: "Mobile Apps",
-    desc: "Native-feeling iOS & Android products people actually want to open.",
-    tags: ["React Native", "Expo", "iOS", "Android"],
-    cases: ["nuddo", "ushuaia360"],
-    image: "/images/cases/nuddo/nuddo1.webp",
-  },
-  {
-    n: "03",
-    title: "Marketplaces & Platforms",
-    desc: "Two-sided products with payments, dashboards and infrastructure built to scale.",
-    tags: ["Payments", "Dashboards", "Auth", "APIs"],
-    cases: ["nubapay", "nuddo", "unickeys"],
-    image: "/images/cases/nubapay/nuba1.webp",
-  },
-  {
-    n: "04",
-    title: "Branding & Identity",
-    desc: "Visual systems that make you unmistakable across every touchpoint.",
-    tags: ["Identity", "Art Direction", "Systems"],
-    cases: [],
-    image: "/images/cases/kennedys/ken1.webp",
-  },
-  {
-    n: "05",
-    title: "Product Strategy & MVP",
-    desc: "From raw idea to a shipped MVP, validated, scoped and built to grow.",
-    tags: ["Discovery", "Prototyping", "Roadmap"],
-    cases: ["nubapay", "unickeys"],
-    image: "/images/cases/nuddo/nuddo4.webp",
-  },
+const SERVICE_META = [
+  { n: "01", tags: ["Next.js", "React", "CMS", "Motion"], cases: ["checkrto", "mes", "provia-consulting"], image: "/images/cases/checkrto/check1.webp" },
+  { n: "02", tags: ["React Native", "Expo", "iOS", "Android"], cases: ["nuddo", "ushuaia360"], image: "/images/cases/nuddo/nuddo1.webp" },
+  { n: "03", tags: ["Payments", "Dashboards", "Auth", "APIs"], cases: ["nubapay", "nuddo", "unickeys"], image: "/images/cases/nubapay/nuba1.webp" },
+  { n: "04", tags: ["Identity", "Art Direction", "Systems"], cases: [] as string[], image: "/images/cases/kennedys/ken1.webp" },
+  { n: "05", tags: ["Discovery", "Prototyping", "Roadmap"], cases: ["nubapay", "unickeys"], image: "/images/cases/nuddo/nuddo4.webp" },
 ];
 
 const TECH = [
@@ -61,17 +24,15 @@ const TECH = [
   "Three.js", "Tailwind", "Figma", "Framer", "Expo", "PostgreSQL",
 ];
 
-const PROCESS = [
-  { n: "01", title: "Discovery", desc: "We dig into your goals, your users and the constraints that shape the work." },
-  { n: "02", title: "Design", desc: "From wireframes to polished UI, iterated fast and in the open." },
-  { n: "03", title: "Build", desc: "Clean, scalable code shipped in tight loops, no black boxes." },
-  { n: "04", title: "Launch & Iterate", desc: "We ship, measure what matters and keep improving after go-live." },
-];
-
-const INTRO_WORDS = INTRO_TEXT.split(" ");
+const PROCESS_N = ["01", "02", "03", "04"];
 
 export default function Services() {
   const lenis = useLenis();
+  const { lang } = useLanguage();
+  const t = getUiText(lang);
+  const INTRO_WORDS = t.services.intro.split(" ");
+  const SERVICES = SERVICE_META.map((meta, i) => ({ ...meta, ...t.services.list[i] }));
+  const PROCESS = PROCESS_N.map((n, i) => ({ n, ...t.services.process[i] }));
   const sectionRef = useRef<HTMLElement>(null);
   const introRef = useRef<HTMLHeadingElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
@@ -580,7 +541,7 @@ export default function Services() {
           <h1 ref={introRef} className="svc-intro-text">
             {INTRO_WORDS.map((word, i) => (
               <Fragment key={i}>
-                <span className={`svc-word${word === "products" ? " accent" : ""}`}>{word}</span>
+                <span className={`svc-word${word === t.services.introAccent ? " accent" : ""}`}>{word}</span>
                 {i < INTRO_WORDS.length - 1 && " "}
               </Fragment>
             ))}
@@ -608,7 +569,7 @@ export default function Services() {
                   </div>
                   {s.cases.length > 0 && (
                     <p className="svc-cases">
-                      <span className="svc-cases-label">Related work</span>
+                      <span className="svc-cases-label">{t.services.relatedWork}</span>
                       {s.cases.map((slug, i) => {
                         const work = getWork(slug);
                         if (!work) return null;
@@ -663,7 +624,7 @@ export default function Services() {
         {/* Process */}
         <div className="svc-process">
           <h2 className="svc-process-head">
-            How we <span className="accent">work</span>
+            {t.services.howWeWorkPre} <span className="accent">{t.services.howWeWorkAccent}</span>
           </h2>
           <div className="svc-steps">
             {PROCESS.map((p) => (
@@ -680,10 +641,10 @@ export default function Services() {
             queda en el HTML aunque este cerrado, asi que el crawler lo lee. */}
         <div className="svc-faq">
           <h2 className="svc-faq-head">
-            Frequently <span className="accent">asked</span>
+            {t.services.faqHeadingPre} <span className="accent">{t.services.faqHeadingAccent}</span>
           </h2>
           <div className="svc-faq-list">
-            {FAQ.map((item) => (
+            {t.faq.map((item) => (
               <details key={item.question} className="svc-faq-item">
                 <summary className="svc-faq-q" onClick={toggleFaq}>
                   <span>{item.question}</span>
@@ -701,9 +662,9 @@ export default function Services() {
         <div ref={ctaRef} id="svc-cta" className="svc-cta">
           <div className="svc-cta-grid" />
           <div ref={ctaCellsRef} className="svc-cta-cells" />
-          <span className="svc-cta-label">Have a project in mind?</span>
+          <span className="svc-cta-label">{t.services.ctaLabel}</span>
           <h2 className="svc-cta-title">
-            Let&apos;s build<br />something <span className="accent">real</span>
+            {t.services.ctaTitleLine1}<br />{t.services.ctaTitleLine2Pre} <span className="accent">{t.services.ctaTitleAccent}</span>
           </h2>
           <a href="tel:+5493513471844" className="svc-cta-mail">
             +54 9 351 347 1844

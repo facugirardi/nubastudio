@@ -6,13 +6,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import Image from "next/image";
 import { works } from "../data/works";
+import { useLanguage } from "../lib/i18n";
+import { getUiText } from "../lib/uiText";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const ROTATING_WORDS = ["branding", "interaction", "code"];
-
-const ABOUT_SUB =
-  "Three disciplines, one process. Nothing is handed off, so every experience holds together, and every detail earns its place.";
 
 const ROW1 = [
   { image: "/images/cases/nubapay/nuba1.webp",        slug: "nubapay",    w: "38vw", h: "340px", mb: "8px"  },
@@ -47,12 +44,7 @@ const STUDIO = {
   since: "2024",
 };
 
-const ORIGIN = [
-  "Nuba started from a simple conviction: the best products come from teams that never hand the work off. One table, three disciplines, the same conversation from first sketch to last deploy.",
-  "We design and build sites, apps, marketplaces and platforms. The scope changes with every project. The way we work doesn't.",
-];
-
-const TEAM: { name: string; role: string; photo?: string }[] = [
+const TEAM: { name: string; role: "Design" | "Development" | "Strategy"; photo?: string }[] = [
   { name: "Alejo Vaquero",   role: "Design",      photo: "/images/alejo.webp" },
   { name: "Facundo Girardi", role: "Development", photo: "/images/facu.webp" },
   { name: "Ángel Vaquero",   role: "Strategy",    photo: "/images/angelito.webp" },
@@ -69,6 +61,8 @@ export default function About() {
   const socialRef = useRef<HTMLElement>(null);
   const cellsRef  = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const { lang } = useLanguage();
+  const t = getUiText(lang);
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth <= 700);
@@ -655,24 +649,24 @@ export default function About() {
           <div className="stmt-inner">
             <h1 className="stmt-heading">
               <span className="stmt-line-mask">
-                <span className="stmt-line stmt-reveal">We turn</span>
+                <span className="stmt-line stmt-reveal">{t.about.lead1}</span>
               </span>
               <span ref={rotRef} className="stmt-rot">
-                {ROTATING_WORDS.map((word) => (
+                {t.about.rotatingWords.map((word) => (
                   <span key={word} className="rot-word">{word}</span>
                 ))}
               </span>
               <span className="stmt-line-mask">
-                <span className="stmt-line stmt-reveal">into experiences</span>
+                <span className="stmt-line stmt-reveal">{t.about.lead2}</span>
               </span>
               <span className="stmt-line-mask">
-                <span className="stmt-line stmt-reveal">that move people.</span>
+                <span className="stmt-line stmt-reveal">{t.about.lead3}</span>
               </span>
             </h1>
 
             <div className="stmt-foot">
               <span className="stmt-rule stmt-reveal" />
-              <p className="stmt-sub stmt-reveal">{ABOUT_SUB}</p>
+              <p className="stmt-sub stmt-reveal">{t.about.sub}</p>
             </div>
           </div>
         </div>
@@ -697,29 +691,29 @@ export default function About() {
                   sizes="(max-width: 900px) 50vw, 40vw"
                 />
                 <div className="mq-overlay">
-                  <span className="mq-label">View more</span>
+                  <span className="mq-label">{t.works.viewMore}</span>
                 </div>
               </Link>
             ))}
           </div>
         </div>
         <div ref={originRef} className="about-origin">
-          <span className="origin-label about-reveal">The studio</span>
+          <span className="origin-label about-reveal">{t.about.theStudio}</span>
           <div className="origin-body">
-            {ORIGIN.map((p, i) => (
+            {t.about.origin.map((p, i) => (
               <p key={i} className="origin-p about-reveal">{p}</p>
             ))}
             <div className="origin-meta">
               <div className="origin-meta-item about-reveal">
-                <span className="origin-meta-k">Based in</span>
+                <span className="origin-meta-k">{t.about.basedIn}</span>
                 <span className="origin-meta-v">{STUDIO.city}, {STUDIO.country}</span>
               </div>
               <div className="origin-meta-item about-reveal">
-                <span className="origin-meta-k">Since</span>
+                <span className="origin-meta-k">{t.about.since}</span>
                 <span className="origin-meta-v">{STUDIO.since}</span>
               </div>
               <div className="origin-meta-item about-reveal">
-                <span className="origin-meta-k">Projects shipped</span>
+                <span className="origin-meta-k">{t.about.projectsShipped}</span>
                 <span className="origin-meta-v">{works.length}</span>
               </div>
             </div>
@@ -728,7 +722,7 @@ export default function About() {
 
         <div ref={teamRef} className="about-team">
           <div className="team-head">
-            <h2 className="team-title about-reveal">The people</h2>
+            <h2 className="team-title about-reveal">{t.about.thePeople}</h2>
             <span className="team-count about-reveal">({String(TEAM.length).padStart(2, "0")})</span>
           </div>
           <div className="team-grid">
@@ -744,7 +738,7 @@ export default function About() {
                   )}
                 </div>
                 <p className="team-name">{m.name}</p>
-                <p className="team-role">{m.role}</p>
+                <p className="team-role">{t.about.roles[m.role]}</p>
               </div>
             ))}
           </div>
@@ -757,9 +751,9 @@ export default function About() {
         <div className="about-social-grid" />
         <div ref={cellsRef} className="about-social-cells" />
         <div className="about-social-inner">
-          <span className="social-eyebrow social-reveal">Get in touch</span>
+          <span className="social-eyebrow social-reveal">{t.about.getInTouch}</span>
           <h2 className="social-title social-reveal">
-            Let&apos;s build something <em>great</em>.
+            {t.about.ctaHeadingPre} <em>{t.about.ctaHeadingAccent}</em>.
           </h2>
           <a href="tel:+5493513471844" className="social-email social-reveal">
             +54 9 351 347 1844
@@ -783,7 +777,7 @@ export default function About() {
           </div>
         </div>
         <footer className="about-social-footer">
-          <span>Design &amp; Development</span>
+          <span>{t.about.footerLeft}</span>
           <span>&copy; {new Date().getFullYear()} · Nuba Studio</span>
         </footer>
       </section>

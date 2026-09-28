@@ -13,6 +13,9 @@ import { useLenis } from "./SmoothScroll";
 import { startCaseTransition } from "./caseTransition";
 import WebGLErrorBoundary from "./WebGLErrorBoundary";
 import { works } from "../data/works";
+import { localizeWork } from "../lib/localizeWork";
+import { useLanguage } from "../lib/i18n";
+import { getUiText } from "../lib/uiText";
 
 const DEBUG_PATH = false; // dibuja el path punteado + un punto donde cae cada card (spacing/orientación)
 // Probar formas del resorte: "vertical" = columna que sube coileando · "spiral" = remolino hacia la cámara
@@ -212,6 +215,9 @@ export default function Works({
   const [hovered, setHovered] = useState<number | null>(null); // work activo en la lista
   const [listMode, setListMode] = useState<"grid" | "list" | "feed">("list"); // sub-vista dentro de list
   const initialModeSetRef = useRef(false); // en mobile arranca en grid (una sola vez, al detectar el viewport)
+  const { lang } = useLanguage();
+  const t = getUiText(lang);
+  const localizedWorks = useMemo(() => works.map((w) => localizeWork(w, lang)), [lang]);
   // El Canvas no se oculta con opacity: sigue en GPU (~360MB de texturas 4500px + CSS filter).
   // Lo desmontamos al pasar a lista, con un margen para el fade-out.
   const [canvasMounted, setCanvasMounted] = useState(
@@ -818,7 +824,7 @@ export default function Works({
             display: mobile ? "none" : "block",
           }}
         >
-          scroll to explore
+          {t.works.scrollToExplore}
         </div>
           </>
         )}
@@ -835,7 +841,7 @@ export default function Works({
         >
           <header className="works-list-head">
             <h2 className="works-list-heading">
-              Selected Works
+              {t.works.heading}
               <sup className="works-list-count">({String(WORKS.length).padStart(2, "0")})</sup>
             </h2>
             <nav className="works-mode" aria-label="View mode">
@@ -846,14 +852,14 @@ export default function Works({
                   className={`works-mode-btn${listMode === m ? " is-on" : ""}${m === "feed" ? " works-mode-btn-feed" : ""}`}
                   onClick={() => setListMode(m)}
                 >
-                  {m === "grid" ? "Grid" : m === "list" ? "List" : "Feed"}
+                  {m === "grid" ? t.works.grid : m === "list" ? t.works.list : t.works.feed}
                 </button>
               ))}
             </nav>
           </header>
           {listMode === "list" && (
           <div key="list" className="works-list-body works-body-anim">
-          {WORKS.map((w, i) => {
+          {localizedWorks.map((w, i) => {
             const isActive = effectiveView === "list" && hovered === i;
             return (
               <Link
@@ -890,7 +896,7 @@ export default function Works({
           )}
           {listMode === "grid" && (
             <div key="grid" className="works-grid works-body-anim">
-              {WORKS.map((w, i) => (
+              {localizedWorks.map((w, i) => (
                 <Link
                   key={w.slug}
                   href={`/cases/${w.slug}`}
@@ -912,7 +918,7 @@ export default function Works({
           )}
           {listMode === "feed" && (
             <div key="feed" className="works-feed works-body-anim">
-              {WORKS.map((w, i) => (
+              {localizedWorks.map((w, i) => (
                 <Link
                   key={w.slug}
                   href={`/cases/${w.slug}`}

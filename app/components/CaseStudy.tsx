@@ -16,6 +16,9 @@ import {
 } from "./caseTransition";
 import type { WorkItem } from "../data/works";
 import { HERO_QUALITY, HERO_SIZES, heroImageSet } from "../lib/optimizedImage";
+import { localizeWork } from "../lib/localizeWork";
+import { useLanguage } from "../lib/i18n";
+import { getUiText, type UiText } from "../lib/uiText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -41,25 +44,29 @@ function ExternalLinkIcon() {
   );
 }
 
-function platforms(links?: WorkItem["links"]) {
+function platforms(links: WorkItem["links"] | undefined, t: UiText) {
   if (!links) return [];
   const out: { label: string; href: string }[] = [];
-  if (links.web) out.push({ label: "Live site", href: links.web });
-  if (links.ios) out.push({ label: "iOS App", href: links.ios });
-  if (links.android) out.push({ label: "Android App", href: links.android });
-  if (links.behance) out.push({ label: "Behance", href: links.behance });
+  if (links.web) out.push({ label: t.caseStudy.liveSite, href: links.web });
+  if (links.ios) out.push({ label: t.caseStudy.iosApp, href: links.ios });
+  if (links.android) out.push({ label: t.caseStudy.androidApp, href: links.android });
+  if (links.behance) out.push({ label: t.caseStudy.behance, href: links.behance });
   if (links.other) out.push({ label: links.other.label, href: links.other.url });
   return out;
 }
 
-export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkItem }) {
+export default function CaseStudy({ work: rawWork, next: rawNext }: { work: WorkItem; next: WorkItem }) {
   const router = useRouter();
   const lenis = useLenis();
   const rootRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLDivElement>(null);
   const nextImgRef = useRef<HTMLImageElement>(null);
+  const { lang } = useLanguage();
+  const t = getUiText(lang);
+  const work = localizeWork(rawWork, lang);
+  const next = localizeWork(rawNext, lang);
 
-  const links = platforms(work.links);
+  const links = platforms(work.links, t);
   const pairImages =
     work.slug === "nuddo"
       ? (work.images ?? []).filter((src) => src.endsWith(".png"))
@@ -259,7 +266,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
             <ol style={{ display: "flex", alignItems: "center", gap: "0.55rem", listStyle: "none", margin: 0, padding: 0 }}>
               <li>
                 <Link href="/" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
-                  Home
+                  {t.caseStudy.home}
                 </Link>
               </li>
               <li aria-hidden style={{ color: "rgba(255,255,255,0.28)" }}>/</li>
@@ -300,7 +307,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
             color: "rgba(255,255,255,0.4)",
           }}
         >
-          scroll
+          {t.caseStudy.scroll}
         </div>
       </section>
 
@@ -341,9 +348,9 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
 
       {/* ───────── Challenge / Solution / Process (sticky bicolumna) ───────── */}
       {[
-        { label: "The Challenge", body: work.task },
-        { label: "The Solution", body: work.solutions },
-        { label: "The Process", body: work.process },
+        { label: t.caseStudy.challenge, body: work.task },
+        { label: t.caseStudy.solution, body: work.solutions },
+        { label: t.caseStudy.process, body: work.process },
       ]
         .filter((b) => b.body)
         .map((b) => (
@@ -441,7 +448,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
       {work.features && work.features.length > 0 && (
         <section style={{ padding: "clamp(4rem, 10vw, 9rem) 6vw", maxWidth: 1200, margin: "0 auto" }}>
           <h2 data-reveal style={{ fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginBottom: "2.5rem" }}>
-            Key features
+            {t.caseStudy.keyFeatures}
           </h2>
           <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
             {work.features.map((f, i) => (
@@ -463,7 +470,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
       {work.result && (
         <section style={{ padding: "clamp(4rem, 9vw, 8rem) 6vw", maxWidth: 1100, margin: "0 auto" }}>
           <h2 data-reveal style={{ fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: ACCENT, marginBottom: "1.6rem" }}>
-            The Result
+            {t.caseStudy.theResult}
           </h2>
           <p data-reveal style={{ fontSize: "clamp(1.3rem, 2.8vw, 2.2rem)", lineHeight: 1.4, letterSpacing: "-0.02em", margin: 0 }}>
             {work.result}
@@ -537,7 +544,7 @@ export default function CaseStudy({ work, next }: { work: WorkItem; next: WorkIt
         <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} />
         <div style={{ position: "relative", zIndex: 2, textAlign: "center" }}>
           <div style={{ textTransform: "uppercase", letterSpacing: "0.25em", fontSize: "0.72rem", color: ACCENT, marginBottom: "1rem" }}>
-            Next project
+            {t.caseStudy.nextProject}
           </div>
           <div style={{ fontSize: "clamp(2.6rem, 9vw, 8rem)", lineHeight: 0.95, letterSpacing: "-0.04em", fontWeight: 600 }}>
             {next.title}
