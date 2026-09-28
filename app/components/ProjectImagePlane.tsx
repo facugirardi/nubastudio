@@ -303,7 +303,7 @@ export default function ProjectImagePlane({
     // Hover: oscurece bastante la card apuntada (transición suave)
     const hoverTarget = hoveredRef.current ? 1 : 0;
     hoverFadeRef.current += (hoverTarget - hoverFadeRef.current) * Math.min(1, dt * 10);
-    const bright = lerp(0.18, 1.20, prox) * lerp(1, 0.4, hoverFadeRef.current); // lejanas oscuras · central viva · se oscurece al hover
+    const bright = lerp(0.18, 1.0, prox) * lerp(1, 0.4, hoverFadeRef.current); // lejanas oscuras · central viva · se oscurece al hover
     const blur = Math.pow(away, 1.35) * (mobile ? 0.009 : 0.015); // lejanas más borrosas
 
     material.opacity = opacity;

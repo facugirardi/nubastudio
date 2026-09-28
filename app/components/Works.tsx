@@ -211,6 +211,7 @@ export default function Works({
   const [labelOpen, setLabelOpen] = useState(false);  // dispara el slide del label
   const [hovered, setHovered] = useState<number | null>(null); // work activo en la lista
   const [listMode, setListMode] = useState<"grid" | "list" | "feed">("list"); // sub-vista dentro de list
+  const initialModeSetRef = useRef(false); // en mobile arranca en grid (una sola vez, al detectar el viewport)
   // El Canvas no se oculta con opacity: sigue en GPU (~360MB de texturas 4500px + CSS filter).
   // Lo desmontamos al pasar a lista, con un margen para el fade-out.
   const [canvasMounted, setCanvasMounted] = useState(
@@ -218,7 +219,14 @@ export default function Works({
   );
 
   useEffect(() => {
-    const update = () => setMobile(window.innerWidth < 768);
+    const update = () => {
+      const isMobile = window.innerWidth < 768;
+      setMobile(isMobile);
+      if (!initialModeSetRef.current) {
+        initialModeSetRef.current = true;
+        if (isMobile) setListMode("grid");
+      }
+    };
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
