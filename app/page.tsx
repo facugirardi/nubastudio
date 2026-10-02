@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import HomeClient from "./components/HomeClient";
 import HomeSeoContent from "./components/HomeSeoContent";
-import { works } from "./data/works";
+import { visibleWorks } from "./data/works";
 import { JsonLd, worksCollectionJsonLd } from "./lib/jsonLd";
 import { SITE_DESCRIPTION, SITE_NAME } from "./lib/seo";
 
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <JsonLd data={worksCollectionJsonLd(works)} />
+      <JsonLd data={worksCollectionJsonLd(visibleWorks)} />
       <HomeClient seoFallback={<HomeSeoContent />} />
     </>
   );

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { works } from "../data/works";
+import { visibleWorks } from "../data/works";
 
 export default function HomeSeoContent() {
   return (
@@ -21,7 +21,7 @@ export default function HomeSeoContent() {
 
       <h2>Selected work</h2>
       <ul>
-        {works.map((work) => (
+        {visibleWorks.map((work) => (
           <li key={work.slug}>
             <Link href={`/cases/${work.slug}`}>
               {work.title} — {work.seoTitle ?? work.subtitle}

@@ -12,7 +12,7 @@ import { optimizedSrc } from "../lib/optimizedImage";
 import { useLenis } from "./SmoothScroll";
 import { startCaseTransition } from "./caseTransition";
 import WebGLErrorBoundary from "./WebGLErrorBoundary";
-import { works } from "../data/works";
+import { visibleWorks } from "../data/works";
 import { localizeWork } from "../lib/localizeWork";
 import { useLanguage } from "../lib/i18n";
 import { getUiText } from "../lib/uiText";
@@ -22,7 +22,7 @@ const DEBUG_PATH = false; // dibuja el path punteado + un punto donde cae cada c
 const CURVE_MODE: "vertical" | "spiral" = "vertical";
 const CARD_SCALE = 0.44; // escala constante de todas las cards (alfombras del mismo tamaño)
 
-const WORKS = works.map(({ title, image, slug, subtitle, year }) => ({
+const WORKS = visibleWorks.map(({ title, image, slug, subtitle, year }) => ({
   title,
   image,
   slug,
@@ -217,7 +217,7 @@ export default function Works({
   const initialModeSetRef = useRef(false); // en mobile arranca en grid (una sola vez, al detectar el viewport)
   const { lang } = useLanguage();
   const t = getUiText(lang);
-  const localizedWorks = useMemo(() => works.map((w) => localizeWork(w, lang)), [lang]);
+  const localizedWorks = useMemo(() => visibleWorks.map((w) => localizeWork(w, lang)), [lang]);
   // El Canvas no se oculta con opacity: sigue en GPU (~360MB de texturas 4500px + CSS filter).
   // Lo desmontamos al pasar a lista, con un margen para el fade-out.
   const [canvasMounted, setCanvasMounted] = useState(

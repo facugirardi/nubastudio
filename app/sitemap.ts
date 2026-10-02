@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { works } from "./data/works";
+import { visibleWorks } from "./data/works";
 import { absoluteUrl } from "./lib/seo";
 
 /**
@@ -19,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ] satisfies MetadataRoute.Sitemap
   ).map((route) => ({ ...route, lastModified: CONTENT_UPDATED }));
 
-  const caseRoutes: MetadataRoute.Sitemap = works.map((work) => ({
+  const caseRoutes: MetadataRoute.Sitemap = visibleWorks.map((work) => ({
     url: absoluteUrl(`/cases/${work.slug}`),
     lastModified: CONTENT_UPDATED,
     changeFrequency: "yearly",

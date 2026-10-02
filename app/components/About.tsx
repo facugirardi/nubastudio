@@ -15,13 +15,10 @@ const ROW1 = [
   { image: "/images/cases/nubapay/nuba1.webp",        slug: "nubapay",    w: "38vw", h: "340px", mb: "8px"  },
   { image: "/images/cases/nuddo/nuddo1.webp",         slug: "nuddo",      w: "42vw", h: "340px", mb: "0px"  },
   { image: "/images/cases/kennedys/ken1.webp",        slug: "kennedys",   w: "20vw", h: "360px", mb: "30px" },
-  { image: "/images/cases/ffmates/ffmatesmock1.webp", slug: "ffmates",    w: "16vw", h: "320px", mb: "10px" },
   { image: "/images/cases/mes/m1.webp",               slug: "mes",        w: "28vw", h: "340px", mb: "18px" },
   { image: "/images/cases/checkrto/check1.webp",      slug: "checkrto",   w: "34vw", h: "350px", mb: "40px" },
-  { image: "/images/cases/unickeys/m1.webp",          slug: "unickeys",   w: "24vw", h: "330px", mb: "22px" },
   { image: "/images/cases/ushuaia360/m1.webp",        slug: "ushuaia360", w: "22vw", h: "360px", mb: "12px" },
   { image: "/images/cases/bausing/desktop1-bausing.webp", slug: "bausing",    w: "26vw", h: "330px", mb: "20px" },
-  { image: "/images/cases/partidosya/py1-min.webp",       slug: "partidosya", w: "30vw", h: "360px", mb: "5px"  },
 ];
 
 const SOCIALS = [

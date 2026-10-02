@@ -1,10 +1,10 @@
-import { works } from "../data/works";
+import { visibleWorks } from "../data/works";
 import { CONTACT, SITE_DESCRIPTION, SITE_NAME, absoluteUrl } from "../lib/seo";
 
 export const dynamic = "force-static";
 
 export function GET() {
-  const cases = works
+  const cases = visibleWorks
     .map(
       (w) =>
         `- [${w.title} — ${w.seoTitle ?? w.subtitle}](${absoluteUrl(`/cases/${w.slug}`)})${

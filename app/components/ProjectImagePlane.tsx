@@ -224,15 +224,31 @@ export default function ProjectImagePlane({
         .replace(
           "#include <map_fragment>",
           `#ifdef USE_MAP
-             // 5-tap cross blur (sin diagonales, 44% menos fetches que el 9-tap)
+             // 5-tap cross blur (sin diagonales, 44% menos fetches que el 9-tap).
+             // Si no hace falta blur (card nítida = la más grande en pantalla, la que más
+             // pesa en fillrate) se salta directo a 1 solo fetch en vez de 5.
              float b = uBlur + (gl_FrontFacing ? 0.0 : uBackBlur);
-             vec4 _t = vec4(0.0);
-             _t += texture2D( map, vMapUv );
-             _t += texture2D( map, vMapUv + vec2( b, 0.0) );
-             _t += texture2D( map, vMapUv + vec2(-b, 0.0) );
-             _t += texture2D( map, vMapUv + vec2(0.0,  b) );
-             _t += texture2D( map, vMapUv + vec2(0.0, -b) );
-             diffuseColor *= _t / 5.0;
+             vec4 _t;
+             if (b > 0.0005) {
+               _t  = texture2D( map, vMapUv ) * 0.2;
+               _t += texture2D( map, vMapUv + vec2( b, 0.0) ) * 0.2;
+               _t += texture2D( map, vMapUv + vec2(-b, 0.0) ) * 0.2;
+               _t += texture2D( map, vMapUv + vec2(0.0,  b) ) * 0.2;
+               _t += texture2D( map, vMapUv + vec2(0.0, -b) ) * 0.2;
+             } else {
+               _t = texture2D( map, vMapUv );
+             }
+             diffuseColor *= _t;
+
+             // Dorso: más oscuro, menos contraste y desaturado (si no, se ve tan brillante como el frente)
+             if (!gl_FrontFacing) {
+               float _lum = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
+               vec3 _back = mix(diffuseColor.rgb, vec3(_lum), uBackDesat);
+               _back = (_back - 0.5) * uBackContrast + 0.5;
+               _back *= uBackDark;
+               diffuseColor.rgb = _back;
+               diffuseColor.a *= uBackAlpha;
+             }
            #endif
 
            vec2 _p = (vMapUv - 0.5) * vec2(uAspect, 1.0);

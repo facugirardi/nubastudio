@@ -16,6 +16,8 @@ export type WorkItem = {
   result?: string;
   features?: string[];
   technologies?: string[];
+  /** Keeps the case page reachable by direct URL but out of all public listings. */
+  hidden?: boolean;
   images?: string[];
   links?: {
     web?: string;
@@ -303,6 +305,7 @@ export const works: WorkItem[] = [
     image: "/images/cases/ffmates/ffmatesmock1.webp",
     slug: "ffmates",
     year: "2025",
+    hidden: true,
     task: "F&F needed an e-commerce design where the product does the selling. That put three things on the table: navigation that survives a large catalog, product pages where the item is legible before it is described, and a checkout short enough that nobody reconsiders halfway through. This was a design problem, not a development one, so the interface had to earn the sale on its own.",
     solutions: "We designed the storefront around the product image. Category and filter navigation stays reachable at every depth, so browsing a large catalog never turns into a series of dead ends. Product pages lead with large, uninterrupted visuals and place specifications below the decision rather than in front of it. The purchase flow was compressed into one continuous checkout with visible progress, so a buyer always knows how much is left. Every layout was designed mobile-first.",
     description: "F&F is an e-commerce platform designed around a single question: how few steps can there be between finding a product and owning it? We designed the navigation, the product pages, and a checkout flow that removes friction instead of explaining it away.",
@@ -337,6 +340,7 @@ export const works: WorkItem[] = [
     image: "/images/cases/partidosya/py1-min.webp",
     slug: "partidosya",
     year: "2025",
+    hidden: true,
     task: "Booking a sports field is a decision made under time pressure. A group is already organizing, and someone has to find a free pitch and confirm it before the plan falls apart. PartidosYa needed a mobile app where that whole sequence, finding a field, checking the time, reserving it, fits inside the few minutes a person actually has.",
     solutions: "We designed the app around the shortest possible path to a confirmed booking. The home screen opens on availability instead of on a search box, so the first thing anyone sees is what they can actually reserve. Field cards carry only the three details that decide a booking, location, time, and price, and nothing that delays it. The reservation runs in a few taps with no account wall in the middle, and confirmation is immediate and unambiguous. We validated the screens through user testing before handoff.",
     description: "PartidosYa is a mobile app for booking sports fields. We designed the reservation flow around one constraint: someone standing on the street with fifteen minutes to find a free pitch and lock it in. Search, pick, book. A few taps, no friction.",
@@ -371,6 +375,7 @@ export const works: WorkItem[] = [
     image: "/images/cases/unickeys/m1.webp",
     slug: "unickeys",
     year: "2025",
+    hidden: true,
     task: "Documents are no longer proof on their own. A PDF can be edited in minutes, issuer databases can be hacked or deleted, and verification still takes days. Companies needed a way to issue certificates, receipts, and contracts that anyone could validate in seconds, without depending on a central database that can be tampered with.",
     solutions: "We designed and built Unickeys as B2B certificate infrastructure: authenticity, fraud, and verification in one platform. Companies issue documents with a unique QR and digital signature. Anyone can scan the QR or open a link to see the original data. An AI layer compares images or PDFs against the source record and flags inconsistencies even when a QR looks valid. Each file gets a SHA-256 hash, grouped into a Merkle tree, and written to Solana Mainnet, immutable and publicly verifiable.",
     description: "Unickeys is verifiable certificate infrastructure for companies. It turns any document into a public, tamper-proof record: issue it, hash it, register it on Solana, and let anyone verify it in seconds. No central database left to hack.",
@@ -397,11 +402,16 @@ export const works: WorkItem[] = [
   },
 ];
 
+/** Cases shown in listings (home carousel, sitemap, JSON-LD, llms.txt). Excludes hidden cases. */
+export const visibleWorks: WorkItem[] = works.filter((w) => !w.hidden);
+
 export function getWork(slug: string): WorkItem | undefined {
   return works.find((w) => w.slug === slug);
 }
 
 export function getNextWork(slug: string): WorkItem {
-  const i = works.findIndex((w) => w.slug === slug);
-  return works[(i + 1) % works.length];
+  const pool = visibleWorks.length > 0 ? visibleWorks : works;
+  const i = pool.findIndex((w) => w.slug === slug);
+  if (i === -1) return pool[0];
+  return pool[(i + 1) % pool.length];
 }

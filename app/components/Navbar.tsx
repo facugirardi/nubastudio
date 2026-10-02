@@ -57,9 +57,29 @@ export default function Navbar({
   const ignoreClickRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const langMenuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const { lang, toggleLang } = useLanguage();
+  const { lang, setLang } = useLanguage();
   const t = getUiText(lang);
+
+  useEffect(() => {
+    if (!langMenuOpen) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (langMenuRef.current && !langMenuRef.current.contains(e.target as Node)) {
+        setLangMenuOpen(false);
+      }
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLangMenuOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [langMenuOpen]);
 
   const chooseView = (next: "spiral" | "list") => {
     if (next === "spiral" && !webglAvailable) return;
@@ -472,6 +492,36 @@ export default function Navbar({
         }
         .lang-toggle:hover { transform: scale(1.06); }
         .lang-toggle:active { transform: scale(0.94); }
+
+        .lang-menu {
+          position: absolute;
+          top: calc(100% + 0.5rem);
+          right: 0;
+          display: flex;
+          flex-direction: column;
+          background: #fff;
+          border-radius: 14px;
+          overflow: hidden;
+          box-shadow: 0 18px 60px rgba(0,0,0,0.3);
+          min-width: 100%;
+        }
+        .lang-menu-opt {
+          font-family: var(--font-outfit), sans-serif;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          background: #fff;
+          color: #000;
+          cursor: pointer;
+          font-size: 0.78rem;
+          font-weight: 500;
+          letter-spacing: 0.01em;
+          padding: 0.6rem 0;
+          transition: background 0.2s ease;
+        }
+        .lang-menu-opt:hover { background: rgba(0,0,0,0.06); }
+        .lang-menu-opt[aria-selected="true"] { background: #C6FF00; }
       `}</style>
 
       <nav
@@ -530,22 +580,47 @@ export default function Navbar({
       </nav>
 
       {/* Botón de idioma, a la izquierda del chip de menú */}
-      <button
-        type="button"
-        className="lang-toggle"
-        onClick={toggleLang}
-        aria-label={t.nav.langToggleLabel}
+      <div
+        ref={langMenuRef}
         style={{
           position: "fixed",
           top: "1.5rem",
           right: `calc(${padX} + ${chipW}px + 0.6rem)`,
           zIndex: 1002,
-          width: isMobile ? 40 : 46,
-          height: CHIP_H,
         }}
       >
-        {lang === "en" ? "EN" : "ES"}
-      </button>
+        <button
+          type="button"
+          className="lang-toggle"
+          onClick={() => setLangMenuOpen((v) => !v)}
+          aria-label={t.nav.langToggleLabel}
+          aria-haspopup="menu"
+          aria-expanded={langMenuOpen}
+          style={{ width: isMobile ? 40 : 46, height: CHIP_H }}
+        >
+          {lang === "en" ? "EN" : "ES"}
+        </button>
+
+        {langMenuOpen && (
+          <div className="lang-menu" role="menu">
+            {(["en", "es"] as const).map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                role="menuitemradio"
+                aria-selected={lang === opt}
+                className="lang-menu-opt"
+                onClick={() => {
+                  setLang(opt);
+                  setLangMenuOpen(false);
+                }}
+              >
+                {opt.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Overlay */}
       <div
