@@ -35,19 +35,23 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = lang;
-    try {
-      localStorage.setItem(STORAGE_KEY, lang);
-    } catch {}
   }, [lang]);
 
-  const value = useMemo<LanguageContextValue>(
-    () => ({
+  const value = useMemo<LanguageContextValue>(() => {
+    // Solo se persiste ante una elección explícita: escribir en el efecto de montaje
+    // pisaba la preferencia guardada con el "en" inicial antes de leerla.
+    const setLang = (l: Lang) => {
+      try {
+        localStorage.setItem(STORAGE_KEY, l);
+      } catch {}
+      setLangState(l);
+    };
+    return {
       lang,
-      setLang: setLangState,
-      toggleLang: () => setLangState((l) => (l === "es" ? "en" : "es")),
-    }),
-    [lang]
-  );
+      setLang,
+      toggleLang: () => setLang(lang === "es" ? "en" : "es"),
+    };
+  }, [lang]);
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }

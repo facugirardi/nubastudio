@@ -138,21 +138,11 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
             bottom: "clamp(20px, 4vw, 48px)",
             display: "flex",
             alignItems: "flex-end",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             fontFamily: "var(--font-outfit), sans-serif",
             opacity: 0,
           }}
         >
-          <span
-            style={{
-              color: "rgba(255,255,255,0.5)",
-              fontSize: 12,
-              letterSpacing: "0.35em",
-              textTransform: "uppercase",
-            }}
-          >
-            Nuba Studio
-          </span>
           <span
             style={{
               color: "#fff",

@@ -12,6 +12,11 @@ const NAV_IDS = ["work", "about", "services", "contact"] as const;
 const CHIP_W = 92;
 const CHIP_H = 40;
 
+const LANG_OPTIONS = [
+  { code: "en", name: "English" },
+  { code: "es", name: "Español" },
+] as const;
+
 const SOCIALS = [
   {
     label: "LinkedIn",
@@ -59,9 +64,69 @@ export default function Navbar({
   const [isMobile, setIsMobile] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
+  const langToggleRef = useRef<HTMLButtonElement>(null);
+  const langCodeRef = useRef<HTMLSpanElement>(null);
+  const langPanelRef = useRef<HTMLDivElement>(null);
+  const langContentRef = useRef<HTMLDivElement>(null);
+  const prevLangRef = useRef<string | null>(null);
   const pathname = usePathname();
   const { lang, setLang } = useLanguage();
   const t = getUiText(lang);
+
+  const bounceLangChars = (delay = 0) => {
+    const chars = langCodeRef.current?.querySelectorAll<HTMLElement>(".lang-char");
+    if (!chars) return;
+    const tl = gsap.timeline({ overwrite: true, delay });
+    chars.forEach((char, i) => {
+      tl.to(char, { y: -5, rotation: 6, fontWeight: 700, fontSize: "0.84rem", duration: 0.2, ease: "power2.out" }, i * 0.07)
+        .to(char, { y: 0, rotation: 0, fontWeight: 500, fontSize: "0.78rem", duration: 0.25, ease: "power2.in" }, i * 0.07 + 0.2);
+    });
+  };
+
+  // Igual que el chip "Menu": el botón crece hasta ser el popover y al cerrar vuelve a chip.
+  const langMountedRef = useRef(false);
+  useEffect(() => {
+    const panel = langPanelRef.current;
+    const content = langContentRef.current;
+    const toggle = langToggleRef.current;
+    if (!panel || !content || !toggle) return;
+    if (!langMountedRef.current) {
+      langMountedRef.current = true;
+      return;
+    }
+    const chipW = toggle.offsetWidth;
+
+    if (langMenuOpen) {
+      gsap.set(panel, { visibility: "visible", width: chipW, height: CHIP_H, borderRadius: 999 });
+      gsap.to(panel, { width: content.offsetWidth, height: content.offsetHeight, borderRadius: 20, duration: 0.6, ease: "power4.inOut", overwrite: true });
+      gsap.to(content, { opacity: 1, duration: 0.4, delay: 0.25, ease: "power2.out", overwrite: true });
+      gsap.set(content.querySelectorAll(".nav-char"), { y: 0, rotation: 0 });
+      gsap.fromTo(
+        content.querySelectorAll("[data-stagger]"),
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.55, stagger: 0.07, delay: 0.35, ease: "power3.out", overwrite: true }
+      );
+    } else {
+      gsap.to(content, { opacity: 0, duration: 0.15, ease: "power2.in", overwrite: true });
+      gsap.timeline()
+        .to(panel, { width: chipW, height: CHIP_H, borderRadius: 999, duration: 0.5, ease: "power3.inOut", overwrite: true })
+        .set(panel, { visibility: "hidden" })
+        .to(toggle, { scaleX: 1.12, scaleY: 0.84, transformOrigin: "center center", duration: 0.16, ease: "power2.out" }, "-=0.1")
+        .to(toggle, { scaleX: 1, scaleY: 1, duration: 1, ease: "elastic.out(1, 0.5)" });
+      bounceLangChars(0.5);
+    }
+  }, [langMenuOpen]);
+
+  useEffect(() => {
+    const prev = prevLangRef.current;
+    prevLangRef.current = lang;
+    if (prev === null || prev === lang || !langCodeRef.current) return;
+    gsap.fromTo(
+      langCodeRef.current,
+      { y: 8, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }
+    );
+  }, [lang]);
 
   useEffect(() => {
     if (!langMenuOpen) return;
@@ -488,40 +553,84 @@ export default function Navbar({
           font-weight: 500;
           letter-spacing: 0.01em;
           box-shadow: 0 18px 60px rgba(0,0,0,0.3);
-          transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+          transition: background 0.3s ease;
         }
-        .lang-toggle:hover { transform: scale(1.06); }
-        .lang-toggle:active { transform: scale(0.94); }
+        .lang-toggle:focus-visible { outline: 2px solid #C6FF00; outline-offset: 3px; }
 
         .lang-menu {
           position: absolute;
-          top: calc(100% + 0.5rem);
+          top: 0;
           right: 0;
-          display: flex;
-          flex-direction: column;
+          width: 46px;
+          height: ${CHIP_H}px;
           background: #fff;
-          border-radius: 14px;
+          border-radius: 999px;
           overflow: hidden;
           box-shadow: 0 18px 60px rgba(0,0,0,0.3);
-          min-width: 100%;
+          visibility: hidden;
         }
+        .lang-menu-content {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 184px;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          padding: 0 6px 6px;
+          opacity: 0;
+        }
+        .lang-menu-head {
+          font-family: var(--font-outfit), sans-serif;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: ${CHIP_H}px;
+          margin: 0 -6px 2px;
+          padding-left: 1.1rem;
+          border: none;
+          background: none;
+          color: #000;
+          cursor: pointer;
+          font-size: 0.78rem;
+        }
+        .lang-menu-head-title { opacity: 0.45; }
+        .lang-menu-head-code { font-weight: 500; text-align: center; }
         .lang-menu-opt {
           font-family: var(--font-outfit), sans-serif;
           display: flex;
           align-items: center;
-          justify-content: center;
+          gap: 0.7rem;
           border: none;
-          background: #fff;
+          background: transparent;
           color: #000;
           cursor: pointer;
-          font-size: 0.78rem;
-          font-weight: 500;
+          font-size: 0.85rem;
           letter-spacing: 0.01em;
-          padding: 0.6rem 0;
-          transition: background 0.2s ease;
+          padding: 0.7rem 0.85rem;
+          border-radius: 12px;
+          text-align: left;
         }
-        .lang-menu-opt:hover { background: rgba(0,0,0,0.06); }
-        .lang-menu-opt[aria-selected="true"] { background: #C6FF00; }
+        .lang-menu-opt:focus-visible { outline: 2px solid #C6FF00; outline-offset: -2px; }
+        .lang-opt-code {
+          font-size: 0.72rem;
+          font-weight: 600;
+          width: 1.6rem;
+          opacity: 0.4;
+          transition: opacity 0.3s ease;
+        }
+        .lang-opt-name { flex: 1; font-weight: 500; }
+        .lang-opt-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #000;
+          transform: scale(0);
+          transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .lang-menu-opt:hover .lang-opt-code,
+        .lang-menu-opt[aria-checked="true"] .lang-opt-code { opacity: 1; }
+        .lang-menu-opt[aria-checked="true"] .lang-opt-dot { transform: scale(1); }
       `}</style>
 
       <nav
@@ -591,35 +700,65 @@ export default function Navbar({
       >
         <button
           type="button"
+          ref={langToggleRef}
           className="lang-toggle"
           onClick={() => setLangMenuOpen((v) => !v)}
+          onMouseEnter={() => {
+            if (langMenuOpen) return;
+            gsap.timeline({ overwrite: true })
+              .to(langToggleRef.current, { scaleX: 1.06, scaleY: 0.9, transformOrigin: "center center", duration: 0.4, ease: "power2.inOut" })
+              .to(langToggleRef.current, { scaleX: 1, scaleY: 1, duration: 1.1, ease: "elastic.out(1, 0.55)" });
+            bounceLangChars();
+          }}
           aria-label={t.nav.langToggleLabel}
           aria-haspopup="menu"
           aria-expanded={langMenuOpen}
           style={{ width: isMobile ? 40 : 46, height: CHIP_H }}
         >
-          {lang === "en" ? "EN" : "ES"}
+          <span ref={langCodeRef} style={{ display: "inline-block" }}>
+            {lang.toUpperCase().split("").map((char, i) => (
+              <span key={i} className="lang-char" style={{ display: "inline-block" }}>{char}</span>
+            ))}
+          </span>
         </button>
 
-        {langMenuOpen && (
-          <div className="lang-menu" role="menu">
-            {(["en", "es"] as const).map((opt) => (
+        <div ref={langPanelRef} className="lang-menu">
+          <div ref={langContentRef} className="lang-menu-content" role="menu">
+            <button
+              type="button"
+              className="lang-menu-head"
+              tabIndex={langMenuOpen ? 0 : -1}
+              onClick={() => setLangMenuOpen(false)}
+            >
+              <span className="lang-menu-head-title">{t.nav.langToggleLabel}</span>
+              <span className="lang-menu-head-code" style={{ width: isMobile ? 40 : 46 }}>{lang.toUpperCase()}</span>
+            </button>
+            {LANG_OPTIONS.map((opt) => (
               <button
-                key={opt}
+                key={opt.code}
                 type="button"
                 role="menuitemradio"
-                aria-selected={lang === opt}
+                aria-checked={lang === opt.code}
+                tabIndex={langMenuOpen ? 0 : -1}
+                data-stagger
                 className="lang-menu-opt"
+                onMouseEnter={(e) => bounceNavChars(e.currentTarget)}
                 onClick={() => {
-                  setLang(opt);
+                  setLang(opt.code);
                   setLangMenuOpen(false);
                 }}
               >
-                {opt.toUpperCase()}
+                <span className="lang-opt-code">{opt.code.toUpperCase()}</span>
+                <span className="lang-opt-name">
+                  {opt.name.split("").map((char, i) => (
+                    <span key={i} className="nav-char" style={{ display: "inline-block" }}>{char}</span>
+                  ))}
+                </span>
+                <span className="lang-opt-dot" />
               </button>
             ))}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Overlay */}
