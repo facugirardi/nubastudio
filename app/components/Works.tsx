@@ -22,13 +22,12 @@ const DEBUG_PATH = false; // dibuja el path punteado + un punto donde cae cada c
 const CURVE_MODE: "vertical" | "spiral" = "vertical";
 const CARD_SCALE = 0.44; // escala constante de todas las cards (alfombras del mismo tamaño)
 
-const WORKS = visibleWorks.map(({ title, image, slug, subtitle, year, mockups }) => ({
+const WORKS = visibleWorks.map(({ title, image, slug, subtitle, year }) => ({
   title,
   image,
   slug,
   subtitle,
   year,
-  mockups,
 }));
 
 const N = WORKS.length;
@@ -144,7 +143,7 @@ function Scene({
 
   useEffect(() => {
     return () => {
-      for (const w of WORKS) useTexture.clear(cardTextureSrc(w.image, !!w.mockups));
+      for (const w of WORKS) useTexture.clear(cardTextureSrc(w.image));
     };
   }, []);
 
@@ -183,7 +182,6 @@ function Scene({
             stairSlope={count * 0.28}
             impulse={impulse}
             mobile={mobile}
-            mockupBackground={work.mockups?.background}
             onSelect={onSelect}
             onHoverStart={onHoverStart}
             onHoverEnd={onHoverEnd}
@@ -520,12 +518,6 @@ export default function Works({
           display: block;
           transform: scale(1.01);
           transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        /* Mockups: la imagen entera, sin recorte, sobre su color de fondo. */
-        .works-list-thumb.is-mockup img,
-        .works-grid-thumb.is-mockup img,
-        .works-feed-thumb.is-mockup img {
-          object-fit: contain;
         }
         .works-list-row.is-active .works-list-thumb img,
         .works-list-row:hover .works-list-thumb img {
@@ -889,7 +881,7 @@ export default function Works({
                   transition: `opacity 0.6s ease ${effectiveView === "list" ? 0.12 + i * 0.06 : 0}s, transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) ${effectiveView === "list" ? 0.12 + i * 0.06 : 0}s`,
                 }}
               >
-                <div className={`works-list-thumb${w.mockups ? " is-mockup" : ""}`} style={{ background: w.mockups?.background }}>
+                <div className="works-list-thumb">
                   <Image src={w.image} alt={`${w.title} — ${w.subtitle}`} fill sizes="148px" />
                 </div>
                 <div className="works-list-meta">
@@ -913,7 +905,7 @@ export default function Works({
                   onMouseEnter={() => setHovered(i)}
                   onMouseLeave={() => setHovered(null)}
                 >
-                  <div className={`works-grid-thumb${w.mockups ? " is-mockup" : ""}`} style={{ background: w.mockups?.background }}>
+                  <div className="works-grid-thumb">
                     <Image src={w.image} alt="" fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" />
                   </div>
                   <div className="works-grid-caption">
@@ -935,7 +927,7 @@ export default function Works({
                   onMouseEnter={() => setHovered(i)}
                   onMouseLeave={() => setHovered(null)}
                 >
-                  <div className={`works-feed-thumb${w.mockups ? " is-mockup" : ""}`} style={{ background: w.mockups?.background }}>
+                  <div className="works-feed-thumb">
                     <Image src={w.image} alt="" fill sizes="(max-width: 900px) 100vw, 900px" />
                   </div>
                   <div className="works-feed-caption">

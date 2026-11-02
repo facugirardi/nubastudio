@@ -19,12 +19,8 @@ export type WorkItem = {
   /** Keeps the case page reachable by direct URL but out of all public listings. */
   hidden?: boolean;
   images?: string[];
-  /**
-   * The images are device mockups: they are shown whole instead of cropped to fill the frame.
-   * `background` is the colour of their surroundings (what fills the space around them) and
-   * `ratios` the width / height of each one in the gallery, by src (default 16:9).
-   */
-  mockups?: { background: string; ratios?: Record<string, number> };
+  /** Shows the cover again as the first image of the case content (normally the hero already is it). */
+  coverInGallery?: boolean;
   links?: {
     web?: string;
     ios?: string;
@@ -176,16 +172,10 @@ export const works: WorkItem[] = [
   {
     title: "Tivvu",
     subtitle: "Product Design & Development",
-    image: "/images/cases/tivvu/tivvu-landing.webp",
+    image: "/images/cases/tivvu/tivvu-mock-1.webp",
     slug: "tivvu",
     year: "2026",
-    mockups: {
-      background: "#ffffff",
-      ratios: {
-        "/images/cases/tivvu/tivvu-landing.webp": 1448 / 1086,
-        "/images/cases/tivvu/tivvu-sitio.webp": 1448 / 1086,
-      },
-    },
+    coverInGallery: true,
     task: "Real estate agencies run on a patchwork: listings in spreadsheets, clients in a CRM nobody opens, offers sent as PDFs, rentals tracked on a calendar, and a website that someone else has to update. Every piece lives in a different tool, so nothing connects: an inquiry never reaches the right agent, an offer goes out and no one knows if it was opened, and publishing a listing means doing the work twice. Agencies needed one place to run the whole operation, and their own site on top of it.",
     solutions: "We built Tivvu as the operating system for a real estate agency. Properties, clients, offers, bookings, availability, services, reviews, and reports sit in one dashboard, with roles so agents see their own work and owners see everything. Inquiries from the public site create the client and log the history automatically. Offers go out as a link and the agency sees when it is opened. A data importer brings listings in from spreadsheets and portal feeds, so moving over takes an afternoon. On top of that, every agency gets its own public site with an editor to choose the layout, colors, fonts, and content blocks, with no developer involved.",
     description: "Tivvu is a platform for real estate agencies. Properties, clients, offers, bookings, and a branded public site live in one dashboard, so the agency stops juggling tools and starts closing deals. Built for sales and rentals, in eight languages.",
@@ -206,10 +196,12 @@ export const works: WorkItem[] = [
     ],
     technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Python", "Flask", "PostgreSQL", "Paddle", "Figma"],
     images: [
-      "/images/cases/tivvu/tivvu-landing.webp",
-      "/images/cases/tivvu/tivvu-dashboard.webp",
-      "/images/cases/tivvu/tivvu-editor.webp",
-      "/images/cases/tivvu/tivvu-sitio.webp",
+      "/images/cases/tivvu/tivvu-mock-1.webp",
+      "/images/cases/tivvu/tivvu-mock-2.webp",
+      "/images/cases/tivvu/tivvu-mock-3.webp",
+      "/images/cases/tivvu/tivvu-mock-4.webp",
+      "/images/cases/tivvu/tivvu-mock-5.webp",
+      "/images/cases/tivvu/tivvu-mock-6.webp",
     ],
     links: {},
   },

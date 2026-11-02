@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import { getLenis } from "./SmoothScroll";
 import { heroImageSet } from "../lib/optimizedImage";
-import { getWork } from "../data/works";
 
 /* ───────── Store de módulo: sobrevive la navegación SPA de Next ───────── */
 export type CaseTransitionPayload = {
@@ -21,12 +20,6 @@ let listener: Listener | null = null;
 // para tener recorrido de parallax. El morph termina en ese mismo encuadre,
 // así el overlay y el hero coinciden pixel a pixel y el relevo no se ve.
 export const HERO_OVERSCAN = 0.2;
-
-// En la spiral el mockup entra en la card a esta fracción de su tamaño (con margen alrededor);
-// el morph lo escala hasta el 100% del hero.
-export const MOCKUP_INSET = 0.82;
-// Fracción del box del hero (120vh) que sobra arriba y abajo de los 100vh visibles.
-export const MOCKUP_HERO_INSET = HERO_OVERSCAN / 2 / (1 + HERO_OVERSCAN);
 
 const MORPH = 1.15; // duración del zoom card → hero
 const NAV_AT = 0.46; // fracción del morph en la que se dispara el router.push
@@ -148,14 +141,6 @@ export default function CaseTransitionProvider() {
         img.src = set.src;
       }
 
-      const mockups = getWork(p.slug)?.mockups;
-      img.style.objectFit = mockups ? "contain" : "cover";
-      // Igual que el hero: el mockup se encuadra en los 100vh visibles del box, sobre su color de fondo.
-      img.style.top = mockups ? `${MOCKUP_HERO_INSET * 100}%` : "0";
-      img.style.height = mockups ? `${(1 - 2 * MOCKUP_HERO_INSET) * 100}%` : "100%";
-      wrap.style.background = mockups?.background ?? "";
-      gsap.set(img, { clearProps: "transform" });
-
       gsap.set(root, { opacity: 1, pointerEvents: "auto" });
       gsap.set(backdrop, { opacity: 0 });
       gsap.set(wrap, {
@@ -188,13 +173,6 @@ export default function CaseTransitionProvider() {
         },
       });
 
-      if (mockups) {
-        // Arranca con el mockup al mismo tamaño que tiene dentro de la card (MOCKUP_INSET de la card).
-        const aspect = img.naturalWidth / img.naturalHeight || vw / vh;
-        const shown = Math.min(vw, vh * aspect); // ancho del mockup en el hero
-        const startScale = Math.min(1, (MOCKUP_INSET * (p.rect.width / scale)) / shown);
-        tl.fromTo(img, { scale: startScale }, { scale: 1, duration: MORPH, ease: "power2.inOut" }, 0);
-      }
       tl.to(backdrop, { opacity: 1, duration: MORPH * 0.45, ease: "power2.out" }, 0)
         .fromTo(
           wrap,
@@ -251,7 +229,7 @@ export default function CaseTransitionProvider() {
         <img
           ref={imgRef}
           alt=""
-          style={{ display: "block", position: "relative", width: "100%", height: "100%", objectFit: "cover" }}
+          style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
         />
       </div>
     </div>
