@@ -12,7 +12,7 @@ import { getUiText } from "../lib/uiText";
 gsap.registerPlugin(ScrollTrigger);
 
 const SERVICE_META = [
-  { n: "01", tags: ["Next.js", "React", "CMS", "Motion"], cases: ["checkrto", "mes", "provia-consulting"], image: "/images/cases/checkrto/check1.webp" },
+  { n: "01", tags: ["Next.js", "React", "CMS", "Motion"], cases: ["checkrto", "mes", "provia-consulting"], image: "/images/cases/checkrto/check-mock-1.webp" },
   { n: "02", tags: ["React Native", "Expo", "iOS", "Android"], cases: ["nuddo", "ushuaia360"], image: "/images/cases/nuddo/nuddo1.webp" },
   { n: "03", tags: ["Payments", "Dashboards", "Auth", "APIs"], cases: ["nubapay", "nuddo"], image: "/images/cases/nubapay/nuba1.webp" },
   { n: "04", tags: ["Identity", "Art Direction", "Systems"], cases: [] as string[], image: "/images/cases/kennedys/ken1.webp" },
