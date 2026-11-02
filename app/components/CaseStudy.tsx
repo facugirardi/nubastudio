@@ -12,6 +12,8 @@ import {
   HERO_BACKDROP_FILTER,
   HERO_OVERSCAN,
   PORTRAIT,
+  PORTRAIT_HERO_RATIO,
+  PORTRAIT_HERO_TOP,
   consumeCaseEntryDelay,
   markCaseHeroReady,
   startCaseTransition,
@@ -220,10 +222,11 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
       <Navbar visible view="list" setView={noop} showToggle={false} />
 
       {/* ───────── Hero fullscreen (match con el final del morph) ───────── */}
-      <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
+      <section className="cs-hero" style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
         {/* El box mide 120vh centrado: el overlay del morph aterriza en este mismo encuadre. */}
         <div
           ref={heroImgRef}
+          className="cs-hero-media"
           style={{
             position: "absolute",
             inset: `${(-HERO_OVERSCAN / 2) * 100}% 0`,
@@ -255,6 +258,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
           />
         </div>
         <div
+          className="cs-hero-shade"
           style={{
             position: "absolute",
             inset: 0,
@@ -263,6 +267,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
           }}
         />
         <div
+          className="cs-hero-text"
           style={{
             position: "absolute",
             left: 0,
@@ -590,6 +595,18 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
         @media ${PORTRAIT} {
           .cs-hero-img { object-fit: contain; }
           .cs-hero-backdrop { display: block; }
+          /* Hero compacto: la imagen entera al ancho y el título debajo, sin relleno alrededor. */
+          .cs-hero { height: auto !important; background: #000; }
+          .cs-hero-media {
+            position: relative !important;
+            inset: auto !important;
+            height: auto !important;
+            aspect-ratio: ${PORTRAIT_HERO_RATIO};
+            margin-top: ${PORTRAIT_HERO_TOP}px;
+            transform: none !important;
+          }
+          .cs-hero-shade { display: none; }
+          .cs-hero-text { position: relative !important; padding: 1.75rem 6vw 2.5rem !important; }
         }
         .cs-pair-figure img {
           width: 100%;

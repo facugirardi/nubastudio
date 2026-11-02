@@ -25,6 +25,11 @@ export const HERO_OVERSCAN = 0.2;
 // hasta mostrar apenas el centro: se muestra entera, al ancho, sobre una copia suya desenfocada.
 export const PORTRAIT = "(max-aspect-ratio: 1/1)";
 export const HERO_BACKDROP_FILTER = "blur(28px) brightness(0.55)";
+// En vertical el hero mide lo que su contenido: la imagen al ancho de la pantalla (con esta
+// proporción), a PORTRAIT_HERO_TOP px del borde de arriba, y el título debajo. El overlay del
+// morph aterriza en ese mismo rectángulo.
+export const PORTRAIT_HERO_RATIO = 3 / 2;
+export const PORTRAIT_HERO_TOP = 88;
 
 const MORPH = 1.15; // duración del zoom card → hero
 const NAV_AT = 0.46; // fracción del morph en la que se dispara el router.push
@@ -87,7 +92,6 @@ export default function CaseTransitionProvider() {
   const backdropRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
-  const bgRef = useRef<HTMLImageElement>(null);
   const busyRef = useRef(false);
 
   useEffect(() => {
@@ -98,10 +102,9 @@ export default function CaseTransitionProvider() {
       const backdrop = backdropRef.current;
       const wrap = wrapRef.current;
       const img = imgRef.current;
-      const bg = bgRef.current;
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      if (!root || !backdrop || !wrap || !img || !bg || busyRef.current || reduced) {
+      if (!root || !backdrop || !wrap || !img || busyRef.current || reduced) {
         router.push(`/cases/${p.slug}`);
         return;
       }
@@ -148,15 +151,16 @@ export default function CaseTransitionProvider() {
         img.src = set.src;
       }
 
-      // Mismo encuadre que el hero del caso: en vertical, la imagen entera sobre su copia desenfocada.
+      // Mismo encuadre que el hero del caso. En vertical la imagen entera ocupa el rectángulo del
+      // hero compacto; el box del morph es de 120vh, centrado, así que se le suma el sobrante de arriba.
       const portrait = window.matchMedia(PORTRAIT).matches;
+      const imgH = vw / PORTRAIT_HERO_RATIO;
+      const imgTop = PORTRAIT_HERO_TOP + (vh * HERO_OVERSCAN) / 2;
       img.style.objectFit = portrait ? "contain" : "cover";
-      bg.style.display = portrait ? "block" : "none";
-      if (portrait && bg.src !== img.src) {
-        bg.sizes = img.sizes;
-        bg.srcset = img.srcset;
-        bg.src = img.src;
-      }
+      img.style.top = portrait ? `${imgTop}px` : "0";
+      img.style.height = portrait ? `${imgH}px` : "100%";
+      wrap.style.background = portrait ? "#000" : "";
+      gsap.set(img, { clearProps: "transform" });
 
       gsap.set(root, { opacity: 1, pointerEvents: "auto" });
       gsap.set(backdrop, { opacity: 0 });
@@ -190,6 +194,11 @@ export default function CaseTransitionProvider() {
         },
       });
 
+      if (portrait) {
+        // Arranca con la imagen en el centro del box (donde cae la card) y la lleva a su lugar en el hero.
+        const startY = heroH / 2 - (imgTop + imgH / 2);
+        tl.fromTo(img, { y: startY }, { y: 0, duration: MORPH, ease: "power2.inOut" }, 0);
+      }
       tl.to(backdrop, { opacity: 1, duration: MORPH * 0.45, ease: "power2.out" }, 0)
         .fromTo(
           wrap,
@@ -242,21 +251,6 @@ export default function CaseTransitionProvider() {
         data-case-morph
         style={{ position: "absolute", left: 0, top: 0, willChange: "transform, clip-path" }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          ref={bgRef}
-          alt=""
-          style={{
-            display: "none",
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "fill",
-            filter: HERO_BACKDROP_FILTER,
-            transform: "scale(1.15)",
-          }}
-        />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
