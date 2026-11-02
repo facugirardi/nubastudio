@@ -19,6 +19,13 @@ export type WorkItem = {
   /** Keeps the case page reachable by direct URL but out of all public listings. */
   hidden?: boolean;
   images?: string[];
+  /**
+   * The images are device mockups: they are shown whole (hero over a blurred copy of itself,
+   * gallery at their own proportion, cover included) instead of cropped to fill the frame.
+   */
+  mockups?: boolean;
+  /** Width / height of each mockup in the gallery, by src. Defaults to 16:9. */
+  imageRatios?: Record<string, number>;
   links?: {
     web?: string;
     ios?: string;
@@ -62,38 +69,6 @@ export const works: WorkItem[] = [
     links: {
       web: "https://www.nubapay.app",
     },
-  },
-  {
-    title: "Tivvu",
-    subtitle: "Product Design & Development",
-    image: "/images/cases/tivvu/tivvu1.webp",
-    slug: "tivvu",
-    year: "2026",
-    task: "Real estate agencies run on a patchwork: listings in spreadsheets, clients in a CRM nobody opens, offers sent as PDFs, rentals tracked on a calendar, and a website that someone else has to update. Every piece lives in a different tool, so nothing connects: an inquiry never reaches the right agent, an offer goes out and no one knows if it was opened, and publishing a listing means doing the work twice. Agencies needed one place to run the whole operation, and their own site on top of it.",
-    solutions: "We built Tivvu as the operating system for a real estate agency. Properties, clients, offers, bookings, availability, services, reviews, and reports sit in one dashboard, with roles so agents see their own work and owners see everything. Inquiries from the public site create the client and log the history automatically. Offers go out as a link and the agency sees when it is opened. A data importer brings listings in from spreadsheets and portal feeds, so moving over takes an afternoon. On top of that, every agency gets its own public site with an editor to choose the layout, colors, fonts, and content blocks, with no developer involved.",
-    description: "Tivvu is a platform for real estate agencies. Properties, clients, offers, bookings, and a branded public site live in one dashboard, so the agency stops juggling tools and starts closing deals. Built for sales and rentals, in eight languages.",
-    seoTitle: "Real Estate Agency Platform",
-    seoDescription: "Tivvu is a platform for real estate agencies: properties, clients, offers, bookings and a branded public site in one dashboard. Built by Nuba Studio.",
-    process: "We designed and developed the product end to end: the agency dashboard, the public site every agency gets, a site editor with live preview, and a Flask API with multi-agency accounts, roles, and audit history. We started from the daily routine of an agent, from a new inquiry to a signed offer, and built each screen around the next action instead of around data tables. The public sites are server-rendered and cached for speed and search, the interface runs in eight languages with emails sent in each reader's language, and billing runs through Paddle so agencies can start with a free trial.",
-    result: "Tivvu gives an agency a single workspace for its listings, clients, offers, and rentals, plus a public site it can edit on its own. Agents see what needs attention today, owners see the whole operation, and clients get a fast, branded experience in their language. Setup is a sign-up and an import, not a project.",
-    features: [
-      "Property management for sales and rentals",
-      "Client CRM with stages, tags, and history",
-      "Offers sent as a link, with open tracking",
-      "Bookings and availability calendar",
-      "Bulk import from spreadsheets and portal feeds",
-      "Site editor with layouts, colors, and content blocks",
-      "Roles for owners, admins, and agents",
-      "Reports and owner statements",
-      "Eight languages across the app, the site, and emails",
-    ],
-    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Python", "Flask", "PostgreSQL", "Paddle", "Figma"],
-    images: [
-      "/images/cases/tivvu/tivvu1.webp",
-      "/images/cases/tivvu/tivvu2.webp",
-      "/images/cases/tivvu/tivvu3.webp",
-    ],
-    links: {},
   },
   {
     title: "Kennedy's Group",
@@ -198,6 +173,40 @@ export const works: WorkItem[] = [
       ios: "https://apps.apple.com/ar/app/nuddo/id6753880733",
       android: "https://play.google.com/store/apps/details?id=com.nuddo.app",
     },
+  },
+  {
+    title: "Tivvu",
+    subtitle: "Product Design & Development",
+    image: "/images/cases/tivvu/tivvu1.webp",
+    slug: "tivvu",
+    year: "2026",
+    mockups: true,
+    imageRatios: { "/images/cases/tivvu/tivvu3.webp": 1448 / 1086 },
+    task: "Real estate agencies run on a patchwork: listings in spreadsheets, clients in a CRM nobody opens, offers sent as PDFs, rentals tracked on a calendar, and a website that someone else has to update. Every piece lives in a different tool, so nothing connects: an inquiry never reaches the right agent, an offer goes out and no one knows if it was opened, and publishing a listing means doing the work twice. Agencies needed one place to run the whole operation, and their own site on top of it.",
+    solutions: "We built Tivvu as the operating system for a real estate agency. Properties, clients, offers, bookings, availability, services, reviews, and reports sit in one dashboard, with roles so agents see their own work and owners see everything. Inquiries from the public site create the client and log the history automatically. Offers go out as a link and the agency sees when it is opened. A data importer brings listings in from spreadsheets and portal feeds, so moving over takes an afternoon. On top of that, every agency gets its own public site with an editor to choose the layout, colors, fonts, and content blocks, with no developer involved.",
+    description: "Tivvu is a platform for real estate agencies. Properties, clients, offers, bookings, and a branded public site live in one dashboard, so the agency stops juggling tools and starts closing deals. Built for sales and rentals, in eight languages.",
+    seoTitle: "Real Estate Agency Platform",
+    seoDescription: "Tivvu is a platform for real estate agencies: properties, clients, offers, bookings and a branded public site in one dashboard. Built by Nuba Studio.",
+    process: "We designed and developed the product end to end: the agency dashboard, the public site every agency gets, a site editor with live preview, and a Flask API with multi-agency accounts, roles, and audit history. We started from the daily routine of an agent, from a new inquiry to a signed offer, and built each screen around the next action instead of around data tables. The public sites are server-rendered and cached for speed and search, the interface runs in eight languages with emails sent in each reader's language, and billing runs through Paddle so agencies can start with a free trial.",
+    result: "Tivvu gives an agency a single workspace for its listings, clients, offers, and rentals, plus a public site it can edit on its own. Agents see what needs attention today, owners see the whole operation, and clients get a fast, branded experience in their language. Setup is a sign-up and an import, not a project.",
+    features: [
+      "Property management for sales and rentals",
+      "Client CRM with stages, tags, and history",
+      "Offers sent as a link, with open tracking",
+      "Bookings and availability calendar",
+      "Bulk import from spreadsheets and portal feeds",
+      "Site editor with layouts, colors, and content blocks",
+      "Roles for owners, admins, and agents",
+      "Reports and owner statements",
+      "Eight languages across the app, the site, and emails",
+    ],
+    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Python", "Flask", "PostgreSQL", "Paddle", "Figma"],
+    images: [
+      "/images/cases/tivvu/tivvu1.webp",
+      "/images/cases/tivvu/tivvu2.webp",
+      "/images/cases/tivvu/tivvu3.webp",
+    ],
+    links: {},
   },
   {
     title: "Ushuaia360",

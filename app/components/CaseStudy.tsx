@@ -16,6 +16,7 @@ import {
 } from "./caseTransition";
 import type { WorkItem } from "../data/works";
 import { HERO_QUALITY, HERO_SIZES, heroImageSet } from "../lib/optimizedImage";
+import { MOCKUP_BACKDROP } from "./caseTransition";
 import { localizeWork } from "../lib/localizeWork";
 import { useLanguage } from "../lib/i18n";
 import { getUiText, type UiText } from "../lib/uiText";
@@ -73,8 +74,10 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
       : [];
   // El hero ya muestra work.image a pantalla completa: repetirla como primera
   // pieza de la galeria la descargaba dos veces en los 11 casos.
+  // Los mockups se muestran enteros: la portada también va en el contenido.
+  const mockups = !!work.mockups;
   const gallery = (work.images ?? []).filter(
-    (src) => src !== work.image && !pairImages.includes(src)
+    (src) => (mockups || src !== work.image) && !pairImages.includes(src)
   );
 
   useEffect(() => {
@@ -236,8 +239,21 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
             priority
             quality={HERO_QUALITY}
             sizes={HERO_SIZES}
-            style={{ objectFit: "cover", display: "block" }}
+            style={{ objectFit: mockups ? "contain" : "cover", display: "block", zIndex: 1 }}
           />
+          {mockups && (
+            // Misma URL que la de arriba: sale de caché. Rellena lo que la imagen entera no cubre.
+            <Image
+              src={work.image}
+              alt=""
+              aria-hidden
+              fill
+              priority
+              quality={HERO_QUALITY}
+              sizes={HERO_SIZES}
+              style={{ objectFit: "cover", display: "block", filter: MOCKUP_BACKDROP, transform: "scale(1.15)" }}
+            />
+          )}
         </div>
         <div
           style={{
@@ -403,25 +419,37 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
                   borderRadius: 16,
                   alignSelf: i % 3 === 0 ? "stretch" : i % 3 === 1 ? "flex-end" : "flex-start",
                   width: i % 3 === 0 ? "100%" : "min(78%, 1000px)",
-                  aspectRatio: "16 / 10",
+                  aspectRatio: mockups ? work.imageRatios?.[src] ?? 16 / 9 : "16 / 10",
                   position: "relative",
                 }}
               >
-                {/* El sobreancho vertical vive en el wrapper: la Image con fill
-                    no admite height propio y el transform va sobre el div. */}
-                <div
-                  data-parallax
-                  style={{ position: "absolute", inset: "-16% 0", willChange: "transform" }}
-                >
+                {mockups ? (
+                  // Proporción propia y sin sobreancho de parallax: nada se recorta.
                   <Image
                     src={src}
                     alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
                     fill
                     quality={95}
-                    sizes={i % 3 === 0 ? "110vw" : "(max-width: 1460px) 86vw, 1240px"}
+                    sizes={i % 3 === 0 ? "100vw" : "(max-width: 1460px) 78vw, 1000px"}
                     style={{ objectFit: "cover", display: "block" }}
                   />
-                </div>
+                ) : (
+                  /* El sobreancho vertical vive en el wrapper: la Image con fill
+                     no admite height propio y el transform va sobre el div. */
+                  <div
+                    data-parallax
+                    style={{ position: "absolute", inset: "-16% 0", willChange: "transform" }}
+                  >
+                    <Image
+                      src={src}
+                      alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
+                      fill
+                      quality={95}
+                      sizes={i % 3 === 0 ? "110vw" : "(max-width: 1460px) 86vw, 1240px"}
+                      style={{ objectFit: "cover", display: "block" }}
+                    />
+                  </div>
+                )}
               </figure>
             ))}
 
