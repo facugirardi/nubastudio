@@ -58,6 +58,14 @@ Puede ser one-pager o multi-página — está por definir.
 - **Pacôme Pertant** (pacomepertant.com) — inmersivo, marquee, GSAP
 - **Tresmares Capital** — estructura corporativa clara
 
+## Idiomas y SEO (en / es)
+- El inglés es el idioma raíz (`/`, `/about`, `/cases/x`) y el español vive bajo `/es` (`/es`, `/es/about`…). `/en/...` redirige (308) a la URL sin prefijo.
+- Las páginas viven en `app/[lang]/…` y `proxy.ts` traduce la URL pública a la interna (rewrite a `/en/...`). El layout raíz (`app/[lang]/layout.tsx`) pone `<html lang>` y le pasa `lang` al `LanguageProvider`: el idioma sale de la URL, no del navegador, así el HTML ya sale traducido del servidor.
+- Los 404 los resuelve `app/global-not-found.tsx` (necesita `experimental.globalNotFound`); el idioma le llega por el header `x-site-lang` que pone el proxy.
+- Helpers en `app/lib/lang.ts` (puros, sirven en servidor y cliente: `localePath`, `stripLocale`…). En componentes: `const { lang, path } = useLanguage()` y `path("/about")` para todo link interno. Cambiar de idioma es un link real al mismo path en el otro idioma (`Navbar`).
+- Todo el SEO por idioma está en `app/lib/seoText.ts` (títulos, descripciones, Open Graph, JSON-LD, llms.txt) y, para cada case, en `seoTitle`/`seoDescription` de `works.ts` (inglés) y `works.es.ts` (español). `app/lib/pageMeta.ts` arma canonical + hreflang (`en`, `es`, `x-default`) y Open Graph; cada página los usa en su `generateMetadata`. Cada traducción tiene su propio canonical.
+- Una página nueva: crearla en `app/[lang]/…`, usar `pageAlternates`/`pageOpenGraph`, agregarla a `app/sitemap.ts` y sumar sus textos a `seoText.ts`. `llms.txt` sale de `app/lib/llms.ts` (`/llms.txt` en inglés, `/es/llms.txt` en español).
+
 ## Convenciones
 - Fondo oscuro (negro) como base — texto blanco
 - Acento `#C6FF00` para CTAs, highlights, bordes activos

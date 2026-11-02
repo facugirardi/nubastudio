@@ -5,7 +5,7 @@ import { useLanguage } from "../lib/i18n";
 import { getUiText } from "../lib/uiText";
 
 export default function NotFoundContent() {
-  const { lang } = useLanguage();
+  const { lang, path } = useLanguage();
   const t = getUiText(lang);
   return (
     <main
@@ -30,9 +30,9 @@ export default function NotFoundContent() {
         {t.notFound.body}
       </p>
       <nav style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", justifyContent: "center", marginTop: "1rem" }}>
-        <Link href="/" style={{ color: "var(--accent)" }}>{t.notFound.backHome}</Link>
-        <Link href="/services" style={{ color: "var(--accent)" }}>{t.notFound.services}</Link>
-        <Link href="/contact" style={{ color: "var(--accent)" }}>{t.notFound.contact}</Link>
+        <Link href={path("/")} style={{ color: "var(--accent)" }}>{t.notFound.backHome}</Link>
+        <Link href={path("/services")} style={{ color: "var(--accent)" }}>{t.notFound.services}</Link>
+        <Link href={path("/contact")} style={{ color: "var(--accent)" }}>{t.notFound.contact}</Link>
       </nav>
     </main>
   );

@@ -1,4 +1,4 @@
-import type { Lang } from "./i18n";
+import type { Lang } from "./lang";
 
 /**
  * Diccionario de todo el copy visible del sitio (fuera de los case studies,
@@ -15,6 +15,7 @@ const dict = {
       menuWord: "menu",
       close: "close",
       langToggleLabel: "Language",
+      homeLabel: "Nuba Studio, home",
       viewSpiral: "spiral",
       viewList: "list",
     },
@@ -137,6 +138,9 @@ const dict = {
       keyFeatures: "Key features",
       theResult: "The Result",
       nextProject: "Next project",
+      caseByline: "case study by Nuba Studio",
+      screenWord: "screen",
+      breadcrumb: "Breadcrumb",
     },
     notFound: {
       errorLabel: "Error 404",
@@ -156,6 +160,7 @@ const dict = {
       menuWord: "menú",
       close: "cerrar",
       langToggleLabel: "Idioma",
+      homeLabel: "Nuba Studio, inicio",
       viewSpiral: "spiral",
       viewList: "lista",
     },
@@ -278,6 +283,9 @@ const dict = {
       keyFeatures: "Funcionalidades clave",
       theResult: "El Resultado",
       nextProject: "Próximo proyecto",
+      caseByline: "caso de estudio de Nuba Studio",
+      screenWord: "pantalla",
+      breadcrumb: "Ruta de navegación",
     },
     notFound: {
       errorLabel: "Error 404",

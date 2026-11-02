@@ -2,10 +2,22 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Navbar from "./Navbar";
-import Works from "./Works";
+import Works, { preloadSpiral } from "./Works";
 import Loader from "./Loader";
 import SmoothScroll from "./SmoothScroll";
 import { isWebGLAvailable } from "../lib/webglSupport";
+
+// Solo en escritorio se prueba WebGL, una única vez y ya al evaluar este módulo: si hay soporte, la
+// espiral (three.js) empieza a descargarse en paralelo a la hidratación y está lista cuando termina
+// el loader. En móvil y sin WebGL no se prueba ni se descarga nada de 3D.
+let desktopWebGL: boolean | null = null;
+function probeDesktopWebGL() {
+  desktopWebGL ??= isWebGLAvailable();
+  return desktopWebGL;
+}
+if (typeof window !== "undefined" && window.innerWidth >= 768 && probeDesktopWebGL()) {
+  void preloadSpiral();
+}
 
 export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactNode }) {
   const [view, setView] = useState<"spiral" | "list">("spiral");
@@ -34,8 +46,9 @@ export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactN
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const wantsList = params.get("view") === "list";
-    const webglOk = isWebGLAvailable();
     const mobile = window.innerWidth < 768;
+    // En móvil la espiral nunca se usa (siempre lista): ni se prueba WebGL ni se descarga three.js.
+    const webglOk = mobile ? false : probeDesktopWebGL();
     setWebglAvailable(webglOk);
     setIsMobile(mobile);
     if (!webglOk || wantsList || mobile) setView("list");

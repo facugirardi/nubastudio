@@ -27,7 +27,7 @@ export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const cellsRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { lang } = useLanguage();
+  const { lang, path } = useLanguage();
   const t = getUiText(lang);
   const HEADLINE_WORDS = useMemo(() => t.contact.headline.split(" "), [t]);
   const STATUS_COPY: Partial<Record<Status, string>> = {
@@ -679,11 +679,11 @@ export default function Contact() {
               const meta = lang === "es" ? work.subtitle : work.seoTitle ?? work.subtitle;
               return (
                 <li key={slug}>
-                  <Link href={`/cases/${slug}`} className="contact-work-link">
+                  <Link href={path(`/cases/${slug}`)} className="contact-work-link">
                     <span className="contact-work-thumb">
                       <Image
                         src={work.image}
-                        alt={`${work.title} — ${meta}`}
+                        alt={`${work.title} - ${meta}`}
                         fill
                         sizes="220px"
                       />

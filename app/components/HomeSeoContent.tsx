@@ -1,49 +1,50 @@
 import Link from "next/link";
 import { visibleWorks } from "../data/works";
+import { localePath, type Lang } from "../lib/lang";
+import { localizeWork } from "../lib/localizeWork";
+import { seoText } from "../lib/seoText";
 
-export default function HomeSeoContent() {
+/**
+ * El texto y los links de la home en HTML plano, en el idioma de la página: así
+ * Google lee los proyectos y los servicios sin tener que usar la espiral.
+ */
+export default function HomeSeoContent({ lang }: { lang: Lang }) {
+  const text = seoText[lang].homeContent;
+
   return (
-    <section className="sr-only" aria-label="About Nuba Studio and selected work">
-      <h1>Nuba Studio - digital product studio in Córdoba, Argentina</h1>
-      <p>
-        Nuba Studio is a digital product studio based in Córdoba, Argentina. We design
-        and build websites, mobile apps, marketplaces and digital products end to end —
-        from strategy and product design to development and launch. We work with
-        founders and companies across Argentina, Latin America and the rest of the
-        world.
-      </p>
-      <p>
-        Our services include web design and development, iOS and Android app
-        development, marketplace and platform engineering, product and UI/UX design,
-        and brand identity for digital products. We build with Next.js, React, React
-        Native, TypeScript, Python and Node.
-      </p>
+    <section className="sr-only" aria-label={text.ariaLabel}>
+      <h1>{text.h1}</h1>
+      {text.intro.map((paragraph) => (
+        <p key={paragraph}>{paragraph}</p>
+      ))}
 
-      <h2>Selected work</h2>
+      <h2>{text.selectedWork}</h2>
       <ul>
-        {visibleWorks.map((work) => (
-          <li key={work.slug}>
-            <Link href={`/cases/${work.slug}`}>
-              {work.title} — {work.seoTitle ?? work.subtitle}
-              {work.year ? ` (${work.year})` : ""}
-            </Link>
-            {work.seoDescription ?? work.description ? (
-              <p>{work.seoDescription ?? work.description}</p>
-            ) : null}
-          </li>
-        ))}
+        {visibleWorks.map((raw) => {
+          const work = localizeWork(raw, lang);
+          const summary = work.seoDescription ?? work.description;
+          return (
+            <li key={work.slug}>
+              <Link href={localePath(lang, `/cases/${work.slug}`)}>
+                {work.title} - {work.seoTitle ?? work.subtitle}
+                {work.year ? ` (${work.year})` : ""}
+              </Link>
+              {summary ? <p>{summary}</p> : null}
+            </li>
+          );
+        })}
       </ul>
 
-      <h2>Explore Nuba Studio</h2>
+      <h2>{text.explore}</h2>
       <ul>
         <li>
-          <Link href="/about">About the studio and the team</Link>
+          <Link href={localePath(lang, "/about")}>{text.links.about}</Link>
         </li>
         <li>
-          <Link href="/services">Services: web, apps, marketplaces and product design</Link>
+          <Link href={localePath(lang, "/services")}>{text.links.services}</Link>
         </li>
         <li>
-          <Link href="/contact">Contact Nuba Studio</Link>
+          <Link href={localePath(lang, "/contact")}>{text.links.contact}</Link>
         </li>
       </ul>
     </section>

@@ -28,7 +28,7 @@ const PROCESS_N = ["01", "02", "03", "04"];
 
 export default function Services() {
   const lenis = useLenis();
-  const { lang } = useLanguage();
+  const { lang, path } = useLanguage();
   const t = getUiText(lang);
   const INTRO_WORDS = t.services.intro.split(" ");
   const SERVICES = SERVICE_META.map((meta, i) => ({ ...meta, ...t.services.list[i] }));
@@ -577,9 +577,9 @@ export default function Services() {
                           <Fragment key={slug}>
                             {i > 0 && <span className="svc-cases-sep">·</span>}
                             <Link
-                              href={`/cases/${slug}`}
+                              href={path(`/cases/${slug}`)}
                               className="svc-case-link"
-                              title={`${work.title} — ${work.seoTitle ?? work.subtitle}`}
+                              title={`${work.title} - ${work.seoTitle ?? work.subtitle}`}
                               onClick={(e) => e.stopPropagation()}
                             >
                               {work.title}

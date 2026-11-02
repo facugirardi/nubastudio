@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import LogoMark from "./LogoMark";
 import { useLanguage } from "../lib/i18n";
+import { localePath, stripLocale, type Lang } from "../lib/lang";
 import { getUiText } from "../lib/uiText";
 
 const NAV_IDS = ["work", "about", "services", "contact"] as const;
@@ -70,8 +71,10 @@ export default function Navbar({
   const langContentRef = useRef<HTMLDivElement>(null);
   const prevLangRef = useRef<string | null>(null);
   const pathname = usePathname();
-  const { lang, setLang } = useLanguage();
+  const { lang, path } = useLanguage();
   const t = getUiText(lang);
+  // Cambiar de idioma es ir a la misma página en el otro idioma: un link real, no un estado.
+  const langHref = (code: Lang) => localePath(code, stripLocale(pathname));
 
   const bounceLangChars = (delay = 0) => {
     const chars = langCodeRef.current?.querySelectorAll<HTMLElement>(".lang-char");
@@ -604,6 +607,7 @@ export default function Navbar({
           border: none;
           background: transparent;
           color: #000;
+          text-decoration: none;
           cursor: pointer;
           font-size: 0.85rem;
           letter-spacing: 0.01em;
@@ -651,8 +655,8 @@ export default function Navbar({
       >
         {/* Logo */}
         <a
-          href="/"
-          aria-label="Nuba Studio, inicio"
+          href={path("/")}
+          aria-label={t.nav.homeLabel}
           style={{ display: "flex", alignItems: "center" }}
         >
           <LogoMark play={visible} />
@@ -734,19 +738,18 @@ export default function Navbar({
               <span className="lang-menu-head-code" style={{ width: isMobile ? 40 : 46 }}>{lang.toUpperCase()}</span>
             </button>
             {LANG_OPTIONS.map((opt) => (
-              <button
+              <a
                 key={opt.code}
-                type="button"
+                href={langHref(opt.code)}
+                hrefLang={opt.code}
+                lang={opt.code}
                 role="menuitemradio"
                 aria-checked={lang === opt.code}
                 tabIndex={langMenuOpen ? 0 : -1}
                 data-stagger
                 className="lang-menu-opt"
                 onMouseEnter={(e) => bounceNavChars(e.currentTarget)}
-                onClick={() => {
-                  setLang(opt.code);
-                  setLangMenuOpen(false);
-                }}
+                onClick={() => setLangMenuOpen(false)}
               >
                 <span className="lang-opt-code">{opt.code.toUpperCase()}</span>
                 <span className="lang-opt-name">
@@ -755,7 +758,7 @@ export default function Navbar({
                   ))}
                 </span>
                 <span className="lang-opt-dot" />
-              </button>
+              </a>
             ))}
           </div>
         </div>
@@ -841,7 +844,7 @@ export default function Navbar({
             <button
               className="menu-close"
               onClick={(e) => { e.stopPropagation(); setOpen(false); }}
-              aria-label="Close menu"
+              aria-label={t.nav.close}
             >
               {t.nav.close}
               <span className="x">
@@ -859,15 +862,16 @@ export default function Navbar({
               <a
                 key={id}
                 data-stagger
-                href={id === "work" ? undefined : `/${id}`}
+                // "work" es la sección del portfolio de la home (id="work" en Works): destino real aunque el JS no corra.
+                href={id === "work" ? `${path("/")}#work` : path(`/${id}`)}
                 className="menu-panel-link"
                 onMouseEnter={(e) => bounceNavChars(e.currentTarget)}
                 onClick={(e) => {
                   if (id === "work") {
                     e.preventDefault();
                     setOpen(false);
-                    if (pathname !== "/") {
-                      window.location.href = "/?view=list";
+                    if (stripLocale(pathname) !== "/") {
+                      window.location.href = path("/?view=list");
                       return;
                     }
                     if (view === "spiral") {
@@ -879,7 +883,7 @@ export default function Navbar({
                   } else {
                     e.preventDefault();
                     setOpen(false);
-                    window.location.href = `/${id}`;
+                    window.location.href = path(`/${id}`);
                   }
                 }}
               >

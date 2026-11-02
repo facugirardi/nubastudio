@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import { getLenis } from "./SmoothScroll";
+import { useLanguage } from "../lib/i18n";
+import { langFromPathname, localePath } from "../lib/lang";
 import { heroImageSet } from "../lib/optimizedImage";
 
 /* ───────── Store de módulo: sobrevive la navegación SPA de Next ───────── */
@@ -24,7 +26,6 @@ export const HERO_OVERSCAN = 0.2;
 // En pantallas verticales (celulares) una portada horizontal a pantalla completa se recortaría
 // hasta mostrar apenas el centro: se muestra entera, al ancho, sobre una copia suya desenfocada.
 export const PORTRAIT = "(max-aspect-ratio: 1/1)";
-export const HERO_BACKDROP_FILTER = "blur(28px) brightness(0.55)";
 // En vertical el hero mide lo que su contenido: la imagen al ancho de la pantalla (con esta
 // proporción), a PORTRAIT_HERO_TOP px del borde de arriba, y el título debajo. El overlay del
 // morph aterriza en ese mismo rectángulo.
@@ -41,7 +42,10 @@ let prefetch: ((slug: string) => void) | null = null;
 // Se dispara desde la card del spiral (o la lista) al clickear un proyecto.
 export function startCaseTransition(p: CaseTransitionPayload) {
   if (listener) listener(p);
-  else window.location.href = `/cases/${p.slug}`; // fallback sin overlay montado
+  else {
+    // Fallback sin overlay montado: el idioma sale de la URL en la que está el visitante.
+    window.location.href = localePath(langFromPathname(window.location.pathname), `/cases/${p.slug}`);
+  }
 }
 
 // Calienta la ruta en hover: el mount de la página de caso deja de robarle
@@ -88,6 +92,7 @@ function decoded(img: HTMLImageElement) {
 /* ───────── Overlay: morph de la imagen (card → hero fullscreen) ───────── */
 export default function CaseTransitionProvider() {
   const router = useRouter();
+  const { path } = useLanguage();
   const rootRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -95,7 +100,7 @@ export default function CaseTransitionProvider() {
   const busyRef = useRef(false);
 
   useEffect(() => {
-    prefetch = (slug) => router.prefetch(`/cases/${slug}`);
+    prefetch = (slug) => router.prefetch(path(`/cases/${slug}`));
 
     listener = async (p) => {
       const root = rootRef.current;
@@ -105,7 +110,7 @@ export default function CaseTransitionProvider() {
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       if (!root || !backdrop || !wrap || !img || busyRef.current || reduced) {
-        router.push(`/cases/${p.slug}`);
+        router.push(path(`/cases/${p.slug}`));
         return;
       }
       busyRef.current = true;
@@ -218,7 +223,7 @@ export default function CaseTransitionProvider() {
         .call(
           () => {
             entryDelay = MORPH * (1 - NAV_AT) + 0.3;
-            router.push(`/cases/${p.slug}`);
+            router.push(path(`/cases/${p.slug}`));
           },
           undefined,
           MORPH * NAV_AT
@@ -229,7 +234,7 @@ export default function CaseTransitionProvider() {
       listener = null;
       prefetch = null;
     };
-  }, [router]);
+  }, [router, path]);
 
   return (
     <div

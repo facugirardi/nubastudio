@@ -1,58 +1,28 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useMemo } from "react";
+import { localePath, type Lang } from "./lang";
 
-export type Lang = "es" | "en";
-
-const STORAGE_KEY = "nuba_lang";
-
-function detectInitialLang(): Lang {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === "es" || stored === "en") return stored;
-  } catch {}
-  // Sin preferencia guardada: se infiere del idioma/localización del navegador.
-  const nav = typeof navigator !== "undefined" ? navigator.language || navigator.languages?.[0] : "";
-  return nav?.toLowerCase().startsWith("es") ? "es" : "en";
-}
+export type { Lang } from "./lang";
 
 type LanguageContextValue = {
   lang: Lang;
-  setLang: (l: Lang) => void;
-  toggleLang: () => void;
+  /** La URL de `path` en el idioma de la página: path("/about") → "/about" o "/es/about". */
+  path: (path: string) => string;
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  // Arranca en "en" (idioma base del contenido hardcodeado) para matchear el SSR;
-  // la detección real corre en el efecto, apenas hidrata en el cliente.
-  const [lang, setLangState] = useState<Lang>("en");
-
-  useEffect(() => {
-    setLangState(detectInitialLang());
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
-
-  const value = useMemo<LanguageContextValue>(() => {
-    // Solo se persiste ante una elección explícita: escribir en el efecto de montaje
-    // pisaba la preferencia guardada con el "en" inicial antes de leerla.
-    const setLang = (l: Lang) => {
-      try {
-        localStorage.setItem(STORAGE_KEY, l);
-      } catch {}
-      setLangState(l);
-    };
-    return {
-      lang,
-      setLang,
-      toggleLang: () => setLang(lang === "es" ? "en" : "es"),
-    };
-  }, [lang]);
-
+/**
+ * El idioma sale de la URL: lo decide el layout según el segmento [lang] y llega
+ * acá como prop, así el HTML que sale del servidor ya está en el idioma de la
+ * página (nada de detectarlo o cambiarlo en el navegador después de hidratar).
+ */
+export function LanguageProvider({ lang, children }: { lang: Lang; children: React.ReactNode }) {
+  const value = useMemo<LanguageContextValue>(
+    () => ({ lang, path: (path) => localePath(lang, path) }),
+    [lang]
+  );
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }
 

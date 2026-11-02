@@ -1,13 +1,9 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMotionValue, type MotionValue } from "./motionValue";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Line, useTexture } from "@react-three/drei";
-import * as THREE from "three";
-import ProjectImagePlane, { cardTextureSrc } from "./ProjectImagePlane";
+import { useMotionValue } from "./motionValue";
 import { optimizedSrc } from "../lib/optimizedImage";
 import { useLenis } from "./SmoothScroll";
 import { startCaseTransition } from "./caseTransition";
@@ -17,180 +13,21 @@ import { localizeWork } from "../lib/localizeWork";
 import { useLanguage } from "../lib/i18n";
 import { getUiText } from "../lib/uiText";
 
-const DEBUG_PATH = false; // dibuja el path punteado + un punto donde cae cada card (spacing/orientación)
-// Probar formas del resorte: "vertical" = columna que sube coileando · "spiral" = remolino hacia la cámara
-const CURVE_MODE: "vertical" | "spiral" = "vertical";
-const CARD_SCALE = 0.44; // escala constante de todas las cards (alfombras del mismo tamaño)
-
-const WORKS = visibleWorks.map(({ title, image, slug, subtitle, year }) => ({
-  title,
-  image,
-  slug,
-  subtitle,
-  year,
-}));
-
-const N = WORKS.length;
-
-/* ───────── Debug temporal: línea del path + puntos de cada card ───────── */
-function PathDebug({
-  curve,
-  remap,
-  offset,
-  count,
-}: {
-  curve: THREE.CatmullRomCurve3;
-  remap: (u: number) => number;
-  offset: MotionValue<number>;
-  count: number;
-}) {
-  const points = useMemo(() => curve.getPoints(220), [curve]);
-  const dotsRef = useRef<(THREE.Mesh | null)[]>([]);
-  const tmp = useMemo(() => new THREE.Vector3(), []);
-  useFrame(() => {
-    const o = offset.get();
-    for (let k = 0; k < count; k++) {
-      const raw = k / count - o;
-      const u = raw - Math.floor(raw); // fract
-      curve.getPointAt(remap(u), tmp);
-      dotsRef.current[k]?.position.copy(tmp);
-    }
+/**
+ * La espiral 3D (three.js + react-three-fiber + drei: ~250 KB comprimidos) vive en
+ * WorksSpiral.tsx y se descarga recién cuando hace falta: nunca en móvil, en la vista
+ * lista ni en navegadores sin WebGL. HomeClient la precarga apenas confirma que el
+ * equipo la va a usar, así en escritorio ya está lista cuando termina el loader.
+ */
+let spiralModule: Promise<typeof import("./WorksSpiral")> | null = null;
+export function preloadSpiral() {
+  spiralModule ??= import("./WorksSpiral").catch((err) => {
+    spiralModule = null; // permite reintentar; mientras tanto el error boundary muestra la lista
+    throw err;
   });
-  return (
-    <>
-      <Line points={points} color="#C6FF00" lineWidth={1} dashed dashSize={0.18} gapSize={0.12} transparent opacity={0.5} />
-      {Array.from({ length: count }).map((_, k) => (
-        <mesh key={k} ref={(el) => { dotsRef.current[k] = el; }}>
-          <sphereGeometry args={[0.07, 12, 12]} />
-          <meshBasicMaterial color="#ff2d6b" />
-        </mesh>
-      ))}
-    </>
-  );
+  return spiralModule;
 }
-
-/* ───────── Escena 3D: curva abierta + cards a lo largo del recorrido ───────── */
-function Scene({
-  offset,
-  impulse,
-  mobile,
-  onSelect,
-  onHoverStart,
-  onHoverEnd,
-}: {
-  offset: MotionValue<number>;
-  impulse: MotionValue<number>;
-  mobile: boolean;
-  onSelect: (slug: string, image: string, rect: { left: number; top: number; width: number; height: number }) => void;
-  onHoverStart: (title: string, image: string) => void;
-  onHoverEnd: () => void;
-}) {
-  // Ancho de la card más ancha (Nubapay cover es ~16:9; el resto 3:2).
-  const maxAspect = 1.78;
-
-  // Hélice / RESORTE horizontal: las cards avanzan en X mientras coilean en el plano Y-Z.
-  // Centro (s=0.5) al frente (protagonista); hacia los lados giran y recedan al fondo.
-  const curve = useMemo(() => {
-    const Wmain     = mobile ? 2.6 : 3.7;   // longitud del recorrido (más aplastado en vertical)
-    const Rcoil     = mobile ? 1.6 : 2.1;  // radio del coil (más ancho)
-    const Rz        = mobile ? 3.0 : 3.8;   // radio en profundidad (más ancho)
-    const endDepth  = mobile ? 4.5 : 6.8;   // cuánto recede hacia los extremos (central al frente)
-    const turns     = 2.3;                  // vueltas del resorte (menos vueltas → curvas más abiertas, no se tocan)
-    const xStart    = mobile ? -1.7 : -2.5; // X del inicio (arriba)
-    const xEnd      = mobile ? 2.8 : 4.2;   // X del final (abajo)
-    const WkickStart = mobile ? -1.9 : -2.9;  // empuje de la punta de ARRIBA (inicio): negativo = se expande a la DERECHA
-    const WkickEnd   = mobile ? -2.4 : -3.6;  // empuje de la punta de ABAJO (final): negativo = se expande a la IZQUIERDA
-    const sideSpread = mobile ? 2.6 : 3.4;    // cuánto se tiran los brazos hacia los COSTADOS (X) en vez de salir rectos
-    const tilt      = 0.262;                // inclinación de toda la columna (~15° a la izquierda)
-    const tiltAxis  = new THREE.Vector3(0, 0, 1);
-
-    const STEPS = 14;
-    const pts: THREE.Vector3[] = [];
-    for (let i = 0; i <= STEPS; i++) {
-      const s = i / STEPS;
-      const theta = (s - 0.5) * turns * Math.PI * 2; // θ=0 en el centro
-      const depth = Math.abs(s - 0.5) * endDepth;    // los extremos recedan al fondo
-      let x: number, y: number, z: number;
-      if (CURVE_MODE === "vertical") {
-        // Resorte VERTICAL: avanza en Y (columna), coilea en X-Z; central al frente
-        const u = (s - 0.5) * 2; // −1 (inicio) .. +1 (final)
-        const kick = u < 0 ? WkickStart : WkickEnd;                       // punta de arriba vs abajo
-        const tipMag = Math.pow(Math.abs(u), 3);                          // 0 en el centro · 1 en las puntas
-        const sideKick = Math.sign(u) * tipMag * kick;                    // X: abre las puntas a los costados
-        // ── Apertura lateral de los brazos VISIBLES: en vez de salir rectos, se tiran a los costados ──
-        // pow(|u|, 1.8) = apertura GRADUAL desde el centro (intacto) hacia las puntas: curvatura suave
-        // (radio grande) → los brazos se tiran a los lados sin doblez abrupto que combe las cards.
-        const spread   = -Math.sign(u) * Math.pow(Math.abs(u), 1.8) * sideSpread; // tira el brazo al costado
-        const yExtendGain = u < 0 ? 0.05 : 0.45;                         // arriba: casi sin extensión axial (no se dispara) · abajo: igual
-        const yExtend = Math.sign(u) * tipMag * Math.abs(kick) * yExtendGain; // Y: las puntas se extienden en el eje (evita la U)
-        const yLift = (u < 0 ? -1.0 : -2.5) * tipMag;                    // inicio ahora BAJA un poco (no se va arriba) · final baja
-        const centerDrop = (1 - u * u) * -0.6;                            // negativo = levanta un poco la zona central
-        y = THREE.MathUtils.lerp(Wmain, -Wmain, s) - yExtend + yLift - centerDrop; // inicio ARRIBA → final ABAJO
-        // Coil de amplitud CONSTANTE (mismo ancho en todo el resorte, puntas = centro)
-        x = Rcoil * Math.sin(theta) + THREE.MathUtils.lerp(xStart, xEnd, s) + sideKick + spread;
-        z = Rz * Math.cos(theta) - depth;
-      } else {
-        // ESPIRAL hacia la cámara: eje en Z, coilea en X-Y; central al frente (s=0.5 → z máx)
-        const r = Rcoil + depth * 0.35;              // el radio abre hacia los extremos
-        x = r * Math.cos(theta);
-        y = r * Math.sin(theta);
-        z = -depth; // s=0.5 al frente (z=0), extremos al fondo
-      }
-      pts.push(new THREE.Vector3(x, y, z).applyAxisAngle(tiltAxis, tilt));
-    }
-    return new THREE.CatmullRomCurve3(pts, false, "catmullrom", 0.5);
-  }, [mobile]);
-
-  useEffect(() => {
-    return () => {
-      for (const w of WORKS) useTexture.clear(cardTextureSrc(w.image));
-    };
-  }, []);
-
-  // ── Espaciado PEGADO POR ARCO (alfombras una al lado de la otra, mismo tamaño) ──
-  // Cada card ocupa un tramo de la curva igual a su ancho en el mundo. getPointAt ya está
-  // parametrizado por longitud de arco, así que un reparto uniforme (remap = identidad) deja
-  // las cards equiespaciadas por arco = pegadas borde a borde, formando una cinta/túnel.
-  const { remap, count } = useMemo(() => {
-    const CARD_W = 2.15 * maxAspect;     // ancho de la card MÁS ANCHA en el mundo (aspect real)
-    const SC = CARD_SCALE;              // escala constante (= a la de la card)
-    const GAP_W = -0.12;                // solape leve: menos separación que borde a borde
-    const cardArc = CARD_W * SC + GAP_W;
-    const len = curve.getLength();
-    const count = Math.max(3, Math.round(len / cardArc));
-    const remap = (u: number) => Math.min(0.999999, Math.max(0, u)); // arc-length uniforme
-    return { remap, count };
-  }, [curve, mobile, maxAspect]);
-
-  return (
-    <group position={[-0.64, -1.13, 1.9]}>
-      {DEBUG_PATH && <PathDebug curve={curve} remap={remap} offset={offset} count={count} />}
-      {Array.from({ length: count }).map((_, k) => {
-        const work = WORKS[k % N];
-        return (
-          <ProjectImagePlane
-            key={k}
-            imageUrl={work.image}
-            slug={work.slug}
-            title={work.title}
-            count={count}
-            slotU={k / count}
-            offset={offset}
-            curve={curve}
-            remap={remap}
-            cardScale={CARD_SCALE}
-            stairSlope={count * 0.28}
-            impulse={impulse}
-            mobile={mobile}
-            onSelect={onSelect}
-            onHoverStart={onHoverStart}
-            onHoverEnd={onHoverEnd}
-          />
-        );
-      })}
-    </group>
-  );
-}
+const WorksSpiral = lazy(preloadSpiral);
 
 /* ───────── Works ───────── */
 export default function Works({
@@ -215,7 +52,7 @@ export default function Works({
   const [hovered, setHovered] = useState<number | null>(null); // work activo en la lista
   const [listMode, setListMode] = useState<"grid" | "list" | "feed">("list"); // sub-vista dentro de list
   const initialModeSetRef = useRef(false); // en mobile arranca en grid (una sola vez, al detectar el viewport)
-  const { lang } = useLanguage();
+  const { lang, path } = useLanguage();
   const t = getUiText(lang);
   const localizedWorks = useMemo(() => visibleWorks.map((w) => localizeWork(w, lang)), [lang]);
   // El Canvas no se oculta con opacity: sigue en GPU (~360MB de texturas 4500px + CSS filter).
@@ -329,50 +166,26 @@ export default function Works({
     () =>
       webglAvailable && canvasMounted ? (
         <WebGLErrorBoundary onError={onWebGLFailed}>
-          <Canvas
-            frameloop={effectiveView === "spiral" && inView ? "always" : "never"}
-            dpr={[1, 1.25]}
-            performance={{ min: 0.5 }}
-            gl={{
-              alpha: true,
-              antialias: false,
-              powerPreference: "default",
-              failIfMajorPerformanceCaveat: true,
-            }}
-            camera={{ position: [0, 0, 8.0], fov: 50 }}
-            style={{
-              position: "absolute",
-              inset: 0,
-              zIndex: 3,
-              opacity: effectiveView === "spiral" ? 1 : 0,
-              transform: effectiveView === "spiral" ? "scale(1)" : "scale(0.96)",
-              pointerEvents: effectiveView === "spiral" ? "auto" : "none",
-              touchAction: effectiveView === "spiral" ? "pan-y" : "auto",
-              transition:
-                effectiveView === "spiral"
-                  ? "opacity 0.8s ease 0.15s"
-                  : "opacity 0.45s ease, transform 0.5s ease",
-            }}
-          >
-            <Suspense fallback={null}>
-              <Scene
-                offset={offset}
-                impulse={impulse}
-                mobile={mobile}
-                onSelect={(slug, image, rect) => startCaseTransition({ slug, image, rect })}
-                onHoverStart={(title, image) => {
-                  hoverCountRef.current += 1;
-                  setLabelTitle(title);
-                  setLabelImage(image);
-                  setLabelOpen(true);
-                }}
-                onHoverEnd={() => {
-                  hoverCountRef.current = Math.max(0, hoverCountRef.current - 1);
-                  if (hoverCountRef.current === 0) setLabelOpen(false);
-                }}
-              />
-            </Suspense>
-          </Canvas>
+          <Suspense fallback={null}>
+            <WorksSpiral
+              active={effectiveView === "spiral"}
+              inView={inView}
+              mobile={mobile}
+              offset={offset}
+              impulse={impulse}
+              onSelect={(slug, image, rect) => startCaseTransition({ slug, image, rect })}
+              onHoverStart={(title, image) => {
+                hoverCountRef.current += 1;
+                setLabelTitle(title);
+                setLabelImage(image);
+                setLabelOpen(true);
+              }}
+              onHoverEnd={() => {
+                hoverCountRef.current = Math.max(0, hoverCountRef.current - 1);
+                if (hoverCountRef.current === 0) setLabelOpen(false);
+              }}
+            />
+          </Suspense>
         </WebGLErrorBoundary>
       ) : null,
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -434,7 +247,7 @@ export default function Works({
           font-size: clamp(1.05rem, 1.8vw, 1.6rem);
           font-weight: 500;
           letter-spacing: -0.02em;
-          color: rgba(255, 255, 255, 0.28);
+          color: rgba(255, 255, 255, 0.48);
           transition: color 0.25s ease;
         }
         .works-mode-btn:hover {
@@ -468,7 +281,7 @@ export default function Works({
         .works-list-count {
           font-size: 0.38em;
           font-weight: 400;
-          color: rgba(255, 255, 255, 0.45);
+          color: rgba(255, 255, 255, 0.48);
           vertical-align: super;
           letter-spacing: 0;
           margin-left: 0.15em;
@@ -544,11 +357,11 @@ export default function Works({
           display: block;
           font-size: clamp(0.8rem, 1vw, 0.9rem);
           line-height: 1.4;
-          color: rgba(255, 255, 255, 0.42);
+          color: rgba(255, 255, 255, 0.48);
         }
         .works-list-year {
           font-size: clamp(0.8rem, 1vw, 0.9rem);
-          color: rgba(255, 255, 255, 0.42);
+          color: rgba(255, 255, 255, 0.48);
           font-variant-numeric: tabular-nums;
           justify-self: end;
         }
@@ -596,7 +409,7 @@ export default function Works({
         }
         .works-grid-year {
           font-size: clamp(0.78rem, 0.95vw, 0.88rem);
-          color: rgba(255, 255, 255, 0.42);
+          color: rgba(255, 255, 255, 0.48);
           font-variant-numeric: tabular-nums;
         }
         .works-grid-item,
@@ -653,12 +466,12 @@ export default function Works({
         }
         .works-feed-cat {
           font-size: clamp(0.8rem, 1vw, 0.9rem);
-          color: rgba(255, 255, 255, 0.42);
+          color: rgba(255, 255, 255, 0.48);
           margin-left: 0.9rem;
         }
         .works-feed-year {
           font-size: clamp(0.8rem, 1vw, 0.9rem);
-          color: rgba(255, 255, 255, 0.42);
+          color: rgba(255, 255, 255, 0.48);
           font-variant-numeric: tabular-nums;
         }
         @media (max-width: 1023px) {
@@ -842,7 +655,7 @@ export default function Works({
           <header className="works-list-head">
             <h2 className="works-list-heading">
               {t.works.heading}
-              <sup className="works-list-count">({String(WORKS.length).padStart(2, "0")})</sup>
+              <sup className="works-list-count">({String(visibleWorks.length).padStart(2, "0")})</sup>
             </h2>
             <nav className="works-mode" aria-label="View mode">
               {(["grid", "list", "feed"] as const).map((m) => (
@@ -864,7 +677,7 @@ export default function Works({
             return (
               <Link
                 key={w.slug}
-                href={`/cases/${w.slug}`}
+                href={path(`/cases/${w.slug}`)}
                 className={`works-list-row${isActive ? " is-active" : ""}`}
                 onClick={openWork(w)}
                 onMouseEnter={() => {
@@ -882,7 +695,7 @@ export default function Works({
                 }}
               >
                 <div className="works-list-thumb">
-                  <Image src={w.image} alt={`${w.title} — ${w.subtitle}`} fill sizes="148px" />
+                  <Image src={w.image} alt={`${w.title} - ${w.subtitle}`} fill sizes="148px" priority={i === 0} />
                 </div>
                 <div className="works-list-meta">
                   <span className="works-list-title">{w.title}</span>
@@ -899,14 +712,14 @@ export default function Works({
               {localizedWorks.map((w, i) => (
                 <Link
                   key={w.slug}
-                  href={`/cases/${w.slug}`}
+                  href={path(`/cases/${w.slug}`)}
                   className={`works-grid-item${hovered === i ? " is-active" : ""}`}
                   onClick={openWork(w)}
                   onMouseEnter={() => setHovered(i)}
                   onMouseLeave={() => setHovered(null)}
                 >
                   <div className="works-grid-thumb">
-                    <Image src={w.image} alt="" fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" />
+                    <Image src={w.image} alt="" fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" priority={i === 0} />
                   </div>
                   <div className="works-grid-caption">
                     <span className="works-grid-title">{w.title}</span>
@@ -921,14 +734,14 @@ export default function Works({
               {localizedWorks.map((w, i) => (
                 <Link
                   key={w.slug}
-                  href={`/cases/${w.slug}`}
+                  href={path(`/cases/${w.slug}`)}
                   className={`works-feed-item${hovered === i ? " is-active" : ""}`}
                   onClick={openWork(w)}
                   onMouseEnter={() => setHovered(i)}
                   onMouseLeave={() => setHovered(null)}
                 >
                   <div className="works-feed-thumb">
-                    <Image src={w.image} alt="" fill sizes="(max-width: 900px) 100vw, 900px" />
+                    <Image src={w.image} alt="" fill sizes="(max-width: 900px) 100vw, 900px" priority={i === 0} />
                   </div>
                   <div className="works-feed-caption">
                     <span>

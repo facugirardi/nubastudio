@@ -1,18 +1,22 @@
 import { ImageResponse } from "next/og";
-import { works, getWork } from "../../data/works";
-import { SITE_NAME } from "../../lib/seo";
+import { works, getWork } from "../../../data/works";
+import { LANGS, isLang } from "../../../lib/lang";
+import { localizeWork } from "../../../lib/localizeWork";
+import { SITE_NAME } from "../../../lib/seo";
 
 export const alt = `Case study by ${SITE_NAME}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export function generateStaticParams() {
-  return works.map((work) => ({ slug: work.slug }));
+  return LANGS.flatMap((lang) => works.map((work) => ({ lang, slug: work.slug })));
 }
 
-export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const work = getWork(slug);
+export default async function Image({ params }: { params: Promise<{ lang: string; slug: string }> }) {
+  const { lang: rawLang, slug } = await params;
+  const lang = isLang(rawLang) ? rawLang : "en";
+  const found = getWork(slug);
+  const work = found ? localizeWork(found, lang) : undefined;
   const title = work?.title ?? SITE_NAME;
   const subtitle = work?.seoTitle ?? work?.subtitle ?? "";
   const tech = (work?.technologies ?? []).slice(0, 5).join(" · ");

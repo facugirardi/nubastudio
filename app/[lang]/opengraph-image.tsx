@@ -1,11 +1,19 @@
 import { ImageResponse } from "next/og";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "./lib/seo";
+import { LANGS, isLang } from "../lib/lang";
+import { SITE_NAME, SITE_TAGLINE } from "../lib/seo";
+import { seoText } from "../lib/seoText";
 
-export const alt = `${SITE_NAME} — ${SITE_TAGLINE}`;
+export const alt = `${SITE_NAME} - ${SITE_TAGLINE}`;
 export const size = { width: 1200, height: 630 };
+export function generateStaticParams() {
+  return LANGS.map((lang) => ({ lang }));
+}
+
 export const contentType = "image/png";
 
-export default async function Image() {
+export default async function Image({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const text = seoText[isLang(raw) ? raw : "en"];
   return new ImageResponse(
     (
       <div
@@ -47,11 +55,11 @@ export default async function Image() {
               flexWrap: "wrap",
             }}
           >
-            We turn ideas into
-            <span style={{ color: "#C6FF00", marginLeft: 22 }}>digital products</span>
+            {text.og.home.title}
+            <span style={{ color: "#C6FF00", marginLeft: 22 }}>{text.og.home.accent}</span>
           </div>
           <div style={{ fontSize: 30, color: "rgba(255,255,255,0.55)", maxWidth: 900 }}>
-            {SITE_DESCRIPTION}
+            {text.siteDescription}
           </div>
         </div>
 
@@ -65,7 +73,7 @@ export default async function Image() {
             paddingTop: 28,
           }}
         >
-          <div style={{ display: "flex" }}>Web · Apps · Marketplaces</div>
+          <div style={{ display: "flex" }}>{text.og.home.footer}</div>
           <div style={{ display: "flex" }}>nuba.studio</div>
         </div>
       </div>

@@ -58,7 +58,7 @@ export default function About() {
   const socialRef = useRef<HTMLElement>(null);
   const cellsRef  = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const { lang } = useLanguage();
+  const { lang, path } = useLanguage();
   const t = getUiText(lang);
 
   useEffect(() => {
@@ -673,7 +673,7 @@ export default function About() {
             {[...ROW1, ...ROW1].map((item, i) => (
               <Link
                 key={i}
-                href={`/cases/${item.slug}`}
+                href={path(`/cases/${item.slug}`)}
                 className="mq-card"
                 style={
                   isMobile
@@ -683,7 +683,7 @@ export default function About() {
               >
                 <Image
                   src={item.image}
-                  alt={`${works.find((w) => w.slug === item.slug)?.title ?? item.slug} case study by Nuba Studio`}
+                  alt={`${works.find((w) => w.slug === item.slug)?.title ?? item.slug} ${t.caseStudy.caseByline}`}
                   fill
                   sizes="(max-width: 900px) 50vw, 40vw"
                 />
