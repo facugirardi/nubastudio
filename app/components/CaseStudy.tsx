@@ -9,7 +9,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "./Navbar";
 import { useLenis } from "./SmoothScroll";
 import {
+  HERO_BACKDROP_FILTER,
   HERO_OVERSCAN,
+  PORTRAIT,
   consumeCaseEntryDelay,
   markCaseHeroReady,
   startCaseTransition,
@@ -230,13 +232,26 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
           }}
         >
           <Image
+            className="cs-hero-img"
             src={work.image}
             alt={`${work.title} — ${work.subtitle} case study by Nuba Studio`}
             fill
             priority
             quality={HERO_QUALITY}
             sizes={HERO_SIZES}
-            style={{ objectFit: "cover", display: "block" }}
+            style={{ display: "block", zIndex: 1 }}
+          />
+          {/* Sólo se ve en pantallas verticales (ver .cs-hero-backdrop). Misma URL que la de arriba. */}
+          <Image
+            className="cs-hero-backdrop"
+            src={work.image}
+            alt=""
+            aria-hidden
+            fill
+            loading="lazy"
+            quality={HERO_QUALITY}
+            sizes={HERO_SIZES}
+            style={{ objectFit: "fill", filter: HERO_BACKDROP_FILTER, transform: "scale(1.15)", zIndex: 0 }}
           />
         </div>
         <div
@@ -569,6 +584,12 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
           min-width: 0;
           border-radius: 16;
           overflow: hidden;
+        }
+        .cs-hero-img { object-fit: cover; }
+        .cs-hero-backdrop { display: none; }
+        @media ${PORTRAIT} {
+          .cs-hero-img { object-fit: contain; }
+          .cs-hero-backdrop { display: block; }
         }
         .cs-pair-figure img {
           width: 100%;

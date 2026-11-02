@@ -21,6 +21,11 @@ let listener: Listener | null = null;
 // así el overlay y el hero coinciden pixel a pixel y el relevo no se ve.
 export const HERO_OVERSCAN = 0.2;
 
+// En pantallas verticales (celulares) una portada horizontal a pantalla completa se recortaría
+// hasta mostrar apenas el centro: se muestra entera, al ancho, sobre una copia suya desenfocada.
+export const PORTRAIT = "(max-aspect-ratio: 1/1)";
+export const HERO_BACKDROP_FILTER = "blur(28px) brightness(0.55)";
+
 const MORPH = 1.15; // duración del zoom card → hero
 const NAV_AT = 0.46; // fracción del morph en la que se dispara el router.push
 const RADIUS = 12;
@@ -82,6 +87,7 @@ export default function CaseTransitionProvider() {
   const backdropRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+  const bgRef = useRef<HTMLImageElement>(null);
   const busyRef = useRef(false);
 
   useEffect(() => {
@@ -92,9 +98,10 @@ export default function CaseTransitionProvider() {
       const backdrop = backdropRef.current;
       const wrap = wrapRef.current;
       const img = imgRef.current;
+      const bg = bgRef.current;
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      if (!root || !backdrop || !wrap || !img || busyRef.current || reduced) {
+      if (!root || !backdrop || !wrap || !img || !bg || busyRef.current || reduced) {
         router.push(`/cases/${p.slug}`);
         return;
       }
@@ -139,6 +146,16 @@ export default function CaseTransitionProvider() {
         img.sizes = set.sizes;
         img.srcset = set.srcSet;
         img.src = set.src;
+      }
+
+      // Mismo encuadre que el hero del caso: en vertical, la imagen entera sobre su copia desenfocada.
+      const portrait = window.matchMedia(PORTRAIT).matches;
+      img.style.objectFit = portrait ? "contain" : "cover";
+      bg.style.display = portrait ? "block" : "none";
+      if (portrait && bg.src !== img.src) {
+        bg.sizes = img.sizes;
+        bg.srcset = img.srcset;
+        bg.src = img.src;
       }
 
       gsap.set(root, { opacity: 1, pointerEvents: "auto" });
@@ -227,9 +244,24 @@ export default function CaseTransitionProvider() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
+          ref={bgRef}
+          alt=""
+          style={{
+            display: "none",
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "fill",
+            filter: HERO_BACKDROP_FILTER,
+            transform: "scale(1.15)",
+          }}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           ref={imgRef}
           alt=""
-          style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
+          style={{ display: "block", position: "relative", width: "100%", height: "100%", objectFit: "cover" }}
         />
       </div>
     </div>
