@@ -22,8 +22,11 @@ let listener: Listener | null = null;
 // así el overlay y el hero coinciden pixel a pixel y el relevo no se ve.
 export const HERO_OVERSCAN = 0.2;
 
-// Los casos de mockups muestran la imagen entera sobre una copia desenfocada de sí misma.
-export const MOCKUP_BACKDROP = "blur(40px) brightness(0.9)";
+// En la spiral el mockup entra en la card a esta fracción de su tamaño (con margen alrededor);
+// el morph lo escala hasta el 100% del hero.
+export const MOCKUP_INSET = 0.82;
+// Fracción del box del hero (120vh) que sobra arriba y abajo de los 100vh visibles.
+export const MOCKUP_HERO_INSET = HERO_OVERSCAN / 2 / (1 + HERO_OVERSCAN);
 
 const MORPH = 1.15; // duración del zoom card → hero
 const NAV_AT = 0.46; // fracción del morph en la que se dispara el router.push
@@ -86,7 +89,6 @@ export default function CaseTransitionProvider() {
   const backdropRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
-  const bgRef = useRef<HTMLImageElement>(null);
   const busyRef = useRef(false);
 
   useEffect(() => {
@@ -97,10 +99,9 @@ export default function CaseTransitionProvider() {
       const backdrop = backdropRef.current;
       const wrap = wrapRef.current;
       const img = imgRef.current;
-      const bg = bgRef.current;
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      if (!root || !backdrop || !wrap || !img || !bg || busyRef.current || reduced) {
+      if (!root || !backdrop || !wrap || !img || busyRef.current || reduced) {
         router.push(`/cases/${p.slug}`);
         return;
       }
@@ -147,15 +148,13 @@ export default function CaseTransitionProvider() {
         img.src = set.src;
       }
 
-      // Mismo encuadre que el hero del caso: mockups enteros sobre su propio fondo desenfocado.
-      const mockups = !!getWork(p.slug)?.mockups;
+      const mockups = getWork(p.slug)?.mockups;
       img.style.objectFit = mockups ? "contain" : "cover";
-      bg.style.display = mockups ? "block" : "none";
-      if (mockups && bg.src !== img.src) {
-        bg.sizes = img.sizes;
-        bg.srcset = img.srcset;
-        bg.src = img.src;
-      }
+      // Igual que el hero: el mockup se encuadra en los 100vh visibles del box, sobre su color de fondo.
+      img.style.top = mockups ? `${MOCKUP_HERO_INSET * 100}%` : "0";
+      img.style.height = mockups ? `${(1 - 2 * MOCKUP_HERO_INSET) * 100}%` : "100%";
+      wrap.style.background = mockups?.background ?? "";
+      gsap.set(img, { clearProps: "transform" });
 
       gsap.set(root, { opacity: 1, pointerEvents: "auto" });
       gsap.set(backdrop, { opacity: 0 });
@@ -189,6 +188,13 @@ export default function CaseTransitionProvider() {
         },
       });
 
+      if (mockups) {
+        // Arranca con el mockup al mismo tamaño que tiene dentro de la card (MOCKUP_INSET de la card).
+        const aspect = img.naturalWidth / img.naturalHeight || vw / vh;
+        const shown = Math.min(vw, vh * aspect); // ancho del mockup en el hero
+        const startScale = Math.min(1, (MOCKUP_INSET * (p.rect.width / scale)) / shown);
+        tl.fromTo(img, { scale: startScale }, { scale: 1, duration: MORPH, ease: "power2.inOut" }, 0);
+      }
       tl.to(backdrop, { opacity: 1, duration: MORPH * 0.45, ease: "power2.out" }, 0)
         .fromTo(
           wrap,
@@ -241,21 +247,6 @@ export default function CaseTransitionProvider() {
         data-case-morph
         style={{ position: "absolute", left: 0, top: 0, willChange: "transform, clip-path" }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          ref={bgRef}
-          alt=""
-          style={{
-            display: "none",
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            filter: MOCKUP_BACKDROP,
-            transform: "scale(1.15)",
-          }}
-        />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}

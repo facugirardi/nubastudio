@@ -5,7 +5,7 @@ import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import type { MotionValue } from "./motionValue";
-import { prefetchCase } from "./caseTransition";
+import { MOCKUP_INSET, prefetchCase } from "./caseTransition";
 import { optimizedSrc } from "../lib/optimizedImage";
 
 /* ───────── Config de la deformación (todo ajustable) ───────── */
@@ -27,23 +27,42 @@ const H = 2.15; // altura del plano en unidades de mundo
 const SAMPLES = 9; // puntos de la curva muestreados a lo ancho de cada card (cinta literal)
 const MAX_TEXTURE = 1024; // las covers originales son 3840px; en GPU eso es ~35MB c/u
 
-// La textura baja la variante optimizada de ~1080px, no el original.
-export const cardTextureSrc = (src: string) => optimizedSrc(src, MAX_TEXTURE / 2);
+// Los mockups traen texto chico de interfaz: textura más grande y a calidad 95.
+const MAX_TEXTURE_MOCKUP = 1600;
 
-function downscaleTexture(texture: THREE.Texture) {
+// La textura baja la variante optimizada de ~1080px, no el original.
+export const cardTextureSrc = (src: string, mockup = false) =>
+  mockup ? optimizedSrc(src, MAX_TEXTURE_MOCKUP / 2, 95) : optimizedSrc(src, MAX_TEXTURE / 2);
+
+function downscaleTexture(texture: THREE.Texture, background?: string) {
+  // La textura se comparte entre cards (y React corre el memo dos veces en dev): una sola pasada.
+  if (background) {
+    if (texture.userData.framed) return;
+    texture.userData.framed = true;
+  }
   const img = texture.image as CanvasImageSource & { width?: number; height?: number };
   const width = img?.width ?? 0;
   const height = img?.height ?? 0;
   if (!width || !height) return;
-  const maxDim = Math.max(width, height);
-  if (maxDim <= MAX_TEXTURE) return;
-  const scale = MAX_TEXTURE / maxDim;
+  const limit = background ? MAX_TEXTURE_MOCKUP : MAX_TEXTURE;
+  const scale = Math.min(1, limit / Math.max(width, height));
+  if (scale === 1 && !background) return;
   const canvas = document.createElement("canvas");
   canvas.width = Math.round(width * scale);
   canvas.height = Math.round(height * scale);
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  ctx.imageSmoothingQuality = "high";
+  if (background) {
+    // Mockup entero, con margen, sobre el color de su fondo (el mismo que usan el hero y las miniaturas).
+    ctx.fillStyle = background;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const w = canvas.width * MOCKUP_INSET;
+    const h = canvas.height * MOCKUP_INSET;
+    ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+  } else {
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  }
   texture.image = canvas;
   texture.needsUpdate = true;
 }
@@ -81,6 +100,7 @@ export default function ProjectImagePlane({
   stairSlope,
   impulse,
   mobile,
+  mockupBackground,
   onSelect,
   slug,
   title,
@@ -98,6 +118,7 @@ export default function ProjectImagePlane({
   stairSlope: number;            // escalonado: bajada en Y por unidad de t (≈20px entre cards)
   impulse: MotionValue<number>;  // skew por inercia del scroll
   mobile: boolean;
+  mockupBackground?: string;     // imagen de mockup: se muestra entera, con margen, sobre este color
   onSelect: (slug: string, image: string, rect: { left: number; top: number; width: number; height: number }) => void;
   slug: string;
   title: string;                 // nombre del proyecto (label al hover)
@@ -106,7 +127,7 @@ export default function ProjectImagePlane({
   onHoverEnd: () => void;
   config?: DistortionConfig;
 }) {
-  const texture = useTexture(cardTextureSrc(imageUrl));
+  const texture = useTexture(cardTextureSrc(imageUrl, !!mockupBackground));
   const meshRef = useRef<THREE.Mesh>(null);
   const camera = useThree((s) => s.camera);
   const gl = useThree((s) => s.gl);
@@ -131,13 +152,13 @@ export default function ProjectImagePlane({
   }, [texture]);
 
   useMemo(() => {
-    downscaleTexture(texture);
+    downscaleTexture(texture, mockupBackground);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = 4;
     texture.generateMipmaps = true;
     texture.minFilter = THREE.LinearMipmapLinearFilter;
     texture.needsUpdate = true;
-  }, [texture]);
+  }, [texture, mockupBackground]);
 
   const curveLen = useMemo(() => curve.getLength(), [curve]); // longitud de arco (mapea ancho de card → Δt)
 

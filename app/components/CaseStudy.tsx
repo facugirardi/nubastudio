@@ -16,7 +16,7 @@ import {
 } from "./caseTransition";
 import type { WorkItem } from "../data/works";
 import { HERO_QUALITY, HERO_SIZES, heroImageSet } from "../lib/optimizedImage";
-import { MOCKUP_BACKDROP } from "./caseTransition";
+import { MOCKUP_HERO_INSET } from "./caseTransition";
 import { localizeWork } from "../lib/localizeWork";
 import { useLanguage } from "../lib/i18n";
 import { getUiText, type UiText } from "../lib/uiText";
@@ -75,9 +75,9 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
   // El hero ya muestra work.image a pantalla completa: repetirla como primera
   // pieza de la galeria la descargaba dos veces en los 11 casos.
   // Los mockups se muestran enteros: la portada también va en el contenido.
-  const mockups = !!work.mockups;
+  const mockups = work.mockups;
   const gallery = (work.images ?? []).filter(
-    (src) => (mockups || src !== work.image) && !pairImages.includes(src)
+    (src) => (!!mockups || src !== work.image) && !pairImages.includes(src)
   );
 
   useEffect(() => {
@@ -228,30 +228,33 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
           style={{
             position: "absolute",
             inset: `${(-HERO_OVERSCAN / 2) * 100}% 0`,
+            background: mockups?.background,
             zIndex: 0,
             willChange: "transform",
           }}
         >
-          <Image
-            src={work.image}
-            alt={`${work.title} — ${work.subtitle} case study by Nuba Studio`}
-            fill
-            priority
-            quality={HERO_QUALITY}
-            sizes={HERO_SIZES}
-            style={{ objectFit: mockups ? "contain" : "cover", display: "block", zIndex: 1 }}
-          />
-          {mockups && (
-            // Misma URL que la de arriba: sale de caché. Rellena lo que la imagen entera no cubre.
+          {mockups ? (
+            // El box de 120vh sobra por el parallax: el mockup se encuadra en los 100vh que se ven.
+            <div style={{ position: "absolute", inset: `${MOCKUP_HERO_INSET * 100}% 0`, zIndex: 1 }}>
+              <Image
+                src={work.image}
+                alt={`${work.title} — ${work.subtitle} case study by Nuba Studio`}
+                fill
+                priority
+                quality={HERO_QUALITY}
+                sizes={HERO_SIZES}
+                style={{ objectFit: "contain", display: "block" }}
+              />
+            </div>
+          ) : (
             <Image
               src={work.image}
-              alt=""
-              aria-hidden
+              alt={`${work.title} — ${work.subtitle} case study by Nuba Studio`}
               fill
               priority
               quality={HERO_QUALITY}
               sizes={HERO_SIZES}
-              style={{ objectFit: "cover", display: "block", filter: MOCKUP_BACKDROP, transform: "scale(1.15)" }}
+              style={{ objectFit: "cover", display: "block" }}
             />
           )}
         </div>
@@ -410,16 +413,20 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
       {(gallery.length > 0 || pairImages.length > 0) && (
         <section style={{ padding: "clamp(2rem, 6vw, 5rem) 6vw", display: "flex", flexDirection: "column", gap: "clamp(4rem, 9vw, 8rem)" }}>
           {gallery.length > 0 &&
-            gallery.map((src, i) => (
+            gallery.map((src, i) => {
+              const ratio = mockups ? mockups.ratios?.[src] ?? 16 / 9 : 16 / 10;
+              // Un mockup alto (4:3) a todo el ancho pasaría el alto de la pantalla: va más angosto.
+              const full = i % 3 === 0 && ratio >= 1.5;
+              return (
               <figure
                 key={src}
                 style={{
                   margin: 0,
                   overflow: "hidden",
                   borderRadius: 16,
-                  alignSelf: i % 3 === 0 ? "stretch" : i % 3 === 1 ? "flex-end" : "flex-start",
-                  width: i % 3 === 0 ? "100%" : "min(78%, 1000px)",
-                  aspectRatio: mockups ? work.imageRatios?.[src] ?? 16 / 9 : "16 / 10",
+                  alignSelf: full ? "stretch" : i % 3 === 0 ? "center" : i % 3 === 1 ? "flex-end" : "flex-start",
+                  width: full ? "100%" : "min(78%, 1000px)",
+                  aspectRatio: ratio,
                   position: "relative",
                 }}
               >
@@ -430,7 +437,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
                     alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
                     fill
                     quality={95}
-                    sizes={i % 3 === 0 ? "100vw" : "(max-width: 1460px) 78vw, 1000px"}
+                    sizes={full ? "100vw" : "(max-width: 1460px) 78vw, 1000px"}
                     style={{ objectFit: "cover", display: "block" }}
                   />
                 ) : (
@@ -451,7 +458,8 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
                   </div>
                 )}
               </figure>
-            ))}
+              );
+            })}
 
           {pairImages.length > 0 && (
             <div className="cs-pair-row">

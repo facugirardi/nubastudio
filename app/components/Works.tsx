@@ -22,12 +22,13 @@ const DEBUG_PATH = false; // dibuja el path punteado + un punto donde cae cada c
 const CURVE_MODE: "vertical" | "spiral" = "vertical";
 const CARD_SCALE = 0.44; // escala constante de todas las cards (alfombras del mismo tamaño)
 
-const WORKS = visibleWorks.map(({ title, image, slug, subtitle, year }) => ({
+const WORKS = visibleWorks.map(({ title, image, slug, subtitle, year, mockups }) => ({
   title,
   image,
   slug,
   subtitle,
   year,
+  mockups,
 }));
 
 const N = WORKS.length;
@@ -143,7 +144,7 @@ function Scene({
 
   useEffect(() => {
     return () => {
-      for (const w of WORKS) useTexture.clear(cardTextureSrc(w.image));
+      for (const w of WORKS) useTexture.clear(cardTextureSrc(w.image, !!w.mockups));
     };
   }, []);
 
@@ -182,6 +183,7 @@ function Scene({
             stairSlope={count * 0.28}
             impulse={impulse}
             mobile={mobile}
+            mockupBackground={work.mockups?.background}
             onSelect={onSelect}
             onHoverStart={onHoverStart}
             onHoverEnd={onHoverEnd}
@@ -193,12 +195,6 @@ function Scene({
 }
 
 /* ───────── Works ───────── */
-/** Relleno de las miniaturas de mockups: una copia mínima de la imagen, desenfocada por CSS. */
-function MockupBackdrop({ src }: { src: string }) {
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img className="works-thumb-bg" src={optimizedSrc(src, 96)} alt="" aria-hidden />;
-}
-
 export default function Works({
   view,
   setView,
@@ -525,19 +521,10 @@ export default function Works({
           transform: scale(1.01);
           transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        /* Mockups: la imagen entera sobre una copia suya desenfocada, sin recorte. */
-        .works-list-thumb img.works-thumb-bg,
-        .works-grid-thumb img.works-thumb-bg,
-        .works-feed-thumb img.works-thumb-bg {
-          position: absolute;
-          inset: 0;
-          object-fit: cover;
-          filter: blur(14px) brightness(0.9);
-          transform: scale(1.3) !important;
-        }
-        .works-list-thumb.is-mockup img:not(.works-thumb-bg),
-        .works-grid-thumb.is-mockup img:not(.works-thumb-bg),
-        .works-feed-thumb.is-mockup img:not(.works-thumb-bg) {
+        /* Mockups: la imagen entera, sin recorte, sobre su color de fondo. */
+        .works-list-thumb.is-mockup img,
+        .works-grid-thumb.is-mockup img,
+        .works-feed-thumb.is-mockup img {
           object-fit: contain;
         }
         .works-list-row.is-active .works-list-thumb img,
@@ -902,8 +889,7 @@ export default function Works({
                   transition: `opacity 0.6s ease ${effectiveView === "list" ? 0.12 + i * 0.06 : 0}s, transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) ${effectiveView === "list" ? 0.12 + i * 0.06 : 0}s`,
                 }}
               >
-                <div className={`works-list-thumb${w.mockups ? " is-mockup" : ""}`}>
-                  {w.mockups && <MockupBackdrop src={w.image} />}
+                <div className={`works-list-thumb${w.mockups ? " is-mockup" : ""}`} style={{ background: w.mockups?.background }}>
                   <Image src={w.image} alt={`${w.title} — ${w.subtitle}`} fill sizes="148px" />
                 </div>
                 <div className="works-list-meta">
@@ -927,8 +913,7 @@ export default function Works({
                   onMouseEnter={() => setHovered(i)}
                   onMouseLeave={() => setHovered(null)}
                 >
-                  <div className={`works-grid-thumb${w.mockups ? " is-mockup" : ""}`}>
-                    {w.mockups && <MockupBackdrop src={w.image} />}
+                  <div className={`works-grid-thumb${w.mockups ? " is-mockup" : ""}`} style={{ background: w.mockups?.background }}>
                     <Image src={w.image} alt="" fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" />
                   </div>
                   <div className="works-grid-caption">
@@ -950,8 +935,7 @@ export default function Works({
                   onMouseEnter={() => setHovered(i)}
                   onMouseLeave={() => setHovered(null)}
                 >
-                  <div className={`works-feed-thumb${w.mockups ? " is-mockup" : ""}`}>
-                    {w.mockups && <MockupBackdrop src={w.image} />}
+                  <div className={`works-feed-thumb${w.mockups ? " is-mockup" : ""}`} style={{ background: w.mockups?.background }}>
                     <Image src={w.image} alt="" fill sizes="(max-width: 900px) 100vw, 900px" />
                   </div>
                   <div className="works-feed-caption">
