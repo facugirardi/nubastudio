@@ -176,14 +176,14 @@ export const works: WorkItem[] = [
   {
     title: "Tivvu",
     subtitle: "Product Design & Development",
-    image: "/images/cases/tivvu/tivvu1.webp",
+    image: "/images/cases/tivvu/tivvu-landing.webp",
     slug: "tivvu",
     year: "2026",
     mockups: {
       background: "#ffffff",
       ratios: {
-        "/images/cases/tivvu/tivvu1.webp": 1448 / 1086,
-        "/images/cases/tivvu/tivvu4.webp": 1448 / 1086,
+        "/images/cases/tivvu/tivvu-landing.webp": 1448 / 1086,
+        "/images/cases/tivvu/tivvu-sitio.webp": 1448 / 1086,
       },
     },
     task: "Real estate agencies run on a patchwork: listings in spreadsheets, clients in a CRM nobody opens, offers sent as PDFs, rentals tracked on a calendar, and a website that someone else has to update. Every piece lives in a different tool, so nothing connects: an inquiry never reaches the right agent, an offer goes out and no one knows if it was opened, and publishing a listing means doing the work twice. Agencies needed one place to run the whole operation, and their own site on top of it.",
@@ -206,10 +206,10 @@ export const works: WorkItem[] = [
     ],
     technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Python", "Flask", "PostgreSQL", "Paddle", "Figma"],
     images: [
-      "/images/cases/tivvu/tivvu1.webp",
-      "/images/cases/tivvu/tivvu2.webp",
-      "/images/cases/tivvu/tivvu3.webp",
-      "/images/cases/tivvu/tivvu4.webp",
+      "/images/cases/tivvu/tivvu-landing.webp",
+      "/images/cases/tivvu/tivvu-dashboard.webp",
+      "/images/cases/tivvu/tivvu-editor.webp",
+      "/images/cases/tivvu/tivvu-sitio.webp",
     ],
     links: {},
   },
