@@ -154,7 +154,9 @@ function Scene({
     const GAP_W = -0.12;                // solape leve: menos separación que borde a borde
     const cardArc = CARD_W * SC + GAP_W;
     const len = curve.getLength();
-    const count = Math.max(3, Math.round(len / cardArc));
+    // Múltiplo de N: el anillo cierra (offset hace fract) y, si no, el último slot repite
+    // WORKS[0] justo pegado al primero (Nubapay doble) y ese work sale una vez de más.
+    const count = Math.max(N, Math.round(len / cardArc / N) * N);
     const remap = (u: number) => Math.min(0.999999, Math.max(0, u)); // arc-length uniforme
     return { remap, count };
   }, [curve, mobile, maxAspect]);
