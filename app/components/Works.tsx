@@ -50,7 +50,8 @@ export default function Works({
   const [labelImage, setLabelImage] = useState("");   // thumbnail del proyecto en hover
   const [labelOpen, setLabelOpen] = useState(false);  // dispara el slide del label
   const [hovered, setHovered] = useState<number | null>(null); // work activo en la lista
-  const [listMode, setListMode] = useState<"grid" | "list" | "feed">("grid"); // sub-vista dentro de list
+  const [listMode, setListMode] = useState<"grid" | "list" | "feed">("list"); // sub-vista dentro de list
+  const initialModeSetRef = useRef(false); // en mobile arranca en grid (una sola vez, al detectar el viewport)
   const { lang, path } = useLanguage();
   const t = getUiText(lang);
   const localizedWorks = useMemo(() => visibleWorks.map((w) => localizeWork(w, lang)), [lang]);
@@ -64,6 +65,10 @@ export default function Works({
     const update = () => {
       const isMobile = window.innerWidth < 768;
       setMobile(isMobile);
+      if (!initialModeSetRef.current) {
+        initialModeSetRef.current = true;
+        if (isMobile) setListMode("grid");
+      }
     };
     update();
     window.addEventListener("resize", update);
@@ -653,7 +658,7 @@ export default function Works({
               <sup className="works-list-count">({String(visibleWorks.length).padStart(2, "0")})</sup>
             </h2>
             <nav className="works-mode" aria-label="View mode">
-              {(["grid", "list", "feed"] as const).map((m) => (
+              {(mobile ? (["grid", "list", "feed"] as const) : (["list", "grid", "feed"] as const)).map((m) => (
                 <button
                   key={m}
                   type="button"
