@@ -30,7 +30,7 @@ const dict = {
     },
     about: {
       hero: {
-        title: "A small *studio* from *Córdoba* where *design,* *code* and *strategy* share the same *table.*",
+        title: "A *studio* from *Córdoba* where *design,* *code* and *strategy* share the same *table.*",
         lead: "We design and build sites, apps, marketplaces and platforms. The scope changes with every project. The way we work doesn't.",
         cta: "Start a project",
       },
@@ -40,7 +40,7 @@ const dict = {
         title: "One table, three disciplines.",
         body: [
           "Nuba started from a simple conviction: the best products come from teams that never hand the work off. Design, interaction and code happen in the same conversation, from the first sketch to the last deploy.",
-          "We work remotely with clients across Latin America and beyond, in Spanish or English, and we stay on after launch when the product needs us.",
+          "We work remotely with clients from all over the world, in Spanish or English, and we stay on after launch when the product needs us.",
         ],
         facts: {
           basedIn: "Based in",
@@ -79,7 +79,6 @@ const dict = {
         { title: "Web Development", desc: "Sites and platforms that load fast, feel alive and turn visitors into clients." },
         { title: "Mobile Apps", desc: "Native-feeling iOS & Android products people actually want to open." },
         { title: "Marketplaces & Platforms", desc: "Two-sided products with payments, dashboards and infrastructure built to scale." },
-        { title: "Branding & Identity", desc: "Visual systems that make you unmistakable across every touchpoint." },
         { title: "Product Strategy & MVP", desc: "From raw idea to a shipped MVP, validated, scoped and built to grow." },
       ],
       relatedWork: "Related work",
@@ -102,7 +101,7 @@ const dict = {
       hero: {
         manifesto: "*Nuba* is a *studio* that *designs* and *builds* websites, apps, *marketplaces* and *more*",
         index: "Nuba Studio",
-        since: "Since 2024",
+        since: "Since 2025",
         discipline: "Design + development",
         fine: "Fine",
         bold: "Bold",
@@ -142,7 +141,7 @@ const dict = {
     },
     servicesPage: {
       hero: {
-        title: "Five ways we help: *websites,* *apps,* *marketplaces,* *brands* and the *strategy* behind them.",
+        title: "Four ways we help: *websites,* *apps,* *marketplaces* and the *strategy* behind them.",
         cta: "Start a project",
       },
       capabilities: {
@@ -188,7 +187,7 @@ const dict = {
           {
             question: "Can you work with our existing team or codebase?",
             answer:
-              "Yes. We can join a product that already exists: we review the code first and pick it up from there. That is how we work with Kennedy's Group, where we are the ongoing full-stack team.",
+              "Yes. We can join a product that already exists: we review the code first and pick it up from there. We can also stay on as your ongoing full-stack team.",
           },
           {
             question: "Do you build MVPs?",
@@ -232,12 +231,12 @@ const dict = {
       {
         question: "Do you work with clients outside Argentina?",
         answer:
-          "Yes. The studio is based in Córdoba and works remotely with clients across Latin America and beyond. We work in English or Spanish, whichever suits your team.",
+          "Yes. We work with clients from all over the world. The studio is based in Córdoba and works fully remotely, in English or Spanish, whichever suits your team.",
       },
       {
         question: "Do you offer maintenance after launch?",
         answer:
-          "Yes. Launch is rarely the end of a product. We stay on for maintenance and continuous improvement when you want us to: for Kennedy's Group we are the ongoing full-stack team, still shipping features long after the first release.",
+          "Yes. Launch is rarely the end of a product. We stay on for maintenance and continuous improvement when you want us to: fixing, monitoring and shipping new features long after the first release.",
       },
       {
         question: "How do you structure contracts?",
@@ -360,7 +359,7 @@ const dict = {
     },
     about: {
       hero: {
-        title: "Un *estudio* chico de *Córdoba* donde *diseño,* *código* y *estrategia* comparten la misma *mesa.*",
+        title: "Un *estudio* de *Córdoba* donde *diseño,* *código* y *estrategia* comparten la misma *mesa.*",
         lead: "Diseñamos y construimos sitios, apps, marketplaces y plataformas. El alcance cambia en cada proyecto. La forma de trabajar, no.",
         cta: "Empezar un proyecto",
       },
@@ -370,7 +369,7 @@ const dict = {
         title: "Una mesa, tres disciplinas.",
         body: [
           "Nuba nació de una convicción simple: los mejores productos salen de equipos que nunca delegan el trabajo. Diseño, interacción y código pasan por la misma conversación, del primer boceto al último deploy.",
-          "Trabajamos de forma remota con clientes en toda Latinoamérica y más allá, en español o en inglés, y seguimos después del lanzamiento cuando el producto nos necesita.",
+          "Trabajamos de forma remota con clientes de todas partes del mundo, en español o en inglés, y seguimos después del lanzamiento cuando el producto nos necesita.",
         ],
         facts: {
           basedIn: "Ubicados en",
@@ -409,7 +408,6 @@ const dict = {
         { title: "Desarrollo Web", desc: "Sitios y plataformas que cargan rápido, se sienten vivos y convierten visitantes en clientes." },
         { title: "Apps Móviles", desc: "Productos iOS y Android con sensación nativa que la gente realmente quiere abrir." },
         { title: "Marketplaces y Plataformas", desc: "Productos de dos lados con pagos, dashboards e infraestructura construida para escalar." },
-        { title: "Branding e Identidad", desc: "Sistemas visuales que te hacen inconfundible en cada punto de contacto." },
         { title: "Estrategia de Producto y MVP", desc: "De una idea en bruto a un MVP lanzado, validado, definido y construido para crecer." },
       ],
       relatedWork: "Trabajo relacionado",
@@ -432,7 +430,7 @@ const dict = {
       hero: {
         manifesto: "*Nuba* es un *estudio* que *diseña* y *construye* webs, apps, *marketplaces* y *más*",
         index: "Nuba Studio",
-        since: "Desde 2024",
+        since: "Desde 2025",
         discipline: "Diseño + desarrollo",
         fine: "Fine",
         bold: "Bold",
@@ -472,7 +470,7 @@ const dict = {
     },
     servicesPage: {
       hero: {
-        title: "Cinco formas de ayudarte: *webs,* *apps,* *marketplaces,* *marcas* y la *estrategia* detrás.",
+        title: "Cuatro formas de ayudarte: *webs,* *apps,* *marketplaces* y la *estrategia* detrás.",
         cta: "Empezar un proyecto",
       },
       capabilities: {
@@ -518,7 +516,7 @@ const dict = {
           {
             question: "¿Pueden trabajar con nuestro equipo o código existente?",
             answer:
-              "Sí. Podemos sumarnos a un producto que ya existe: primero revisamos el código y seguimos desde ahí. Así trabajamos con Kennedy's Group, donde somos el equipo full-stack permanente.",
+              "Sí. Podemos sumarnos a un producto que ya existe: primero revisamos el código y seguimos desde ahí. También podemos quedarnos como tu equipo full-stack permanente.",
           },
           {
             question: "¿Hacen MVPs?",
@@ -562,12 +560,12 @@ const dict = {
       {
         question: "¿Trabajan con clientes fuera de Argentina?",
         answer:
-          "Sí. El estudio está en Córdoba y trabaja de forma remota con clientes en toda Latinoamérica y más allá. Trabajamos en inglés o en español, según lo que le quede mejor a tu equipo.",
+          "Sí. Trabajamos con clientes de todas partes del mundo. El estudio está en Córdoba y trabaja 100% en remoto, en inglés o en español, según lo que le quede mejor a tu equipo.",
       },
       {
         question: "¿Ofrecen mantenimiento después del lanzamiento?",
         answer:
-          "Sí. El lanzamiento casi nunca es el final de un producto. Seguimos con mantenimiento y mejora continua cuando lo necesitás: para Kennedy's Group somos el equipo full-stack permanente, todavía entregando funcionalidades mucho después del primer release.",
+          "Sí. El lanzamiento casi nunca es el final de un producto. Seguimos con mantenimiento y mejora continua cuando lo necesitás: corregimos, monitoreamos y entregamos funcionalidades nuevas mucho después del primer release.",
       },
       {
         question: "¿Cómo estructuran los contratos?",

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import LandingClient from "../components/landing/LandingClient";
-import { JsonLd, webPageJsonLd } from "../lib/jsonLd";
+import { JsonLd, faqJsonLd, webPageJsonLd } from "../lib/jsonLd";
 import { isLang } from "../lib/lang";
 import { pageMetadata } from "../lib/pageMeta";
 import { seoText } from "../lib/seoText";
+import { getUiText } from "../lib/uiText";
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -23,7 +24,13 @@ export default async function Home({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={webPageJsonLd(lang, "/", { name: home.title, description: home.description })} />
+      <JsonLd
+        data={[
+          webPageJsonLd(lang, "/", { name: home.title, description: home.description }),
+          // Las preguntas del JSON-LD son las mismas que se ven en la home.
+          faqJsonLd(getUiText(lang).faq),
+        ]}
+      />
       <LandingClient />
     </>
   );

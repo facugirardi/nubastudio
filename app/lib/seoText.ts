@@ -81,7 +81,7 @@ export const seoText: Record<Lang, SeoText> = {
     services: {
       title: "Services - Web, app & marketplace development",
       description:
-        "Web development, iOS & Android apps, marketplaces and platforms, branding and product strategy. Nuba Studio designs and builds digital products end to end.",
+        "Web development, iOS & Android apps, marketplaces and platforms, and product strategy. Nuba Studio designs and builds digital products end to end.",
       ogTitle: "Services - Nuba Studio",
     },
     contact: {
@@ -114,11 +114,6 @@ export const seoText: Record<Lang, SeoText> = {
           "Two-sided products with payments, dashboards, authentication and APIs, built to scale.",
       },
       {
-        name: "Branding & Identity",
-        description:
-          "Visual systems, art direction and design systems that make you unmistakable across every touchpoint.",
-      },
-      {
         name: "Product Strategy & MVP",
         description:
           "From raw idea to a shipped MVP: discovery, prototyping and a roadmap validated and scoped to grow.",
@@ -144,7 +139,7 @@ export const seoText: Record<Lang, SeoText> = {
         title: "We design and build",
         accent: "digital products",
         subtitle:
-          "Web development · Mobile apps · Marketplaces & platforms · Branding · Product strategy and MVP.",
+          "Web development · Mobile apps · Marketplaces & platforms · Product strategy and MVP.",
         footer: "Services",
       },
       contact: {
@@ -167,7 +162,7 @@ export const seoText: Record<Lang, SeoText> = {
       h1: "Nuba Studio - custom software and app development studio in Córdoba, Argentina",
       intro: [
         "Nuba Studio is a digital product studio based in Córdoba, Argentina. We design and build websites, mobile apps, marketplaces and digital products end to end - from strategy and product design to development and launch. We work with founders and companies across Argentina, Latin America and the rest of the world.",
-        "Our services include web design and development, iOS and Android app development, marketplace and platform engineering, product and UI/UX design, and brand identity for digital products. We build with Next.js, React, React Native, TypeScript, Python and Node.",
+        "Our services include web design and development, iOS and Android app development, marketplace and platform engineering, product and UI/UX design. We build with Next.js, React, React Native, TypeScript, Python and Node.",
       ],
       selectedWork: "Selected work",
       explore: "Explore Nuba Studio",
@@ -213,7 +208,7 @@ export const seoText: Record<Lang, SeoText> = {
     services: {
       title: "Servicios - Desarrollo web, apps y marketplaces",
       description:
-        "Desarrollo web, apps iOS y Android, marketplaces y plataformas, branding y estrategia de producto. Nuba Studio diseña y desarrolla productos digitales.",
+        "Desarrollo web, apps iOS y Android, marketplaces y plataformas, y estrategia de producto. Nuba Studio diseña y desarrolla productos digitales.",
       ogTitle: "Servicios - Nuba Studio",
     },
     contact: {
@@ -276,7 +271,7 @@ export const seoText: Record<Lang, SeoText> = {
         title: "Diseñamos y desarrollamos",
         accent: "productos digitales",
         subtitle:
-          "Desarrollo web · Apps móviles · Marketplaces y plataformas · Branding · Estrategia de producto y MVP.",
+          "Desarrollo web · Apps móviles · Marketplaces y plataformas · Estrategia de producto y MVP.",
         footer: "Servicios",
       },
       contact: {
@@ -299,7 +294,7 @@ export const seoText: Record<Lang, SeoText> = {
       h1: "Nuba Studio - estudio de desarrollo de software a medida y apps en Córdoba, Argentina",
       intro: [
         "Nuba Studio es un estudio de producto digital con base en Córdoba, Argentina. Diseñamos y desarrollamos sitios web, apps móviles, marketplaces y productos digitales de punta a punta - desde la estrategia y el diseño de producto hasta el desarrollo y el lanzamiento. Trabajamos con emprendedores y empresas de Argentina, Latinoamérica y el resto del mundo.",
-        "Nuestros servicios incluyen diseño y desarrollo web, desarrollo de apps iOS y Android, ingeniería de marketplaces y plataformas, diseño de producto y UI/UX, e identidad de marca para productos digitales. Construimos con Next.js, React, React Native, TypeScript, Python y Node.",
+        "Nuestros servicios incluyen diseño y desarrollo web, desarrollo de apps iOS y Android, ingeniería de marketplaces y plataformas, diseño de producto y UI/UX. Construimos con Next.js, React, React Native, TypeScript, Python y Node.",
       ],
       selectedWork: "Trabajos seleccionados",
       explore: "Explorá Nuba Studio",

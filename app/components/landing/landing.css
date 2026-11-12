@@ -525,7 +525,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: clamp(88px, 11vw, 180px);
-  margin-bottom: -0.17em;
+  margin-bottom: -0.04em;
   font-family: var(--font-outfit), sans-serif;
   font-size: 15.2vw;
   font-weight: 300;
