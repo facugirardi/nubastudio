@@ -164,7 +164,7 @@ export default function CaseTransitionProvider() {
       img.style.objectFit = portrait ? "contain" : "cover";
       img.style.top = portrait ? `${imgTop}px` : "0";
       img.style.height = portrait ? `${imgH}px` : "100%";
-      wrap.style.background = portrait ? "#000" : "";
+      wrap.style.background = portrait ? "#ffffff" : "";
       gsap.set(img, { clearProps: "transform" });
 
       gsap.set(root, { opacity: 1, pointerEvents: "auto" });
@@ -250,7 +250,7 @@ export default function CaseTransitionProvider() {
         overflow: "hidden",
       }}
     >
-      <div ref={backdropRef} style={{ position: "absolute", inset: 0, background: "#000" }} />
+      <div ref={backdropRef} style={{ position: "absolute", inset: 0, background: "#ffffff" }} />
       <div
         ref={wrapRef}
         data-case-morph

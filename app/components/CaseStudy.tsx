@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import Arrow from "./Arrow";
+import ClosingCta from "./landing/ClosingCta";
+import { useNavTone } from "./landing/useNavTone";
+import "./landing/landing.css";
+import "./case/case.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "./Navbar";
@@ -25,27 +30,7 @@ import { getUiText, type UiText } from "../lib/uiText";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ACCENT = "#C6FF00";
 const noop = () => {};
-
-function ExternalLinkIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <line x1="7" y1="17" x2="17" y2="7" />
-      <polyline points="7 7 17 7 17 17" />
-    </svg>
-  );
-}
 
 function platforms(links: WorkItem["links"] | undefined, t: UiText) {
   if (!links) return [];
@@ -64,10 +49,26 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
   const rootRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLDivElement>(null);
   const nextImgRef = useRef<HTMLImageElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const [portrait, setPortrait] = useState(false);
   const { lang, path } = useLanguage();
   const t = getUiText(lang);
   const work = localizeWork(rawWork, lang);
   const next = localizeWork(rawNext, lang);
+
+  // Sobre el hero el nav queda blanco; desde el contenido pasa a tinta sobre papel.
+  useNavTone(contentRef, "#0b0b0a", "#ffffff");
+  // En vertical el hero es compacto y queda sobre papel: el nav también va en tinta.
+  useNavTone(heroRef, portrait ? "#0b0b0a" : "#ffffff", portrait ? "#ffffff" : "transparent");
+
+  useEffect(() => {
+    const mq = window.matchMedia(PORTRAIT);
+    const sync = () => setPortrait(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   const links = platforms(work.links, t);
   const pairImages =
@@ -145,17 +146,6 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
         });
       });
 
-      // Líneas lima de las features crecen al entrar
-      gsap.utils.toArray<HTMLElement>("[data-line]").forEach((el) => {
-        gsap.from(el, {
-          scaleX: 0,
-          transformOrigin: "left",
-          duration: 0.9,
-          ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 90%" },
-        });
-      });
-
       // Parallax sutil en las imágenes de galería
       gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el, i) => {
         gsap.fromTo(
@@ -205,33 +195,31 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
     });
   };
 
+  const chapters = [
+    { label: t.caseStudy.challenge, body: work.task },
+    { label: t.caseStudy.solution, body: work.solutions },
+    { label: t.caseStudy.process, body: work.process },
+  ].filter((c) => c.body);
+  // Rótulos numerados como en la landing: (01) Resumen, (02) El Desafío…
+  let n = 0;
+  const num = () => `(${String(++n).padStart(2, "0")})`;
+  const overviewN = num();
+  const chapterNs = chapters.map(() => num());
+  const featuresN = work.features?.length ? num() : "";
+  const resultN = work.result ? num() : "";
+  const shotClass = (i: number) => (i % 3 === 0 ? "cs-shot-full" : i % 3 === 1 ? "cs-shot-l" : "cs-shot-r");
+
   return (
-    <div ref={rootRef} style={{ background: "#000", color: "#fff", position: "relative", overflow: "hidden" }}>
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: -1,
-          pointerEvents: "none",
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-          backgroundSize: "55px 55px",
-        }}
-      />
+    <div ref={rootRef} className="ln cs">
       <Navbar visible view="list" setView={noop} showToggle={false} />
 
       {/* ───────── Hero fullscreen (match con el final del morph) ───────── */}
-      <section className="cs-hero" style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
+      <section ref={heroRef} className="cs-hero">
         {/* El box mide 120vh centrado: el overlay del morph aterriza en este mismo encuadre. */}
         <div
           ref={heroImgRef}
           className="cs-hero-media"
-          style={{
-            position: "absolute",
-            inset: `${(-HERO_OVERSCAN / 2) * 100}% 0`,
-            zIndex: 0,
-            willChange: "transform",
-          }}
+          style={{ position: "absolute", inset: `${(-HERO_OVERSCAN / 2) * 100}% 0`, zIndex: 0, willChange: "transform" }}
         >
           <Image
             className="cs-hero-img"
@@ -239,359 +227,232 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
             alt={`${work.title} - ${work.subtitle} ${t.caseStudy.caseByline}`}
             fill
             priority
+            fetchPriority="high"
             quality={HERO_QUALITY}
             sizes={HERO_SIZES}
             style={{ display: "block", zIndex: 1 }}
           />
         </div>
-        <div
-          className="cs-hero-shade"
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 1,
-            background: "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.2) 45%, rgba(0,0,0,0.45) 100%)",
-          }}
-        />
-        <div
-          className="cs-hero-text"
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 2,
-            padding: "0 6vw 6vh",
-          }}
-        >
+        <div className="cs-hero-shade" />
+        <div className="cs-hero-text">
           {/* Breadcrumb visible que refleja el BreadcrumbList del JSON-LD. */}
-          <nav
-            data-hero
-            aria-label={t.caseStudy.breadcrumb}
-            style={{ marginBottom: "1rem", fontSize: "0.72rem", letterSpacing: "0.12em", textTransform: "uppercase" }}
-          >
-            <ol style={{ display: "flex", alignItems: "center", gap: "0.55rem", listStyle: "none", margin: 0, padding: 0 }}>
+          <nav data-hero className="cs-crumbs" aria-label={t.caseStudy.breadcrumb}>
+            <ol>
               <li>
-                <Link href={path("/")} style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
-                  {t.caseStudy.home}
-                </Link>
+                <Link href={path("/")}>{t.caseStudy.home}</Link>
               </li>
-              <li aria-hidden style={{ color: "rgba(255,255,255,0.28)" }}>/</li>
+              <li aria-hidden>/</li>
               <li>
-                <Link href={path("/works")} style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
-                  {t.nav.work}
-                </Link>
+                <Link href={path("/works")}>{t.nav.work}</Link>
               </li>
-              <li aria-hidden style={{ color: "rgba(255,255,255,0.28)" }}>/</li>
-              <li aria-current="page" style={{ color: "rgba(255,255,255,0.72)" }}>
-                {work.title}
-              </li>
+              <li aria-hidden>/</li>
+              <li aria-current="page">{work.title}</li>
             </ol>
           </nav>
-
-          <div data-hero style={{ display: "flex", alignItems: "center", marginBottom: "1.4rem" }}>
-            <span style={{ textTransform: "uppercase", letterSpacing: "0.22em", fontSize: "0.72rem", color: ACCENT }}>
-              {work.subtitle}
-            </span>
-          </div>
-          <h1
-            data-hero
-            style={{
-              fontSize: "clamp(3rem, 11vw, 11rem)",
-              lineHeight: 0.92,
-              letterSpacing: "-0.04em",
-              fontWeight: 600,
-              margin: 0,
-            }}
-          >
+          {/* El H1 lleva el nombre y qué es el producto: es la frase que la gente busca. */}
+          <h1 data-hero className="cs-h1">
             {work.title}
+            {work.seoTitle && <> <span className="cs-h1-sub">{work.seoTitle}</span></>}
           </h1>
-        </div>
-        <div
-          data-hero
-          style={{
-            position: "absolute",
-            right: "6vw",
-            bottom: "6vh",
-            zIndex: 2,
-            fontSize: "0.6rem",
-            letterSpacing: "0.25em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.4)",
-          }}
-        >
-          {t.caseStudy.scroll}
-        </div>
-      </section>
-
-      {/* ───────── Intro / overview ───────── */}
-      <section style={{ padding: "clamp(5rem, 12vw, 11rem) 6vw", maxWidth: 1400, margin: "0 auto" }}>
-        <div style={{ display: "grid", gap: "3rem", gridTemplateColumns: "minmax(0, 1fr)" }} className="cs-intro-grid">
-          <div data-reveal style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", alignSelf: "start" }}>
-            {(work.technologies ?? []).slice(0, 4).map((t) => (
-              <span
-                key={t}
-                style={{
-                  border: "1px solid rgba(255,255,255,0.16)",
-                  borderRadius: 999,
-                  padding: "0.35rem 0.9rem",
-                  fontSize: "0.72rem",
-                  color: "rgba(255,255,255,0.7)",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {t}
+          <div data-hero className="cs-hero-foot">
+            <span>{work.subtitle}</span>
+            {work.year && (
+              <span>
+                {t.caseStudy.year} <b>{work.year}</b>
               </span>
-            ))}
+            )}
+            <span>{t.caseStudy.scroll}</span>
           </div>
-          <p
-            data-reveal
-            style={{
-              fontSize: "clamp(1.4rem, 3.2vw, 2.6rem)",
-              lineHeight: 1.28,
-              letterSpacing: "-0.02em",
-              color: "rgba(255,255,255,0.92)",
-              margin: 0,
-            }}
-          >
-            {work.description}
-          </p>
         </div>
       </section>
 
-      {/* ───────── Challenge / Solution / Process (sticky bicolumna) ───────── */}
-      {[
-        { label: t.caseStudy.challenge, body: work.task },
-        { label: t.caseStudy.solution, body: work.solutions },
-        { label: t.caseStudy.process, body: work.process },
-      ]
-        .filter((b) => b.body)
-        .map((b) => (
-          <section
-            key={b.label}
-            style={{ padding: "0 6vw clamp(4rem, 9vw, 8rem)", maxWidth: 1400, margin: "0 auto" }}
-          >
-            <div className="cs-two-col" style={{ display: "grid", gap: "2.5rem", gridTemplateColumns: "1fr" }}>
-              <div>
-                <h2
-                  data-reveal
-                  style={{
-                    position: "sticky",
-                    top: "18vh",
-                    fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-                    letterSpacing: "-0.03em",
-                    fontWeight: 500,
-                    margin: 0,
-                  }}
-                >
-                  <span
-                    aria-hidden
-                    style={{ display: "inline-block", width: "0.9em", height: "0.07em", background: ACCENT, verticalAlign: "0.28em" }}
-                  />{" "}
-                  {b.label}
-                </h2>
-              </div>
-              <p
-                data-reveal
-                style={{
-                  fontSize: "clamp(1.05rem, 1.5vw, 1.4rem)",
-                  lineHeight: 1.7,
-                  color: "rgba(255,255,255,0.62)",
-                  margin: 0,
-                  maxWidth: 720,
-                }}
-              >
-                {b.body}
+      <div ref={contentRef}>
+        {/* ───────── Resumen + datos ───────── */}
+        <section className="lx-sec">
+          <div className="cs-grid">
+            <span className="lx-label" data-reveal>
+              {overviewN} {t.caseStudy.overview}
+            </span>
+            {work.description && (
+              <p className="cs-lead" data-reveal>
+                {work.description}
               </p>
-            </div>
-          </section>
-        ))}
+            )}
+            <dl className="cs-facts" data-reveal>
+              <div className="cs-fact">
+                <dt>{t.caseStudy.discipline}</dt>
+                <dd>{work.subtitle}</dd>
+              </div>
+              {work.year && (
+                <div className="cs-fact">
+                  <dt>{t.caseStudy.year}</dt>
+                  <dd>{work.year}</dd>
+                </div>
+              )}
+              {work.technologies && work.technologies.length > 0 && (
+                <div className="cs-fact">
+                  <dt>{t.caseStudy.stack}</dt>
+                  <dd>{work.technologies.slice(0, 5).join(", ")}</dd>
+                </div>
+              )}
+              {links.length > 0 && (
+                <div className="cs-fact">
+                  <dt>{t.caseStudy.visit}</dt>
+                  <dd className="cs-fact-links">
+                    {links.map((l) => (
+                      <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="lx-ul">
+                        {l.label}
+                        <Arrow />
+                      </a>
+                    ))}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </div>
+        </section>
 
-      {/* ───────── Galería con parallax alternado ───────── */}
-      {(gallery.length > 0 || pairImages.length > 0) && (
-        <section style={{ padding: "clamp(2rem, 6vw, 5rem) 6vw", display: "flex", flexDirection: "column", gap: "clamp(4rem, 9vw, 8rem)" }}>
-          {gallery.length > 0 &&
-            gallery.map((src, i) => (
-              <figure
-                key={src}
-                style={{
-                  margin: 0,
-                  overflow: "hidden",
-                  borderRadius: 16,
-                  alignSelf: i % 3 === 0 ? "stretch" : i % 3 === 1 ? "flex-end" : "flex-start",
-                  width: i % 3 === 0 ? "100%" : "min(78%, 1000px)",
-                  aspectRatio: "16 / 10",
-                  position: "relative",
-                }}
-              >
+        {/* ───────── Desafío / Solución / Proceso ───────── */}
+        {chapters.length > 0 && (
+          <section className="lx-sec cs-chapters">
+            {chapters.map((c, i) => (
+              <div key={c.label} className="cs-chapter" data-reveal>
+                <span className="cs-chapter-n">{chapterNs[i]}</span>
+                <h2 className="cs-chapter-t">{c.label}</h2>
+                <p className="cs-chapter-b">{c.body}</p>
+              </div>
+            ))}
+          </section>
+        )}
+
+        {/* ───────── Galería con parallax ───────── */}
+        {(gallery.length > 0 || pairImages.length > 0) && (
+          <section className="lx-sec cs-gallery">
+            {gallery.map((src, i) => (
+              <figure key={src} className={`cs-shot ${shotClass(i)}`}>
                 {/* El sobreancho vertical vive en el wrapper: la Image con fill
                     no admite height propio y el transform va sobre el div. */}
-                <div
-                  data-parallax
-                  style={{ position: "absolute", inset: "-16% 0", willChange: "transform" }}
-                >
+                <div data-parallax className="cs-shot-par">
                   <Image
                     src={src}
                     alt={`${work.title} - ${work.subtitle}, ${t.caseStudy.screenWord} ${i + 1}`}
                     fill
                     quality={95}
-                    sizes={i % 3 === 0 ? "110vw" : "(max-width: 1460px) 86vw, 1240px"}
-                    style={{ objectFit: "cover", display: "block" }}
+                    sizes={i % 3 === 0 ? "100vw" : "(max-width: 899px) 100vw, 60vw"}
                   />
                 </div>
               </figure>
             ))}
+            {pairImages.length > 0 && (
+              <div className="cs-pair">
+                {pairImages.map((src, i) => (
+                  <figure key={src}>
+                    <Image
+                      src={src}
+                      alt={`${work.title} - ${work.subtitle}, ${t.caseStudy.screenWord} ${i + 1}`}
+                      width={2400}
+                      height={1600}
+                      quality={95}
+                      sizes="(max-width: 899px) 100vw, 520px"
+                    />
+                  </figure>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
-          {pairImages.length > 0 && (
-            <div className="cs-pair-row">
-              {pairImages.map((src, i) => (
-                <figure key={src} className="cs-pair-figure">
-                  <Image
-                    src={src}
-                    alt={`${work.title} - ${work.subtitle}, ${t.caseStudy.screenWord} ${i + 1}`}
-                    width={2400}
-                    height={1600}
-                    quality={95}
-                    sizes="(max-width: 900px) 100vw, 50vw"
-                  />
-                </figure>
-              ))}
+        {/* ───────── Funcionalidades ───────── */}
+        {work.features && work.features.length > 0 && (
+          <section className="lx-sec">
+            <div className="cs-grid">
+              <div className="lx-label" data-reveal>
+                {featuresN} <h2 className="cs-label-h">{t.caseStudy.keyFeatures}</h2>
+              </div>
+              <ol className="cs-feats">
+                {work.features.map((f, i) => (
+                  <li key={f} className="cs-feat" data-reveal>
+                    <span className="cs-feat-n">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="cs-feat-t">{f}</span>
+                  </li>
+                ))}
+              </ol>
             </div>
-          )}
-        </section>
-      )}
+          </section>
+        )}
 
-      {/* ───────── Features numeradas ───────── */}
-      {work.features && work.features.length > 0 && (
-        <section style={{ padding: "clamp(4rem, 10vw, 9rem) 6vw", maxWidth: 1200, margin: "0 auto" }}>
-          <h2 data-reveal style={{ fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginBottom: "2.5rem" }}>
-            {t.caseStudy.keyFeatures}
-          </h2>
-          <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-            {work.features.map((f, i) => (
-              <li key={f} data-reveal style={{ padding: "1.4rem 0", position: "relative" }}>
-                <div data-line style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "rgba(255,255,255,0.12)" }} />
-                <div style={{ display: "flex", alignItems: "baseline", gap: "1.5rem" }}>
-                  <span style={{ color: ACCENT, fontSize: "0.8rem", fontVariantNumeric: "tabular-nums", minWidth: "2rem" }}>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.7rem)", letterSpacing: "-0.02em" }}>{f}</span>
+        {/* ───────── Resultado ───────── */}
+        {work.result && (
+          <section className="lx-sec">
+            <div className="cs-grid">
+              <div className="lx-label" data-reveal>
+                {resultN} <h2 className="cs-label-h">{t.caseStudy.theResult}</h2>
+              </div>
+              <p className="cs-result" data-reveal>
+                {work.result}
+              </p>
+              {links.length > 0 && (
+                <div className="cs-links" data-reveal>
+                  {links.map((l) => (
+                    <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="lx-ul">
+                      {l.label}
+                      <Arrow />
+                    </a>
+                  ))}
                 </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+              )}
+            </div>
+          </section>
+        )}
 
-      {/* ───────── Result ───────── */}
-      {work.result && (
-        <section style={{ padding: "clamp(4rem, 9vw, 8rem) 6vw", maxWidth: 1100, margin: "0 auto" }}>
-          <h2 data-reveal style={{ fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: ACCENT, marginBottom: "1.6rem" }}>
-            {t.caseStudy.theResult}
-          </h2>
-          <p data-reveal style={{ fontSize: "clamp(1.3rem, 2.8vw, 2.2rem)", lineHeight: 1.4, letterSpacing: "-0.02em", margin: 0 }}>
-            {work.result}
-          </p>
-          {links.length > 0 && (
-            <div data-reveal style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginTop: "2.8rem" }}>
-              {links.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cs-cta"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.6rem",
-                    padding: "0.85rem 1.6rem",
-                    borderRadius: 999,
-                    background: ACCENT,
-                    color: "#000",
-                    fontWeight: 500,
-                    fontSize: "0.95rem",
-                    textDecoration: "none",
-                  }}
-                >
-                  {l.label}
-                  <ExternalLinkIcon />
-                </a>
+        {/* ───────── Stack en marquee ───────── */}
+        {work.technologies && work.technologies.length > 0 && (
+          <div className="cs-marquee" aria-hidden>
+            <div data-marquee className="cs-marquee-track">
+              {[...work.technologies, ...work.technologies, ...work.technologies, ...work.technologies].map((tech, i) => (
+                <span key={i} className="cs-marquee-item">
+                  {tech}
+                  <i className="cs-marquee-dot" />
+                </span>
               ))}
             </div>
-          )}
-        </section>
-      )}
+          </div>
+        )}
 
-      {/* ───────── Marquee del stack ───────── */}
-      {work.technologies && work.technologies.length > 0 && (
-        <section style={{ padding: "clamp(3rem, 7vw, 6rem) 0", borderTop: "1px solid rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(255,255,255,0.1)", overflow: "hidden" }}>
-          <div data-marquee style={{ display: "flex", width: "max-content", gap: "3rem", whiteSpace: "nowrap" }}>
-            {[...work.technologies, ...work.technologies, ...work.technologies, ...work.technologies].map((t, i) => (
-              <span key={i} style={{ fontSize: "clamp(1.4rem, 3vw, 2.6rem)", letterSpacing: "-0.02em", color: "rgba(255,255,255,0.5)", display: "inline-flex", alignItems: "center", gap: "3rem" }}>
-                {t}
-                <span style={{ color: ACCENT, fontSize: "0.9em" }}>✦</span>
+        {/* ───────── Próximo caso ───────── */}
+        <section className="lx-sec">
+          <Link
+            href={path(`/cases/${next.slug}`)}
+            onClick={(e) => {
+              // Deja pasar cmd/ctrl/shift-click y el boton del medio al navegador.
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+              e.preventDefault();
+              goNext();
+            }}
+            className="cs-next"
+            aria-label={`${t.caseStudy.nextProject}: ${next.title} - ${next.subtitle}`}
+          >
+            <span className="cs-next-head">
+              <span className="lx-label">{t.caseStudy.nextProject}</span>
+              <span className="lx-label cs-next-name">
+                {next.title}
+                <Arrow />
               </span>
-            ))}
-          </div>
+            </span>
+            <span className="cs-next-img">
+              <Image ref={nextImgRef} src={next.image} alt={`${next.title} - ${next.subtitle}`} fill sizes="100vw" />
+            </span>
+          </Link>
         </section>
-      )}
+      </div>
 
-      {/* ───────── Next case ───────── */}
-      <Link
-        href={path(`/cases/${next.slug}`)}
-        onClick={(e) => {
-          // Deja pasar cmd/ctrl/shift-click y el boton del medio al navegador.
-          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-          e.preventDefault();
-          goNext();
-        }}
-        style={{ position: "relative", height: "70vh", overflow: "hidden", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", color: "inherit" }}
-        className="cs-next"
-        aria-label={`${t.caseStudy.nextProject}: ${next.title} - ${next.subtitle}`}
-      >
-        <Image
-          ref={nextImgRef}
-          src={next.image}
-          alt={`${next.title} - ${next.subtitle}`}
-          fill
-          sizes="100vw"
-          style={{ objectFit: "cover", opacity: 0.35, transition: "opacity 0.5s ease, transform 0.8s ease" }}
-        />
-        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} />
-        <div style={{ position: "relative", zIndex: 2, textAlign: "center" }}>
-          <div style={{ textTransform: "uppercase", letterSpacing: "0.25em", fontSize: "0.72rem", color: ACCENT, marginBottom: "1rem" }}>
-            {t.caseStudy.nextProject}
-          </div>
-          <div style={{ fontSize: "clamp(2.6rem, 9vw, 8rem)", lineHeight: 0.95, letterSpacing: "-0.04em", fontWeight: 600 }}>
-            {next.title}
-          </div>
-        </div>
-      </Link>
+      <ClosingCta />
 
       <style>{`
-        .cs-pair-row {
-          display: flex;
-          gap: clamp(1rem, 2.5vw, 2rem);
-          justify-content: center;
-          align-items: flex-start;
-          width: 100%;
-          max-width: 1100px;
-          margin: 0 auto;
-        }
-        .cs-pair-figure {
-          margin: 0;
-          flex: 1 1 calc(50% - 1rem);
-          max-width: 520px;
-          min-width: 0;
-          border-radius: 16;
-          overflow: hidden;
-        }
-        .cs-hero-img { object-fit: cover; }
         @media ${PORTRAIT} {
           .cs-hero-img { object-fit: contain; }
           /* Hero compacto: la imagen entera al ancho y el título debajo, sin relleno alrededor. */
-          .cs-hero { height: auto !important; background: #000; }
+          .cs-hero { height: auto; background: var(--paper); }
           .cs-hero-media {
             position: relative !important;
             inset: auto !important;
@@ -599,38 +460,16 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
             aspect-ratio: ${PORTRAIT_HERO_RATIO};
             margin-top: ${PORTRAIT_HERO_TOP}px;
             overflow: hidden;
-            background: #000;
+            background: var(--paper);
             transform: none !important;
           }
           .cs-hero-shade { display: none; }
-          .cs-hero-text { position: relative !important; padding: 1.75rem 6vw 2.5rem !important; }
+          .cs-hero-text { position: relative; padding-top: 1.75rem; color: var(--ink); }
+          .cs-crumbs ol { color: rgba(11, 11, 10, 0.5); }
+          .cs-crumbs a:hover, .cs-crumbs [aria-current] { color: var(--ink); }
+          .cs-hero-foot { color: rgba(11, 11, 10, 0.6); border-top-color: rgba(11, 11, 10, 0.18); }
+          .cs-hero-foot b { color: var(--ink); }
         }
-        .cs-pair-figure img {
-          width: 100%;
-          height: auto;
-          display: block;
-          object-fit: contain;
-        }
-        @media (min-width: 900px) {
-          .cs-intro-grid { grid-template-columns: 280px 1fr !important; gap: 5rem !important; }
-          .cs-two-col { grid-template-columns: 1fr 1fr !important; gap: 5rem !important; }
-        }
-        @media (max-width: 699px) {
-          .cs-pair-row {
-            flex-direction: column;
-            align-items: center;
-            max-width: 100%;
-          }
-          .cs-pair-row figure,
-          .cs-pair-figure {
-            flex: 1 1 100%;
-            max-width: min(520px, 100%) !important;
-            width: 100%;
-          }
-        }
-        .cs-cta { transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), background 0.3s ease; }
-        .cs-cta:hover { transform: translateY(-3px); background: #d4ff33; }
-        .cs-next:hover img { opacity: 0.6 !important; transform: scale(1.04); }
       `}</style>
     </div>
   );
