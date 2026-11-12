@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Outfit } from "next/font/google";
+import { Instrument_Serif, Outfit } from "next/font/google";
 import "./globals.css";
 import NotFoundContent from "./components/NotFoundContent";
 import { LanguageProvider } from "./lib/i18n";
@@ -10,7 +10,13 @@ import { seoText } from "./lib/seoText";
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: "400",
   display: "swap",
 });
 
@@ -34,7 +40,7 @@ export default async function GlobalNotFound() {
   const lang = await requestLang();
   return (
     <html lang={lang} suppressHydrationWarning>
-      <body className={`${outfit.variable} antialiased`}>
+      <body className={`${outfit.variable} ${instrumentSerif.variable} antialiased`} style={{ background: "#ffffff" }}>
         <LanguageProvider lang={lang}>
           <NotFoundContent />
         </LanguageProvider>

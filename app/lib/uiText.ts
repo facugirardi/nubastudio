@@ -330,11 +330,10 @@ const dict = {
     },
     notFound: {
       errorLabel: "Error 404",
-      heading: "This page doesn't exist.",
+      heading: "This page *drifted* off into the *cloud.*",
       body: "The link may be broken or the page may have moved. Everything we've built is still one click away.",
       backHome: "Back home",
-      services: "Services",
-      contact: "Contact",
+      index: "Index",
     },
   },
   es: {
@@ -661,11 +660,10 @@ const dict = {
     },
     notFound: {
       errorLabel: "Error 404",
-      heading: "Esta página no existe.",
+      heading: "Esta página se *fue* a las *nubes.*",
       body: "El link puede estar roto o la página puede haberse movido. Todo lo que construimos sigue a un click de distancia.",
       backHome: "Volver al inicio",
-      services: "Servicios",
-      contact: "Contacto",
+      index: "Índice",
     },
   },
 } satisfies Record<Lang, unknown>;
