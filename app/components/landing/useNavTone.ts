@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, type RefObject } from "react";
+import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Secciones activas detrás del navbar. Con varias seguidas, gana la última que entró;
 // sin ninguna activa, el logo vuelve a su color por defecto.

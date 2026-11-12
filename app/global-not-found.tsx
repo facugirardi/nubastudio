@@ -1,23 +1,41 @@
-import "./globals.css";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
+import { Outfit } from "next/font/google";
+import "./globals.css";
 import NotFoundContent from "./components/NotFoundContent";
 import { LanguageProvider } from "./lib/i18n";
-import { fontClassName, rootViewport } from "./lib/rootShell";
-import { SITE_NAME, SITE_URL } from "./lib/seo";
+import { isLang, type Lang } from "./lib/lang";
+import { seoText } from "./lib/seoText";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: `Page not found — ${SITE_NAME}`,
-  description: "The page you were looking for doesn't exist.",
-};
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
 
-export const viewport = rootViewport;
+// Mismo nombre que LANG_HEADER en proxy.ts (el proxy no se puede importar desde acá).
+async function requestLang(): Promise<Lang> {
+  const value = (await headers()).get("x-site-lang");
+  return isLang(value) ? value : "en";
+}
 
-export default function GlobalNotFound() {
+export async function generateMetadata(): Promise<Metadata> {
+  const text = seoText[await requestLang()].notFound;
+  // Next ya agrega <meta name="robots" content="noindex"> a los 404.
+  return { title: text.title, description: text.description };
+}
+
+/**
+ * El 404 de las URLs que ninguna ruta atiende. Como el layout raíz depende del
+ * idioma, trae su propio documento, con el <html lang> del idioma de la URL.
+ */
+export default async function GlobalNotFound() {
+  const lang = await requestLang();
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={fontClassName}>
-        <LanguageProvider>
+    <html lang={lang} suppressHydrationWarning>
+      <body className={`${outfit.variable} antialiased`}>
+        <LanguageProvider lang={lang}>
           <NotFoundContent />
         </LanguageProvider>
       </body>

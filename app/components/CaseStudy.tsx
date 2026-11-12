@@ -3,13 +3,16 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "./LocaleLink";
+import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "./Navbar";
 import { useLenis } from "./SmoothScroll";
 import {
   HERO_OVERSCAN,
+  PORTRAIT,
+  PORTRAIT_HERO_RATIO,
+  PORTRAIT_HERO_TOP,
   consumeCaseEntryDelay,
   markCaseHeroReady,
   startCaseTransition,
@@ -61,7 +64,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
   const rootRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLDivElement>(null);
   const nextImgRef = useRef<HTMLImageElement>(null);
-  const { lang, lp } = useLanguage();
+  const { lang, path } = useLanguage();
   const t = getUiText(lang);
   const work = localizeWork(rawWork, lang);
   const next = localizeWork(rawNext, lang);
@@ -74,7 +77,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
   // El hero ya muestra work.image a pantalla completa: repetirla como primera
   // pieza de la galeria la descargaba dos veces en los 11 casos.
   const gallery = (work.images ?? []).filter(
-    (src) => src !== work.image && !pairImages.includes(src)
+    (src) => (work.coverInGallery || src !== work.image) && !pairImages.includes(src)
   );
 
   useEffect(() => {
@@ -191,7 +194,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
   const goNext = () => {
     const el = nextImgRef.current;
     if (!el) {
-      router.push(lp(`/cases/${next.slug}`));
+      router.push(path(`/cases/${next.slug}`));
       return;
     }
     const r = el.getBoundingClientRect();
@@ -218,10 +221,11 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
       <Navbar visible view="list" setView={noop} showToggle={false} />
 
       {/* ───────── Hero fullscreen (match con el final del morph) ───────── */}
-      <section style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
+      <section className="cs-hero" style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
         {/* El box mide 120vh centrado: el overlay del morph aterriza en este mismo encuadre. */}
         <div
           ref={heroImgRef}
+          className="cs-hero-media"
           style={{
             position: "absolute",
             inset: `${(-HERO_OVERSCAN / 2) * 100}% 0`,
@@ -230,16 +234,18 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
           }}
         >
           <Image
+            className="cs-hero-img"
             src={work.image}
-            alt={`${work.title} — ${work.subtitle} case study by Nuba Studio`}
+            alt={`${work.title} - ${work.subtitle} ${t.caseStudy.caseByline}`}
             fill
             priority
             quality={HERO_QUALITY}
             sizes={HERO_SIZES}
-            style={{ objectFit: "cover", display: "block" }}
+            style={{ display: "block", zIndex: 1 }}
           />
         </div>
         <div
+          className="cs-hero-shade"
           style={{
             position: "absolute",
             inset: 0,
@@ -248,6 +254,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
           }}
         />
         <div
+          className="cs-hero-text"
           style={{
             position: "absolute",
             left: 0,
@@ -260,18 +267,18 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
           {/* Breadcrumb visible que refleja el BreadcrumbList del JSON-LD. */}
           <nav
             data-hero
-            aria-label="Breadcrumb"
+            aria-label={t.caseStudy.breadcrumb}
             style={{ marginBottom: "1rem", fontSize: "0.72rem", letterSpacing: "0.12em", textTransform: "uppercase" }}
           >
             <ol style={{ display: "flex", alignItems: "center", gap: "0.55rem", listStyle: "none", margin: 0, padding: 0 }}>
               <li>
-                <Link href="/" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
+                <Link href={path("/")} style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
                   {t.caseStudy.home}
                 </Link>
               </li>
               <li aria-hidden style={{ color: "rgba(255,255,255,0.28)" }}>/</li>
               <li>
-                <Link href="/works" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
+                <Link href={path("/works")} style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
                   {t.nav.work}
                 </Link>
               </li>
@@ -377,7 +384,11 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
                     margin: 0,
                   }}
                 >
-                  <span style={{ color: ACCENT }}>—</span> {b.label}
+                  <span
+                    aria-hidden
+                    style={{ display: "inline-block", width: "0.9em", height: "0.07em", background: ACCENT, verticalAlign: "0.28em" }}
+                  />{" "}
+                  {b.label}
                 </h2>
               </div>
               <p
@@ -421,7 +432,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
                 >
                   <Image
                     src={src}
-                    alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
+                    alt={`${work.title} - ${work.subtitle}, ${t.caseStudy.screenWord} ${i + 1}`}
                     fill
                     quality={95}
                     sizes={i % 3 === 0 ? "110vw" : "(max-width: 1460px) 86vw, 1240px"}
@@ -437,7 +448,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
                 <figure key={src} className="cs-pair-figure">
                   <Image
                     src={src}
-                    alt={`${work.title} — ${work.subtitle}, screen ${i + 1}`}
+                    alt={`${work.title} - ${work.subtitle}, ${t.caseStudy.screenWord} ${i + 1}`}
                     width={2400}
                     height={1600}
                     quality={95}
@@ -528,7 +539,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
 
       {/* ───────── Next case ───────── */}
       <Link
-        href={`/cases/${next.slug}`}
+        href={path(`/cases/${next.slug}`)}
         onClick={(e) => {
           // Deja pasar cmd/ctrl/shift-click y el boton del medio al navegador.
           if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -537,12 +548,12 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
         }}
         style={{ position: "relative", height: "70vh", overflow: "hidden", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", color: "inherit" }}
         className="cs-next"
-        aria-label={`Next project: ${next.title} — ${next.subtitle}`}
+        aria-label={`${t.caseStudy.nextProject}: ${next.title} - ${next.subtitle}`}
       >
         <Image
           ref={nextImgRef}
           src={next.image}
-          alt={`${next.title} — ${next.subtitle}`}
+          alt={`${next.title} - ${next.subtitle}`}
           fill
           sizes="100vw"
           style={{ objectFit: "cover", opacity: 0.35, transition: "opacity 0.5s ease, transform 0.8s ease" }}
@@ -575,6 +586,24 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
           min-width: 0;
           border-radius: 16;
           overflow: hidden;
+        }
+        .cs-hero-img { object-fit: cover; }
+        @media ${PORTRAIT} {
+          .cs-hero-img { object-fit: contain; }
+          /* Hero compacto: la imagen entera al ancho y el título debajo, sin relleno alrededor. */
+          .cs-hero { height: auto !important; background: #000; }
+          .cs-hero-media {
+            position: relative !important;
+            inset: auto !important;
+            height: auto !important;
+            aspect-ratio: ${PORTRAIT_HERO_RATIO};
+            margin-top: ${PORTRAIT_HERO_TOP}px;
+            overflow: hidden;
+            background: #000;
+            transform: none !important;
+          }
+          .cs-hero-shade { display: none; }
+          .cs-hero-text { position: relative !important; padding: 1.75rem 6vw 2.5rem !important; }
         }
         .cs-pair-figure img {
           width: 100%;

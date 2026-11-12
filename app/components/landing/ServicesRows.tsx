@@ -10,10 +10,10 @@ import { useNavTone } from "./useNavTone";
 import Arrow from "../Arrow";
 
 const META = [
-  { tags: ["Next.js", "React", "CMS", "Motion"], image: "/images/cases/mes/m1.webp" },
-  { tags: ["React Native", "Expo", "iOS", "Android"], image: "/images/cases/nuddo/nuddo1.webp" },
-  { tags: ["Payments", "Dashboards", "Auth", "APIs"], image: "/images/cases/nubapay/nuba1.webp" },
-  { tags: ["Identity", "Art direction", "Systems"], image: "/images/cases/kennedys/ken1.webp" },
+  { tags: ["Next.js", "React", "CMS", "Motion"], image: "/images/cases/mes/mes-v3-1.webp" },
+  { tags: ["React Native", "Expo", "iOS", "Android"], image: "/images/cases/nuddo/nuddo-mock-1.webp" },
+  { tags: ["Payments", "Dashboards", "Auth", "APIs"], image: "/images/cases/nubapay/nubapay-v2-1.webp" },
+  { tags: ["Identity", "Art direction", "Systems"], image: "/images/cases/kennedys/kennedys-v2-1.webp" },
   { tags: ["Discovery", "Prototyping", "Roadmap"], image: "/images/cases/nuddo/nuddo4.webp" },
 ];
 

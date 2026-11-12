@@ -8,8 +8,8 @@ type Props = ComponentProps<typeof Link>;
 
 /** next/link que agrega el prefijo de idioma (/es) a las rutas internas. */
 const LocaleLink = forwardRef<HTMLAnchorElement, Props>(function LocaleLink({ href, ...rest }, ref) {
-  const { lp } = useLanguage();
-  const localized = typeof href === "string" ? lp(href) : href;
+  const { path } = useLanguage();
+  const localized = typeof href === "string" && href.startsWith("/") ? path(href) : href;
   return <Link ref={ref} href={localized} {...rest} />;
 });
 

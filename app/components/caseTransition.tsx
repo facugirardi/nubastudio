@@ -4,9 +4,9 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import { getLenis } from "./SmoothScroll";
-import { heroImageSet } from "../lib/optimizedImage";
 import { useLanguage } from "../lib/i18n";
-import { localePath, splitLocale } from "../lib/locale";
+import { langFromPathname, localePath } from "../lib/lang";
+import { heroImageSet } from "../lib/optimizedImage";
 
 /* ───────── Store de módulo: sobrevive la navegación SPA de Next ───────── */
 export type CaseTransitionPayload = {
@@ -23,6 +23,15 @@ let listener: Listener | null = null;
 // así el overlay y el hero coinciden pixel a pixel y el relevo no se ve.
 export const HERO_OVERSCAN = 0.2;
 
+// En pantallas verticales (celulares) una portada horizontal a pantalla completa se recortaría
+// hasta mostrar apenas el centro: se muestra entera, al ancho, sobre una copia suya desenfocada.
+export const PORTRAIT = "(max-aspect-ratio: 1/1)";
+// En vertical el hero mide lo que su contenido: la imagen al ancho de la pantalla (con esta
+// proporción), a PORTRAIT_HERO_TOP px del borde de arriba, y el título debajo. El overlay del
+// morph aterriza en ese mismo rectángulo.
+export const PORTRAIT_HERO_RATIO = 3 / 2;
+export const PORTRAIT_HERO_TOP = 88;
+
 const MORPH = 1.15; // duración del zoom card → hero
 const NAV_AT = 0.46; // fracción del morph en la que se dispara el router.push
 const RADIUS = 12;
@@ -33,7 +42,10 @@ let prefetch: ((slug: string) => void) | null = null;
 // Se dispara desde la card del spiral (o la lista) al clickear un proyecto.
 export function startCaseTransition(p: CaseTransitionPayload) {
   if (listener) listener(p);
-  else window.location.href = localePath(`/cases/${p.slug}`, splitLocale(window.location.pathname).lang); // fallback sin overlay montado
+  else {
+    // Fallback sin overlay montado: el idioma sale de la URL en la que está el visitante.
+    window.location.href = localePath(langFromPathname(window.location.pathname), `/cases/${p.slug}`);
+  }
 }
 
 // Calienta la ruta en hover: el mount de la página de caso deja de robarle
@@ -80,7 +92,7 @@ function decoded(img: HTMLImageElement) {
 /* ───────── Overlay: morph de la imagen (card → hero fullscreen) ───────── */
 export default function CaseTransitionProvider() {
   const router = useRouter();
-  const { lp } = useLanguage();
+  const { path } = useLanguage();
   const rootRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -88,7 +100,7 @@ export default function CaseTransitionProvider() {
   const busyRef = useRef(false);
 
   useEffect(() => {
-    prefetch = (slug) => router.prefetch(lp(`/cases/${slug}`));
+    prefetch = (slug) => router.prefetch(path(`/cases/${slug}`));
 
     listener = async (p) => {
       const root = rootRef.current;
@@ -98,7 +110,7 @@ export default function CaseTransitionProvider() {
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       if (!root || !backdrop || !wrap || !img || busyRef.current || reduced) {
-        router.push(lp(`/cases/${p.slug}`));
+        router.push(path(`/cases/${p.slug}`));
         return;
       }
       busyRef.current = true;
@@ -144,6 +156,17 @@ export default function CaseTransitionProvider() {
         img.src = set.src;
       }
 
+      // Mismo encuadre que el hero del caso. En vertical la imagen entera ocupa el rectángulo del
+      // hero compacto; el box del morph es de 120vh, centrado, así que se le suma el sobrante de arriba.
+      const portrait = window.matchMedia(PORTRAIT).matches;
+      const imgH = vw / PORTRAIT_HERO_RATIO;
+      const imgTop = PORTRAIT_HERO_TOP + (vh * HERO_OVERSCAN) / 2;
+      img.style.objectFit = portrait ? "contain" : "cover";
+      img.style.top = portrait ? `${imgTop}px` : "0";
+      img.style.height = portrait ? `${imgH}px` : "100%";
+      wrap.style.background = portrait ? "#000" : "";
+      gsap.set(img, { clearProps: "transform" });
+
       gsap.set(root, { opacity: 1, pointerEvents: "auto" });
       gsap.set(backdrop, { opacity: 0 });
       gsap.set(wrap, {
@@ -176,6 +199,11 @@ export default function CaseTransitionProvider() {
         },
       });
 
+      if (portrait) {
+        // Arranca con la imagen en el centro del box (donde cae la card) y la lleva a su lugar en el hero.
+        const startY = heroH / 2 - (imgTop + imgH / 2);
+        tl.fromTo(img, { y: startY }, { y: 0, duration: MORPH, ease: "power2.inOut" }, 0);
+      }
       tl.to(backdrop, { opacity: 1, duration: MORPH * 0.45, ease: "power2.out" }, 0)
         .fromTo(
           wrap,
@@ -195,7 +223,7 @@ export default function CaseTransitionProvider() {
         .call(
           () => {
             entryDelay = MORPH * (1 - NAV_AT) + 0.3;
-            router.push(lp(`/cases/${p.slug}`));
+            router.push(path(`/cases/${p.slug}`));
           },
           undefined,
           MORPH * NAV_AT
@@ -206,7 +234,7 @@ export default function CaseTransitionProvider() {
       listener = null;
       prefetch = null;
     };
-  }, [router, lp]);
+  }, [router, path]);
 
   return (
     <div
@@ -232,7 +260,7 @@ export default function CaseTransitionProvider() {
         <img
           ref={imgRef}
           alt=""
-          style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
+          style={{ display: "block", position: "relative", width: "100%", height: "100%", objectFit: "cover" }}
         />
       </div>
     </div>

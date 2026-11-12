@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { visibleWorks } from "./data/works";
-import { HREFLANG, LANGS, localePath } from "./lib/locale";
+import { LANGS, localePath } from "./lib/lang";
 import { absoluteUrl } from "./lib/seo";
 
 /**
@@ -10,43 +10,41 @@ import { absoluteUrl } from "./lib/seo";
  */
 const CONTENT_UPDATED = new Date("2026-11-12");
 
-type Route = {
+type Entry = Pick<MetadataRoute.Sitemap[number], "changeFrequency" | "priority"> & {
   path: string;
-  changeFrequency: "monthly" | "yearly";
-  priority: number;
   images?: string[];
 };
 
-function languages(path: string): Record<string, string> {
-  const langs: Record<string, string> = {};
-  for (const l of LANGS) langs[HREFLANG[l]] = absoluteUrl(localePath(path, l));
-  langs["x-default"] = absoluteUrl(localePath(path, "en"));
-  return langs;
+/** Una entrada por idioma y página, cada una con la lista completa de hreflang. */
+function entriesFor({ path, images, ...rest }: Entry): MetadataRoute.Sitemap {
+  const languages: Record<string, string> = {};
+  for (const lang of LANGS) languages[lang] = absoluteUrl(localePath(lang, path));
+  languages["x-default"] = absoluteUrl(localePath("en", path));
+
+  return LANGS.map((lang) => ({
+    url: absoluteUrl(localePath(lang, path)),
+    lastModified: CONTENT_UPDATED,
+    ...rest,
+    alternates: { languages },
+    ...(images ? { images: images.map((src) => absoluteUrl(src)) } : {}),
+  }));
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes: Route[] = [
+  const staticRoutes: Entry[] = [
     { path: "/", changeFrequency: "monthly", priority: 1 },
     { path: "/works", changeFrequency: "monthly", priority: 0.9 },
-    { path: "/services", changeFrequency: "monthly", priority: 0.9 },
     { path: "/about", changeFrequency: "monthly", priority: 0.8 },
+    { path: "/services", changeFrequency: "monthly", priority: 0.9 },
     { path: "/contact", changeFrequency: "yearly", priority: 0.7 },
-    ...visibleWorks.map((work) => ({
-      path: `/cases/${work.slug}`,
-      changeFrequency: "yearly" as const,
-      priority: 0.8,
-      images: (work.images ?? [work.image]).map((src) => absoluteUrl(src)),
-    })),
   ];
 
-  return routes.flatMap((route) =>
-    LANGS.map((lang) => ({
-      url: absoluteUrl(localePath(route.path, lang)),
-      lastModified: CONTENT_UPDATED,
-      changeFrequency: route.changeFrequency,
-      priority: lang === "en" ? route.priority : Math.round(route.priority * 90) / 100,
-      alternates: { languages: languages(route.path) },
-      ...(route.images ? { images: route.images } : {}),
-    }))
-  );
+  const caseRoutes: Entry[] = visibleWorks.map((work) => ({
+    path: `/cases/${work.slug}`,
+    changeFrequency: "yearly",
+    priority: 0.8,
+    images: work.images ?? [work.image],
+  }));
+
+  return [...staticRoutes, ...caseRoutes].flatMap(entriesFor);
 }

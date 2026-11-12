@@ -1,11 +1,11 @@
 import type { WorkItem } from "../data/works";
 import { WORKS_ES } from "../data/works.es";
-import type { Lang } from "./i18n";
+import type { Lang } from "./lang";
 
 /**
  * Devuelve el WorkItem con los campos narrativos (subtitle/task/solutions/
- * description/process/result/features/seoTitle/seoDescription) en el idioma
- * pedido. Title, images, technologies, links y year no se traducen.
+ * description/process/result/features y el SEO: seoTitle/seoDescription) en el
+ * idioma pedido. Title, images, technologies, links y year no se traducen.
  */
 export function localizeWork(work: WorkItem, lang: Lang): WorkItem {
   if (lang === "en") return work;

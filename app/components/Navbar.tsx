@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import LogoMark from "./LogoMark";
 import { getLenis } from "./SmoothScroll";
-import { useLanguage, type Lang } from "../lib/i18n";
+import { useLanguage } from "../lib/i18n";
+import { localePath, stripLocale, type Lang } from "../lib/lang";
 import { getUiText } from "../lib/uiText";
 import { CONTACT } from "../lib/seo";
 import Arrow from "./Arrow";
@@ -53,7 +54,9 @@ export default function Navbar({
   const wasOpen = useRef(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const { lang, setLang, lp } = useLanguage();
+  const { lang, path: lp } = useLanguage();
+  // Cambiar de idioma es ir a la misma página en el otro idioma: un link real, no un estado.
+  const langHref = (code: Lang) => localePath(code, stripLocale(pathname ?? "/"));
   const t = getUiText(lang);
   const time = useCordobaTime();
 
@@ -163,7 +166,7 @@ export default function Navbar({
           transition: opacity 0.3s;
         }
         .nb-btn:hover { opacity: 1; }
-        .nb-btn[aria-pressed="true"] { opacity: 1; }
+        .nb-btn[aria-pressed="true"], .nb-btn[aria-current="true"] { opacity: 1; }
         .nb-btn::after {
           content: "";
           position: absolute;
@@ -176,7 +179,7 @@ export default function Navbar({
           transform-origin: right;
           transition: transform 0.45s cubic-bezier(0.7, 0, 0.2, 1);
         }
-        .nb-btn[aria-pressed="true"]::after { transform: scaleX(1); transform-origin: left; }
+        .nb-btn[aria-pressed="true"]::after, .nb-btn[aria-current="true"]::after { transform: scaleX(1); transform-origin: left; }
         .nb-btn:disabled { cursor: not-allowed; opacity: 0.2; }
         .nb-btn:focus-visible, .nb-menu:focus-visible, .mp a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
         .nb-menu {
@@ -288,7 +291,7 @@ export default function Navbar({
         aria-label="Nuba Studio"
         style={{ color: open ? "#f3f2ee" : "var(--nav-fg, #fff)", background: open ? "transparent" : "var(--nav-bg, transparent)" }}
       >
-        <Link href="/" aria-label="Nuba Studio, inicio" className="nb-logo">
+        <Link href="/" aria-label={t.nav.homeLabel} className="nb-logo">
           <LogoMark play={visible} />
         </Link>
 
@@ -318,9 +321,9 @@ export default function Navbar({
             {LANGS.map((code, i) => (
               <span key={code} style={{ display: "contents" }}>
                 {i > 0 && <span className="nb-sep" aria-hidden>/</span>}
-                <button type="button" className="nb-btn" aria-pressed={lang === code} onClick={() => setLang(code)}>
+                <a href={langHref(code)} hrefLang={code} lang={code} className="nb-btn" aria-current={lang === code ? "true" : undefined}>
                   {code}
-                </button>
+                </a>
               </span>
             ))}
           </div>

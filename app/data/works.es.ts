@@ -1,7 +1,8 @@
 /**
  * Traducciones al español de los campos narrativos de cada case study.
  * Se mergean sobre el WorkItem en inglés (works.ts, fuente canónica) vía
- * localizeWork(). Title, images, technologies, links y year no se traducen.
+ * localizeWork(). Title, images, technologies, links y year no se traducen
+ * (nombres propios). seoTitle y seoDescription sí: cada idioma tiene su propio SEO.
  */
 export type WorkTranslation = {
   subtitle: string;
@@ -19,7 +20,7 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   nubapay: {
     subtitle: "Diseño y Desarrollo de Producto",
     seoTitle: "Pagos y pedidos para eventos",
-    seoDescription: "Nubapay es una plataforma de pedidos y pagos con QR para eventos masivos: los asistentes pagan desde el teléfono y los organizadores ven las ventas en vivo.",
+    seoDescription: "Nubapay es una plataforma de pedidos y pagos con QR para eventos masivos: los asistentes pagan desde el celular y los organizadores siguen las ventas en vivo.",
     task: "Los eventos masivos en Latinoamérica todavía funcionan con cajas registradoras: filas largas, barras lentas, ventas perdidas y sin control en tiempo real. Los organizadores necesitaban una forma simple y escalable para que los asistentes pidan, paguen y retiren desde el teléfono, sin descargar una app, sin hardware extra y sin el caos del checkout tradicional.",
     solutions: "Construimos Nubapay como el sistema operativo de los eventos masivos. Los asistentes escanean un QR, navegan el menú digital, pagan desde el teléfono y retiran con un QR único de un solo uso. Los organizadores tienen un dashboard en vivo de ventas, pedidos y rendimiento. El staff valida el retiro desde cualquier dispositivo. También diseñamos Atendium, una IA que atiende, recomienda y hace upselling las 24 horas, más unickeys sobre Solana para que cada QR de retiro sea único, de un solo uso e imposible de falsificar. Un evento puede estar en vivo en menos de 20 minutos.",
     description: "Nubapay es una plataforma de pedidos y pagos para eventos masivos. Los asistentes escanean un QR, pagan desde el teléfono y retiran sin hacer fila, mientras los organizadores ven cada venta moverse en tiempo real. Sin app para descargar. Sin caja registradora.",
@@ -36,10 +37,31 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
       "Unickeys verificados en Solana para cada ticket",
     ],
   },
+  tivvu: {
+    subtitle: "Diseño y Desarrollo de Producto",
+    seoTitle: "Plataforma para inmobiliarias",
+    seoDescription: "Tivvu es una plataforma para inmobiliarias: propiedades, clientes, ofertas, reservas y un sitio público con la marca de la agencia en un solo panel.",
+    task: "Las inmobiliarias funcionan con un parche de herramientas: propiedades en planillas, clientes en un CRM que nadie abre, ofertas enviadas como PDF, alquileres anotados en un calendario y un sitio web que alguien más tiene que actualizar. Cada pieza vive en una herramienta distinta, así que nada se conecta: una consulta nunca llega al agente correcto, una oferta sale y nadie sabe si la abrieron, y publicar una propiedad implica hacer el trabajo dos veces. Las inmobiliarias necesitaban un solo lugar para manejar toda la operación, y su propio sitio encima.",
+    solutions: "Construimos Tivvu como el sistema operativo de una inmobiliaria. Propiedades, clientes, ofertas, reservas, disponibilidad, servicios, reseñas y reportes conviven en un solo panel, con roles para que cada agente vea su trabajo y los propietarios vean todo. Las consultas del sitio público crean al cliente y registran el historial solas. Las ofertas salen como un link y la inmobiliaria ve cuándo se abre. Un importador de datos trae las propiedades desde planillas y feeds de portales, así que mudarse toma una tarde. Encima de todo eso, cada inmobiliaria tiene su propio sitio público con un editor para elegir el diseño, los colores, las tipografías y los bloques de contenido, sin ayuda de un desarrollador.",
+    description: "Tivvu es una plataforma para inmobiliarias. Propiedades, clientes, ofertas, reservas y un sitio público con la marca de la agencia viven en un solo panel, para que la inmobiliaria deje de saltar entre herramientas y se enfoque en cerrar negocios. Pensada para ventas y alquileres, en ocho idiomas.",
+    process: "Diseñamos y desarrollamos el producto de punta a punta: el panel de la inmobiliaria, el sitio público que recibe cada agencia, un editor de sitio con vista previa en vivo y una API en Flask con cuentas multi-agencia, roles e historial de auditoría. Partimos de la rutina diaria de un agente, desde una consulta nueva hasta una oferta firmada, y armamos cada pantalla alrededor de la próxima acción en vez de alrededor de tablas de datos. Los sitios públicos se renderizan en el servidor y se cachean para ganar velocidad y posicionamiento, la interfaz funciona en ocho idiomas con emails enviados en el idioma de cada lector, y la facturación corre por Paddle para que las agencias puedan empezar con una prueba gratis.",
+    result: "Tivvu le da a una inmobiliaria un único espacio de trabajo para sus propiedades, clientes, ofertas y alquileres, más un sitio público que puede editar por su cuenta. Los agentes ven qué requiere atención hoy, los propietarios ven toda la operación, y los clientes reciben una experiencia rápida, con la marca de la agencia y en su idioma. Ponerlo en marcha es un registro y una importación, no un proyecto.",
+    features: [
+      "Gestión de propiedades para ventas y alquileres",
+      "CRM de clientes con etapas, etiquetas e historial",
+      "Ofertas enviadas por link, con seguimiento de aperturas",
+      "Reservas y calendario de disponibilidad",
+      "Importación masiva desde planillas y feeds de portales",
+      "Editor de sitio con diseños, colores y bloques de contenido",
+      "Roles para propietarios, administradores y agentes",
+      "Reportes y estados de cuenta del propietario",
+      "Ocho idiomas en la app, el sitio y los emails",
+    ],
+  },
   kennedys: {
     subtitle: "Desarrollo Full-Stack",
     seoTitle: "Alquiler de villas de lujo",
-    seoDescription: "Plataforma full-stack para un negocio de alquiler de villas de lujo y concierge: búsqueda de propiedades, reservas y el backoffice Loggia. Por Nuba Studio.",
+    seoDescription: "Plataforma full-stack para un negocio de alquiler de villas de ultra lujo y concierge: búsqueda de propiedades, reservas y el backoffice Loggia.",
     task: "Kennedy's Group opera un negocio de alquiler de villas de ultra lujo y concierge a través de un sitio público, una experiencia de itinerario compartido para huéspedes y un backoffice interno que su equipo usa a diario. Nos incorporamos como el equipo full-stack permanente, a cargo de la API en Node.js/PostgreSQL, el sitio público en Next.js y el panel de administración Loggia, para seguir lanzando funcionalidades y mejorando la confiabilidad en los tres frentes a medida que el negocio crecía.",
     solutions: "Reconstruimos y extendimos la experiencia inmobiliaria de punta a punta: páginas de propiedad más ricas, búsqueda y mapa fijos (sticky) en los listados, selectores de moneda y de unidad (m²/ft²), y filtros que realmente coinciden con lo que hay en la base de datos, corrigiendo un filtro de ubicación que descartaba resultados en silencio. En el backend agregamos geocodificación inversa server-side para que cada propiedad resuelva automáticamente su país, región y área, construimos el motor de enrutamiento de emails que envía cada tipo de consulta a la bandeja correcta, y mantuvimos sincronizado el camino de búsqueda por SQL crudo con el ORM a medida que evolucionaban los filtros. Para el equipo detrás de escena, lanzamos Loggia: un backoffice que cubre 14 categorías de producto, gestión de reservas, un flujo de itinerario compartido con un modal de reserva inline, y un generador de reportes para propietarios con un rediseño completo de UI/UX y exportación a PDF, para que los dueños de villas reciban un resumen de rendimiento prolijo.",
     description: "Kennedy's Group alquila villas de ultra lujo y construye experiencias de concierge a medida alrededor de ellas. Somos su equipo full-stack permanente: el sitio público de propiedades, la API de reservas y Loggia, el backoffice donde se maneja toda la operación.",
@@ -59,7 +81,7 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   bausing: {
     subtitle: "Desarrollo Web",
     seoTitle: "E-commerce y billetera digital",
-    seoDescription: "Bausing es un e-commerce de colchones con billetera digital en pesos argentinos. Tienda online y billetera desarrolladas por Nuba Studio.",
+    seoDescription: "Bausing es un e-commerce de colchones con una billetera digital en pesos argentinos integrada. Tienda online y billetera desarrolladas por Nuba Studio.",
     task: "Un colchón es una compra reflexiva que se hace online con casi nada de información útil. La firmeza, el tamaño y los materiales definen la elección, y una foto no muestra ninguno de esos datos. Bausing necesitaba una tienda donde las especificaciones hicieran la venta, y además una billetera digital en pesos argentinos para que los clientes pudieran tener y gastar un saldo dentro de la misma plataforma. Dos productos, una sola cuenta.",
     solutions: "Construimos la tienda alrededor de la comparación. Cada colchón lleva especificaciones estructuradas (tamaño, firmeza y materiales) en un formato consistente, así los modelos se pueden leer uno contra otro en vez de uno a la vez, y la búsqueda y los filtros funcionan sobre esos atributos en lugar de sobre los nombres de producto. El checkout es corto y seguro. La billetera Bausing convive con la tienda: los clientes tienen un saldo en pesos, lo ven moverse y lo gastan en el checkout sin salir a un proveedor de pagos externo. Ambas mitades comparten una cuenta y una sesión, así la billetera es parte de la tienda y no un agregado.",
     description: "Bausing es una tienda de colchones online con una billetera digital integrada. Los clientes comparan modelos, compran en pocos pasos y manejan sus pesos dentro de la misma plataforma. Un e-commerce y una billetera compartiendo una sola cuenta.",
@@ -79,7 +101,7 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   nuddo: {
     subtitle: "Desarrollo Web y Mobile",
     seoTitle: "Marketplace de moda de segunda mano",
-    seoDescription: "Nuddo es un marketplace de moda circular para comprar y vender ropa de segunda mano en web, iOS y Android. App desarrollada por Nuba Studio.",
+    seoDescription: "Nuddo es un marketplace de moda circular para comprar y vender ropa de segunda mano en web, iOS y Android. App de marketplace desarrollada por Nuba Studio.",
     task: "Vender una prenda que ya no usás debería tomar minutos, pero la reventa suele trabarse en tres puntos: publicar es lo bastante tedioso como para que el artículo nunca se liste, pagarle a un desconocido se siente inseguro para ambas partes, y coordinar la entrega arruina el trato después de ya haberlo acordado. Nuddo tenía que resolver los tres puntos a la vez, en web, iOS y Android, y dejar espacio para que marcas de moda locales vendan colecciones nuevas en el mismo lugar.",
     solutions: "Construimos el marketplace para que cada uno de esos tres puntos deje de ser una decisión. Listar un artículo toma pocos pasos, así publicar es un acto pequeño y no un proyecto. Los pagos corren por Mercado Pago con protección para ambas partes, así ninguna confía a ciegas en un desconocido. El envío puerta a puerta es parte de la transacción en vez de algo que compradores y vendedores negocian después, con opciones estándar o económicas según el valor de la prenda. Un sistema de reputación hace visible el historial de un vendedor antes de la compra, no después. Las marcas locales tienen su propio espacio para mostrar colecciones nuevas junto a los artículos de segunda mano.",
     description: "Nuddo es un marketplace de moda circular para comprar y vender ropa de segunda mano, en web, iOS y Android. Envío puerta a puerta, pagos protegidos y reputación de vendedor hacen que cada intercambio se sienta seguro. No es solo un marketplace: es una comunidad donde cada prenda todavía tiene una historia para contar.",
@@ -96,8 +118,8 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   },
   ushuaia360: {
     subtitle: "Desarrollo Web y Mobile",
-    seoTitle: "App de senderismo offline",
-    seoDescription: "Ushuaia360 es una app de trekking offline para Tierra del Fuego: senderos con GPS, vistas 360° y navegación sin señal. App iOS y Android de Nuba Studio.",
+    seoTitle: "App de senderismo sin conexión",
+    seoDescription: "Ushuaia360 es una app de senderismo sin conexión para Tierra del Fuego: senderos con GPS, vistas 360° y navegación sin señal.",
     task: "Ushuaia es el fin del mundo, y ahí es exactamente donde muere la señal. Excursionistas y turistas necesitaban una forma de explorar Tierra del Fuego con senderos mapeados, vistas 360° de puntos clave, y navegación que siga funcionando sin cobertura. El producto tenía que sentirse como el paisaje: GPS preciso, dificultad honesta y el sendero en el bolsillo antes de salir del pueblo.",
     solutions: "Diseñamos y construimos Ushuaia360, una app móvil de senderos y lugares turísticos en el fin del mundo. Cada sendero incluye trazas GPS, waypoints, distancia, elevación y dificultad. La fotografía 360° inmersiva le permite a la gente previsualizar un punto antes o durante la caminata. La mecánica central es offline: se descarga el mapa, la traza, la información y las fotos 360, y después se camina sin señal. Un admin web complementario gestiona senderos, media, waypoints y lugares.",
     description: "Ushuaia360 es una app de trekking offline para el fin del mundo. Senderos mapeados con precisión GPS, vistas 360° de cada punto clave, y navegación que sigue funcionando cuando muere la señal. Tierra del Fuego en el bolsillo antes de salir del pueblo.",
@@ -116,7 +138,7 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   },
   checkrto: {
     subtitle: "Desarrollo Web",
-    seoTitle: "Inspección técnica vehicular",
+    seoTitle: "Revisión técnica vehicular",
     seoDescription: "CheckRTO digitaliza la revisión técnica vehicular: inspecciones, informes, certificados digitales y flujos de cumplimiento en una sola plataforma web.",
     task: "La revisión técnica vehicular obligatoria todavía funciona en papel. Un inspector llena un formulario a mano, el informe se tipea en otro lado, y el certificado llega después por un proceso separado. Nada está conectado, así que una inspección se ingresa varias veces y ni el inspector ni el dueño del vehículo pueden ver en qué estado está. CheckRTO tenía que contener toda la inspección en un solo sistema.",
     solutions: "Construimos una plataforma que lleva una inspección desde el ingreso hasta el certificado emitido sin salir del flujo de trabajo. Los inspectores registran cada revisión contra una checklist estructurada, y el informe se genera solo a partir de lo ingresado en vez de escribirse una segunda vez. Los certificados se emiten digitalmente desde ese mismo registro, así el documento y la inspección nunca pueden estar en desacuerdo. Encima se apoyan dos dashboards: uno para inspectores trabajando su cola, otro para dueños de vehículos siguiendo el estado e historial de un vehículo. El seguimiento de cumplimiento corre a través de cada paso, así el rastro de auditoría es un subproducto del trabajo.",
@@ -134,8 +156,8 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   },
   "provia-consulting": {
     subtitle: "Desarrollo Web, Diseño UX/UI",
-    seoTitle: "Sitio web para consultora",
-    seoDescription: "Sitio institucional para una consultora de seguridad vial e inspección vehicular, hecho con Astro para máxima velocidad. Diseño y desarrollo de Nuba Studio.",
+    seoTitle: "Sitio web de consultora",
+    seoDescription: "Sitio institucional para una consultora de seguridad vial e inspección vehicular, desarrollado con Astro para ganar velocidad.",
     task: "Provia Consulting asesora en seguridad vial, revisión técnica vehicular y desarrollo de negocios, y le vende a tres audiencias que no leen de la misma manera: empresas privadas, organizaciones y municipios. Un comprador del sector público evaluando seguridad vial y una empresa buscando modernizar sus procesos llegan con preguntas distintas. El sitio tenía que sostener ese rango sin caer en el lenguaje genérico de consultora que hace que cada firma suene igual a las demás.",
     solutions: "Construimos el sitio alrededor de la especialización y no de la empresa. Cada área de práctica se presenta en sus propios términos, con el tipo de trabajo que implica y para quién es, así un visitante reconoce su propia situación en vez de decodificar una lista de capacidades. Las credenciales están donde respaldan el argumento y no antes de él, y los formularios de consulta están al final de cada servicio en vez de estar estacionados en una única página de contacto. Lo construimos en Astro, así el sitio sale como HTML estático: carga de inmediato y se mantiene barato de operar, que es lo que un sitio institucional realmente necesita.",
     description: "Provia Consulting asesora a empresas, organizaciones y municipios en seguridad vial, revisión técnica vehicular y desarrollo de negocios. Construimos su sitio institucional en Astro: estático, rápido y pensado para que una firma especialista se lea como una sola cosa.",
@@ -154,8 +176,8 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   },
   mes: {
     subtitle: "Desarrollo Web, Diseño UX/UI",
-    seoTitle: "Sitio web para agente financiero",
-    seoDescription: "Sitio institucional para un agente de finanzas productivas argentino: leasing, préstamos prendarios y seguros de caución. Diseño y desarrollo de Nuba Studio.",
+    seoTitle: "Sitio web de broker financiero",
+    seoDescription: "Sitio institucional para un broker argentino de financiamiento productivo: leasing, préstamos prendarios y seguros de caución.",
     task: "Més Capital necesitaba un sitio institucional que pudiera explicar un producto financiero especializado a empresas productivas (leasing, préstamos prendarios y seguros de caución) sin sonar a banco. El sitio tenía que dejar clara un modelo de bróker complejo: una conversación con Més, muchas entidades financieras detrás de escena. También necesitaba hablarle a dos audiencias a la vez: empresas buscando financiamiento y entidades o proveedores buscando originación.",
     solutions: "Diseñamos y construimos un sitio claro y editorial que presenta a Més como un bróker de finanzas productivas, no como un prestamista genérico. La estructura lleva a los visitantes desde los productos hasta los sectores, el proceso de aprobación en cuatro pasos, y por qué un bróker especialista cambia el resultado. Las páginas de producto explican leasing, préstamos prendarios y seguros de caución en lenguaje simple, con los activos y garantías que cubre cada uno. Un flujo de contacto recolecta los detalles de la operación para que el equipo pueda devolver una primera lectura: qué producto encaja y qué información va a necesitar.",
     description: "Més Capital es un bróker financiero para empresas productivas en Argentina, que estructura leasing, préstamos prendarios y seguros de caución, y después lleva cada operación a las entidades con más chances de aprobarla. Las empresas hablan con una sola persona. Més habla con todos los bancos.",
@@ -175,7 +197,7 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   ffmates: {
     subtitle: "Diseño UX/UI",
     seoTitle: "Diseño UX/UI de e-commerce",
-    seoDescription: "Caso de diseño UX/UI de e-commerce: navegación, visualización de producto y un checkout pensado para convertir. Diseño de interfaz de Nuba Studio.",
+    seoDescription: "Caso de diseño UX/UI de e-commerce: navegación, visualización de producto y un checkout pensado para convertir. Diseño de interfaz por Nuba Studio.",
     task: "F&F necesitaba un diseño de e-commerce donde el producto hiciera la venta. Eso puso tres cosas sobre la mesa: una navegación que sobreviva a un catálogo grande, páginas de producto donde el artículo sea legible antes de ser descripto, y un checkout lo bastante corto como para que nadie lo reconsidere a la mitad. Era un problema de diseño, no de desarrollo, así que la interfaz tenía que ganarse la venta por sí misma.",
     solutions: "Diseñamos la tienda alrededor de la imagen del producto. La navegación de categorías y filtros se mantiene accesible en cualquier profundidad, así explorar un catálogo grande nunca se convierte en una serie de callejones sin salida. Las páginas de producto lideran con visuales grandes e ininterrumpidos, y ubican las especificaciones debajo de la decisión y no delante de ella. El flujo de compra se comprimió en un checkout continuo con progreso visible, así el comprador siempre sabe cuánto falta. Cada layout se diseñó mobile-first.",
     description: "F&F es una plataforma de e-commerce diseñada alrededor de una sola pregunta: ¿cuán pocos pasos puede haber entre encontrar un producto y ser dueño de él? Diseñamos la navegación, las páginas de producto y un flujo de checkout que elimina la friction en vez de explicarla.",
@@ -192,8 +214,8 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   },
   partidosya: {
     subtitle: "Diseño UX/UI",
-    seoTitle: "Diseño de app de reserva de canchas",
-    seoDescription: "Diseño UX/UI de una app para reservar canchas: encontrá canchas cercanas, mirá la disponibilidad y reservá en pocos toques. Diseño de Nuba Studio.",
+    seoTitle: "Diseño de app para reservar canchas",
+    seoDescription: "Diseño UX/UI de una app para reservar canchas deportivas: explorá las canchas cercanas, mirá la disponibilidad y reservá en pocos toques.",
     task: "Reservar una cancha deportiva es una decisión que se toma bajo presión de tiempo. Un grupo ya se está organizando, y alguien tiene que encontrar una cancha libre y confirmarla antes de que el plan se caiga. PartidosYa necesitaba una app móvil donde toda esa secuencia (encontrar una cancha, chequear el horario, reservarla) entrara en los pocos minutos que una persona realmente tiene.",
     solutions: "Diseñamos la app alrededor del camino más corto posible hacia una reserva confirmada. La pantalla de inicio abre en disponibilidad en vez de en un buscador, así lo primero que ve cualquiera es lo que realmente puede reservar. Las tarjetas de cancha llevan solo los tres datos que definen una reserva (ubicación, horario y precio) y nada que la demore. La reserva corre en pocos toques sin un muro de registro en el medio, y la confirmación es inmediata e inequívoca. Validamos las pantallas con testing de usuarios antes de la entrega.",
     description: "PartidosYa es una app móvil para reservar canchas deportivas. Diseñamos el flujo de reserva alrededor de una sola restricción: alguien parado en la calle con quince minutos para encontrar una cancha libre y confirmarla. Buscar, elegir, reservar. Pocos toques, sin friction.",
@@ -211,7 +233,7 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   unickeys: {
     subtitle: "Diseño y Desarrollo de Producto",
     seoTitle: "Certificados en blockchain",
-    seoDescription: "Unickeys es infraestructura de certificados verificables: emití documentos infalsificables, registralos en Solana y verificalos en segundos. Por Nuba Studio.",
+    seoDescription: "Unickeys es infraestructura de certificados verificables: emití documentos inalterables, registralos en Solana y que cualquiera los verifique en segundos.",
     task: "Los documentos ya no son prueba por sí solos. Un PDF se puede editar en minutos, las bases de datos de los emisores se pueden hackear o borrar, y la verificación todavía toma días. Las empresas necesitaban una forma de emitir certificados, comprobantes y contratos que cualquiera pudiera validar en segundos, sin depender de una base de datos central que se pueda manipular.",
     solutions: "Diseñamos y construimos Unickeys como infraestructura B2B de certificados: autenticidad, fraude y verificación en una sola plataforma. Las empresas emiten documentos con un QR único y firma digital. Cualquiera puede escanear el QR o abrir un link para ver los datos originales. Una capa de IA compara imágenes o PDFs contra el registro original y marca inconsistencias incluso cuando un QR parece válido. Cada archivo obtiene un hash SHA-256, se agrupa en un árbol de Merkle, y se escribe en Solana Mainnet, inmutable y verificable públicamente.",
     description: "Unickeys es infraestructura de certificados verificables para empresas. Convierte cualquier documento en un registro público e inalterable: se emite, se hashea, se registra en Solana, y cualquiera lo puede verificar en segundos. Sin base de datos central que hackear.",
