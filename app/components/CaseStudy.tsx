@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "./LocaleLink";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "./Navbar";
@@ -61,7 +61,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
   const rootRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLDivElement>(null);
   const nextImgRef = useRef<HTMLImageElement>(null);
-  const { lang } = useLanguage();
+  const { lang, lp } = useLanguage();
   const t = getUiText(lang);
   const work = localizeWork(rawWork, lang);
   const next = localizeWork(rawNext, lang);
@@ -191,7 +191,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
   const goNext = () => {
     const el = nextImgRef.current;
     if (!el) {
-      router.push(`/cases/${next.slug}`);
+      router.push(lp(`/cases/${next.slug}`));
       return;
     }
     const r = el.getBoundingClientRect();
@@ -267,6 +267,12 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
               <li>
                 <Link href="/" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
                   {t.caseStudy.home}
+                </Link>
+              </li>
+              <li aria-hidden style={{ color: "rgba(255,255,255,0.28)" }}>/</li>
+              <li>
+                <Link href="/works" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
+                  {t.nav.work}
                 </Link>
               </li>
               <li aria-hidden style={{ color: "rgba(255,255,255,0.28)" }}>/</li>

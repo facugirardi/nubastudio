@@ -1,9 +1,10 @@
 import type { WorkItem } from "../data/works";
+import { localePath, type Lang } from "./locale";
 import {
   CONTACT,
   FOUNDED,
   PROFILES,
-  SITE_DESCRIPTION,
+  SITE_COPY,
   SITE_NAME,
   SITE_URL,
   TEAM_MEMBERS,
@@ -20,6 +21,8 @@ function compact<T extends object>(obj: T): T {
 const ORG_ID = `${SITE_URL}/#organization`;
 const SITE_ID = `${SITE_URL}/#website`;
 
+const url = (path: string, lang: Lang) => absoluteUrl(localePath(path, lang));
+
 export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
@@ -27,10 +30,10 @@ export function organizationJsonLd() {
     "@id": ORG_ID,
     name: SITE_NAME,
     alternateName: "Nuba",
-    url: SITE_URL,
-    logo: absoluteUrl("/Nuba%20logo.svg"),
-    image: absoluteUrl("/opengraph-image"),
-    description: SITE_DESCRIPTION,
+    url: absoluteUrl("/"),
+    logo: absoluteUrl("/icon-512.png"),
+    image: absoluteUrl("/icon-512.png"),
+    description: SITE_COPY.en.description,
     slogan: "We turn ideas into digital products",
     telephone: CONTACT.phone,
     foundingDate: FOUNDED,
@@ -69,6 +72,7 @@ export function organizationJsonLd() {
       "Web development",
       "Mobile app development",
       "Marketplace development",
+      "Custom software development",
       "Product design",
       "UI/UX design",
       "Brand identity",
@@ -81,26 +85,54 @@ export function organizationJsonLd() {
         telephone: CONTACT.phone,
         ...(CONTACT.email ? { email: CONTACT.email } : {}),
         url: CONTACT.whatsapp,
-        availableLanguage: ["en", "es"],
+        areaServed: ["AR", "Worldwide"],
+        availableLanguage: ["English", "Spanish"],
       },
     ],
   };
 }
 
-export function webSiteJsonLd() {
+export function webSiteJsonLd(lang: Lang) {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": SITE_ID,
-    url: SITE_URL,
+    url: absoluteUrl("/"),
     name: SITE_NAME,
-    description: SITE_DESCRIPTION,
-    inLanguage: "en",
+    description: SITE_COPY[lang].description,
+    inLanguage: ["en", "es"],
     publisher: { "@id": ORG_ID },
   };
 }
 
-export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
+export function webPageJsonLd({
+  lang,
+  path,
+  name,
+  description,
+  type = "WebPage",
+}: {
+  lang: Lang;
+  path: string;
+  name: string;
+  description: string;
+  type?: "WebPage" | "AboutPage" | "ContactPage" | "CollectionPage";
+}) {
+  const pageUrl = url(path, lang);
+  return {
+    "@context": "https://schema.org",
+    "@type": type,
+    "@id": `${pageUrl}#webpage`,
+    url: pageUrl,
+    name,
+    description,
+    inLanguage: lang,
+    isPartOf: { "@id": SITE_ID },
+    about: { "@id": ORG_ID },
+  };
+}
+
+export function breadcrumbJsonLd(lang: Lang, items: { name: string; path: string }[]) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -108,45 +140,53 @@ export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
       "@type": "ListItem",
       position: i + 1,
       name: item.name,
-      item: absoluteUrl(item.path),
+      item: url(item.path, lang),
     })),
   };
 }
 
-export function worksCollectionJsonLd(works: WorkItem[]) {
+export function worksCollectionJsonLd(
+  lang: Lang,
+  works: WorkItem[],
+  page: { name: string; description: string }
+) {
+  const pageUrl = url("/works", lang);
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "@id": `${SITE_URL}/#work`,
-    name: `Selected work — ${SITE_NAME}`,
-    description: `Case studies of websites, apps and digital products designed and built by ${SITE_NAME}.`,
+    "@id": `${pageUrl}#webpage`,
+    url: pageUrl,
+    name: page.name,
+    description: page.description,
+    inLanguage: lang,
     isPartOf: { "@id": SITE_ID },
+    about: { "@id": ORG_ID },
     mainEntity: {
       "@type": "ItemList",
       numberOfItems: works.length,
       itemListElement: works.map((work, i) => ({
         "@type": "ListItem",
         position: i + 1,
-        url: absoluteUrl(`/cases/${work.slug}`),
-        name: work.title,
+        url: url(`/cases/${work.slug}`, lang),
+        name: `${work.title} — ${work.seoTitle ?? work.subtitle}`,
       })),
     },
   };
 }
 
-export function caseStudyJsonLd(work: WorkItem) {
-  const url = absoluteUrl(`/cases/${work.slug}`);
+export function caseStudyJsonLd(lang: Lang, work: WorkItem) {
+  const caseUrl = url(`/cases/${work.slug}`, lang);
   return {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
-    "@id": `${url}#case`,
-    url,
+    "@id": `${caseUrl}#case`,
+    url: caseUrl,
     name: work.title,
     headline: `${work.title} — ${work.seoTitle ?? work.subtitle}`,
     description: work.seoDescription ?? work.description ?? `${work.title} — ${work.subtitle}`,
     image: (work.images ?? [work.image]).map((src) => absoluteUrl(src)),
     dateCreated: work.year,
-    inLanguage: "en",
+    inLanguage: lang,
     genre: work.subtitle,
     keywords: [...(work.technologies ?? []), work.subtitle].join(", "),
     creator: { "@id": ORG_ID },
@@ -155,13 +195,11 @@ export function caseStudyJsonLd(work: WorkItem) {
   };
 }
 
-export function servicesJsonLd(
-  services: { name: string; description: string }[]
-) {
+export function servicesJsonLd(lang: Lang, name: string, services: { name: string; description: string }[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: `Services — ${SITE_NAME}`,
+    name,
     itemListElement: services.map((service, i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -169,8 +207,12 @@ export function servicesJsonLd(
         "@type": "Service",
         name: service.name,
         description: service.description,
+        inLanguage: lang,
         provider: { "@id": ORG_ID },
-        areaServed: { "@type": "Country", name: "Argentina" },
+        areaServed: [
+          { "@type": "Country", name: "Argentina" },
+          { "@type": "Place", name: "Worldwide" },
+        ],
       },
     })),
   };

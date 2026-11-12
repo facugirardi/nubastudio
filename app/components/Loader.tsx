@@ -80,6 +80,10 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
       .to(black, { yPercent: -100, duration: 0.95, ease: "power4.inOut" }, "-=0.05")
       .to(lime, { yPercent: -100, duration: 0.95, ease: "power4.inOut" }, "-=0.85");
 
+    // La coreografía dura ~4.4s a velocidad 1; el H1 del hero no pinta hasta
+    // que termina, así que eso era el LCP. A 2x queda en ~2.2s.
+    tl.timeScale(2);
+
     return () => {
       tl.kill();
       document.documentElement.style.overflow = "";

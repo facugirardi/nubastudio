@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  experimental: {
+    globalNotFound: true,
+  },
   compress: true,
   images: {
     formats: ["image/webp"],

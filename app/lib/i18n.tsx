@@ -1,57 +1,86 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { localePath, splitLocale, type Lang } from "./locale";
 
-export type Lang = "es" | "en";
+export type { Lang } from "./locale";
 
 const STORAGE_KEY = "nuba_lang";
 
-function detectInitialLang(): Lang {
+function readStoredLang(): Lang | null {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "es" || stored === "en") return stored;
   } catch {}
-  // Sin preferencia guardada: se infiere del idioma/localización del navegador.
-  const nav = typeof navigator !== "undefined" ? navigator.language || navigator.languages?.[0] : "";
-  return nav?.toLowerCase().startsWith("es") ? "es" : "en";
+  return null;
+}
+
+function storeLang(l: Lang) {
+  try {
+    localStorage.setItem(STORAGE_KEY, l);
+  } catch {}
 }
 
 type LanguageContextValue = {
   lang: Lang;
   setLang: (l: Lang) => void;
   toggleLang: () => void;
+  /** Prefija una ruta interna con el idioma actual ("/about" → "/es/about"). */
+  lp: (path: string) => string;
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  // Arranca en "en" (idioma base del contenido hardcodeado) para matchear el SSR;
-  // la detección real corre en el efecto, apenas hidrata en el cliente.
-  const [lang, setLangState] = useState<Lang>("en");
+/**
+ * El idioma sale de la URL (/es/* = español), así Google indexa cada versión
+ * por separado. `lang` llega fijo desde el layout de cada idioma; sin él (404
+ * global) se deduce del pathname y no se redirige.
+ */
+export function LanguageProvider({ lang: fixedLang, children }: { lang?: Lang; children: React.ReactNode }) {
+  const pathname = usePathname() ?? "/";
+  const router = useRouter();
+  const lang = fixedLang ?? splitLocale(pathname).lang;
 
-  useEffect(() => {
-    setLangState(detectInitialLang());
-  }, []);
+  const goTo = useCallback(
+    (l: Lang, mode: "push" | "replace") => {
+      const { path } = splitLocale(window.location.pathname);
+      const target = localePath(path, l) + window.location.search + window.location.hash;
+      if (mode === "replace") router.replace(target);
+      else router.push(target);
+    },
+    [router]
+  );
 
+  // Respeta la elección previa del usuario; en la primera visita sugiere español
+  // por el idioma del navegador. Los crawlers no tienen preferencia guardada y
+  // navegan en inglés, así que siempre ven la URL que pidieron.
   useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
+    if (!fixedLang) return;
+    const stored = readStoredLang();
+    if (stored) {
+      if (stored !== fixedLang) goTo(stored, "replace");
+      return;
+    }
+    const nav = navigator.language || navigator.languages?.[0] || "";
+    if (fixedLang === "en" && nav.toLowerCase().startsWith("es")) {
+      storeLang("es");
+      goTo("es", "replace");
+    }
+  }, [fixedLang, goTo]);
 
   const value = useMemo<LanguageContextValue>(() => {
-    // Solo se persiste ante una elección explícita: escribir en el efecto de montaje
-    // pisaba la preferencia guardada con el "en" inicial antes de leerla.
     const setLang = (l: Lang) => {
-      try {
-        localStorage.setItem(STORAGE_KEY, l);
-      } catch {}
-      setLangState(l);
+      storeLang(l);
+      if (l !== lang) goTo(l, "push");
     };
     return {
       lang,
       setLang,
       toggleLang: () => setLang(lang === "es" ? "en" : "es"),
+      lp: (path: string) => localePath(path, lang),
     };
-  }, [lang]);
+  }, [lang, goTo]);
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }

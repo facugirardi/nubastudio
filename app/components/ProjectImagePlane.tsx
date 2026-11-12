@@ -158,7 +158,7 @@ export default function ProjectImagePlane({
     uImpulse:        { value: 0 },                          // magnitud/signo del impulso
     // ── Tratamiento del dorso (cara trasera) ──
     uBackBlur:       { value: 0.013 }, // blur extra respecto al frente
-    uBackDark:       { value: 0.16 },  // < 1 → más oscuro
+    uBackDark:       { value: 0.35 },  // < 1 → más lavado hacia el blanco del fondo
     uBackContrast:   { value: 0.7 },   // < 1 → menos contraste (hacia gris)
     uBackDesat:      { value: 0.35 },  // 0..1 → mezcla hacia luminancia
     uBackAlpha:      { value: 0.92 },  // < 1 → un poco menos opaco
@@ -240,12 +240,12 @@ export default function ProjectImagePlane({
              }
              diffuseColor *= _t;
 
-             // Dorso: más oscuro, menos contraste y desaturado (si no, se ve tan brillante como el frente)
+             // Dorso: lavado hacia blanco, menos contraste y desaturado (si no, compite con el frente)
              if (!gl_FrontFacing) {
                float _lum = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
                vec3 _back = mix(diffuseColor.rgb, vec3(_lum), uBackDesat);
                _back = (_back - 0.5) * uBackContrast + 0.5;
-               _back *= uBackDark;
+               _back = mix(vec3(1.0), _back, uBackDark);
                diffuseColor.rgb = _back;
                diffuseColor.a *= uBackAlpha;
              }

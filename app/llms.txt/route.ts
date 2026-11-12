@@ -1,4 +1,6 @@
 import { visibleWorks } from "../data/works";
+import { localizeWork } from "../lib/localizeWork";
+import { localePath } from "../lib/locale";
 import { CONTACT, SITE_DESCRIPTION, SITE_NAME, absoluteUrl } from "../lib/seo";
 
 export const dynamic = "force-static";
@@ -13,12 +15,21 @@ export function GET() {
     )
     .join("\n");
 
+  const casesEs = visibleWorks
+    .map((raw) => {
+      const w = localizeWork(raw, "es");
+      return `- [${w.title} — ${w.seoTitle ?? w.subtitle}](${absoluteUrl(localePath(`/cases/${w.slug}`, "es"))})`;
+    })
+    .join("\n");
+
+  const es = (p: string) => absoluteUrl(localePath(p, "es"));
+
   const body = `# ${SITE_NAME}
 
 > ${SITE_DESCRIPTION}
 
 ${SITE_NAME} is a digital product studio based in ${CONTACT.city}, Argentina. We design
-and build websites, mobile apps, marketplaces and digital products end to end, from
+and build websites, mobile apps, marketplaces and custom software end to end, from
 product strategy and design through development and launch. We work with founders and
 companies in Argentina, across Latin America and internationally.
 
@@ -33,13 +44,24 @@ companies in Argentina, across Latin America and internationally.
 ## Pages
 
 - [Home](${absoluteUrl("/")}): studio overview and selected work.
-- [About](${absoluteUrl("/about")}): how the studio works, its process and the team.
+- [Work](${absoluteUrl("/works")}): portfolio of case studies.
 - [Services](${absoluteUrl("/services")}): what we build and how we run a project.
+- [About](${absoluteUrl("/about")}): how the studio works, its principles and the team.
 - [Contact](${absoluteUrl("/contact")}): start a project with us.
 
 ## Case studies
 
 ${cases}
+
+## Versión en español
+
+- [Inicio](${es("/")})
+- [Trabajos](${es("/works")})
+- [Servicios](${es("/services")})
+- [Nosotros](${es("/about")})
+- [Contacto](${es("/contact")})
+
+${casesEs}
 
 ## Contact
 
@@ -49,10 +71,10 @@ ${cases}
 
 ## Notes
 
-- Content is published in English. The studio works in English and Spanish.
+- Content is published in English (${absoluteUrl("/")}) and Spanish (${es("/")}).
 - Canonical domain: ${absoluteUrl("/")}
-- Structured data (Organization, WebSite, CreativeWork, BreadcrumbList) is available
-  as JSON-LD on every page.
+- Structured data (Organization, WebSite, WebPage, CreativeWork, BreadcrumbList, FAQPage)
+  is available as JSON-LD on every page.
 `;
 
   return new Response(body, {

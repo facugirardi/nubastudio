@@ -70,7 +70,7 @@ export default function LogoMark({
       <path
         ref={pathRef}
         d={PATH_D}
-        stroke="#ffffff"
+        stroke="currentColor"
         strokeWidth={1.5}
         strokeLinecap="round"
         strokeLinejoin="round"

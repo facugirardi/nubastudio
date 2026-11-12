@@ -1,0 +1,263 @@
+/* ───────────── Tira de trabajos ───────────── */
+.ab-strip {
+  overflow: hidden;
+  padding: clamp(40px, 5vw, 72px) 0 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+.ab-strip-track {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  width: max-content;
+  will-change: transform;
+}
+.ab-strip-track > li { height: clamp(260px, 30vw, 500px); flex: none; }
+.ab-strip-item { display: flex; flex-direction: column; gap: 0.8rem; height: 100%; color: var(--ink); text-decoration: none; }
+.ab-strip-img { position: relative; flex: 1; overflow: hidden; background: #e2e1dc; }
+.ab-strip-img img { object-fit: cover; transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.ab-strip-cap {
+  display: flex;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ab-strip-cap > :first-child { color: rgba(11, 11, 10, 0.5); }
+.ab-strip-item:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+@media (hover: hover) and (pointer: fine) {
+  .ab-strip-item:hover .ab-strip-img img { transform: scale(1.04); }
+}
+
+/* ───────────── (01) Estudio ───────────── */
+.ab-studio-body {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1.6rem 1.2rem;
+}
+.ab-p {
+  grid-column: 4 / 10;
+  margin: 0;
+  font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--mute);
+  max-width: 52ch;
+}
+.ab-p-lead {
+  font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+  max-width: 34ch;
+}
+.ab-facts {
+  margin: clamp(56px, 7vw, 104px) 0 0;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+.ab-fact {
+  grid-column: span 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+.ab-fact dt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.ab-fact dd {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.4vw, 2.6rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+/* ───────────── (02) Principios ───────────── */
+.ab-pr-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0 1.2rem;
+}
+.ab-pr {
+  grid-column: 4 / 13;
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 0.8rem 1.2rem;
+  padding-block: clamp(28px, 3.4vw, 52px);
+  border-top: 1px solid var(--rule);
+  transition: opacity 0.35s;
+}
+.ab-pr-n {
+  grid-column: 1 / -1;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--mute);
+}
+.ab-pr-t {
+  grid-column: 1 / 6;
+  margin: 0;
+  font-size: clamp(1.8rem, 3.4vw, 3.6rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  transition: font-weight 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ab-pr-d {
+  grid-column: 6 / 10;
+  margin: 0;
+  align-self: end;
+  color: var(--mute);
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 34ch;
+}
+.ab-pr:last-child { border-bottom: 1px solid var(--rule); }
+@media (hover: hover) and (pointer: fine) {
+  .ab-pr-grid:has(.ab-pr:hover) .ab-pr:not(:hover) { opacity: 0.3 !important; }
+  .ab-pr:hover .ab-pr-t { font-weight: 700; }
+}
+
+/* ───────────── (03) Equipo ───────────── */
+.ab-team-count { grid-column: 11 / 13 !important; justify-self: end; }
+.ab-team-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+.ab-member { grid-column: span 3; display: flex; flex-direction: column; gap: 0.9rem; }
+.ab-member:first-child { grid-column: 4 / 7; }
+.ab-member-img {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #e2e1dc;
+}
+.ab-member-img img {
+  object-fit: cover;
+  object-position: 50% 20%;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter 0.6s, transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ab-member-cap {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.2rem 1rem;
+  align-items: baseline;
+}
+.ab-member-n,
+.ab-member-role {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.ab-member-n { grid-row: 1 / 3; }
+.ab-member-name {
+  font-size: clamp(1.2rem, 1.6vw, 1.6rem);
+  letter-spacing: -0.03em;
+  transition: font-weight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ab-member-role { grid-column: 2; }
+@media (hover: hover) and (pointer: fine) {
+  .ab-member:hover .ab-member-img img { filter: none; transform: scale(1.035); }
+  .ab-member:hover .ab-member-name { font-weight: 700; }
+}
+
+/* ───────────── (04) Trayectoria ───────────── */
+.ab-yr {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+.ab-yr + .ab-yr { margin-top: clamp(48px, 6vw, 88px); }
+.ab-yr-head {
+  grid-column: 1 / 4;
+  align-self: start;
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.ab-yr-y {
+  font-size: clamp(3.2rem, 7vw, 7.6rem);
+  line-height: 0.9;
+}
+.ab-yr-list { grid-column: 4 / 13; list-style: none; margin: 0; padding: 0; }
+.ab-yr-row {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) auto;
+  gap: 1.2rem;
+  align-items: baseline;
+  padding-block: clamp(14px, 1.6vw, 22px);
+  border-bottom: 1px solid var(--rule);
+  color: var(--fg);
+  text-decoration: none;
+  transition: opacity 0.35s;
+}
+.ab-yr-list li:first-child .ab-yr-row { padding-top: 0; }
+.ab-yr-t {
+  font-size: clamp(1.6rem, 2.8vw, 3rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  transition: font-weight 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.ab-yr-s {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.ab-yr-row .arrow { opacity: 0; transform: translate(-6px, 6px); transition: opacity 0.3s, transform 0.45s cubic-bezier(0.7, 0, 0.2, 1); }
+.ab-yr-row:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+@media (hover: hover) and (pointer: fine) {
+  .ab-record:has(.ab-yr-row:hover) .ab-yr-row:not(:hover) { opacity: 0.3; }
+  .ab-yr-row:hover .ab-yr-t { font-weight: 700; }
+  .ab-yr-row:hover .arrow { opacity: 1; transform: none; }
+}
+
+/* ───────────── Responsive ───────────── */
+@media (max-width: 899px) {
+  .ab-strip { overflow-x: auto; scrollbar-width: none; }
+  .ab-strip::-webkit-scrollbar { display: none; }
+  .ab-strip-track > li { height: 240px; }
+  .ab-p, .ab-p-lead { grid-column: 1 / -1; }
+  .ab-fact { grid-column: span 6; }
+  .ab-pr { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr); }
+  .ab-pr-t, .ab-pr-d { grid-column: 1 / -1; }
+  .ab-team-count { display: none; }
+  .ab-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ab-member, .ab-member:first-child { grid-column: auto; }
+  .ab-yr { grid-template-columns: minmax(0, 1fr); }
+  .ab-yr-head { grid-column: 1 / -1; position: static; flex-direction: row; align-items: baseline; justify-content: space-between; }
+  .ab-yr-list { grid-column: 1 / -1; }
+  .ab-yr-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .ab-yr-s { grid-column: 1; grid-row: 2; }
+  .ab-yr-row .arrow { opacity: 1; transform: none; grid-row: 1 / 3; grid-column: 2; align-self: center; }
+}

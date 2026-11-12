@@ -9,12 +9,18 @@ const RATE_LIMIT = 8;
 const GLOBAL_LIMIT = 60;
 const MAX_TRACKED = 2000;
 
-const SYSTEM_PROMPT = `You help visitors of Nuba Studio (a digital product agency that builds websites, apps and marketplaces) turn rough notes into a clear first message to send on WhatsApp.
+const LANGUAGES = {
+  en: { name: "English", greeting: "Hi Nuba" },
+  es: { name: "Spanish (Rioplatense, using vos)", greeting: "Hola Nuba" },
+} as const;
+type Lang = keyof typeof LANGUAGES;
+
+const systemPrompt = (lang: Lang) => `You help visitors of Nuba Studio (a digital product agency that builds websites, apps and marketplaces) turn rough notes into a clear first message to send on WhatsApp.
 
 Rewrite the user's notes as a short message written in FIRST PERSON, as if the visitor is writing to Nuba. Rules:
 - Reply with ONLY the message text. No quotes, no preamble, no explanations, no markdown.
-- Write in the SAME language the user wrote in.
-- Start with a brief greeting: "Hola Nuba" (or the natural equivalent in the user's language).
+- Always write the message in ${LANGUAGES[lang].name}, even if the notes are in another language; translate them if needed.
+- Start with a brief greeting: "${LANGUAGES[lang].greeting}".
 - Never use emojis, emoticons or decorative symbols. Plain text only.
 - Keep it between 2 and 5 sentences. Be concrete about what they need or want.
 - Preserve any detail they gave (budget, timeline, type of project, links, company).
@@ -76,9 +82,11 @@ export async function POST(req: Request) {
   }
 
   let text = "";
+  let lang: Lang = "es";
   try {
     const body = await req.json();
     text = typeof body?.text === "string" ? body.text.trim() : "";
+    if (body?.lang === "en") lang = "en";
   } catch {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
@@ -91,7 +99,7 @@ export async function POST(req: Request) {
   }
 
   const payload = JSON.stringify({
-    system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+    system_instruction: { parts: [{ text: systemPrompt(lang) }] },
     contents: [{ parts: [{ text }] }],
     generationConfig: { temperature: 0.7, maxOutputTokens: 1200 },
   });

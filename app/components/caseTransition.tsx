@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import { getLenis } from "./SmoothScroll";
 import { heroImageSet } from "../lib/optimizedImage";
+import { useLanguage } from "../lib/i18n";
+import { localePath, splitLocale } from "../lib/locale";
 
 /* ───────── Store de módulo: sobrevive la navegación SPA de Next ───────── */
 export type CaseTransitionPayload = {
@@ -31,7 +33,7 @@ let prefetch: ((slug: string) => void) | null = null;
 // Se dispara desde la card del spiral (o la lista) al clickear un proyecto.
 export function startCaseTransition(p: CaseTransitionPayload) {
   if (listener) listener(p);
-  else window.location.href = `/cases/${p.slug}`; // fallback sin overlay montado
+  else window.location.href = localePath(`/cases/${p.slug}`, splitLocale(window.location.pathname).lang); // fallback sin overlay montado
 }
 
 // Calienta la ruta en hover: el mount de la página de caso deja de robarle
@@ -78,6 +80,7 @@ function decoded(img: HTMLImageElement) {
 /* ───────── Overlay: morph de la imagen (card → hero fullscreen) ───────── */
 export default function CaseTransitionProvider() {
   const router = useRouter();
+  const { lp } = useLanguage();
   const rootRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -85,7 +88,7 @@ export default function CaseTransitionProvider() {
   const busyRef = useRef(false);
 
   useEffect(() => {
-    prefetch = (slug) => router.prefetch(`/cases/${slug}`);
+    prefetch = (slug) => router.prefetch(lp(`/cases/${slug}`));
 
     listener = async (p) => {
       const root = rootRef.current;
@@ -95,7 +98,7 @@ export default function CaseTransitionProvider() {
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       if (!root || !backdrop || !wrap || !img || busyRef.current || reduced) {
-        router.push(`/cases/${p.slug}`);
+        router.push(lp(`/cases/${p.slug}`));
         return;
       }
       busyRef.current = true;
@@ -192,7 +195,7 @@ export default function CaseTransitionProvider() {
         .call(
           () => {
             entryDelay = MORPH * (1 - NAV_AT) + 0.3;
-            router.push(`/cases/${p.slug}`);
+            router.push(lp(`/cases/${p.slug}`));
           },
           undefined,
           MORPH * NAV_AT
@@ -203,7 +206,7 @@ export default function CaseTransitionProvider() {
       listener = null;
       prefetch = null;
     };
-  }, [router]);
+  }, [router, lp]);
 
   return (
     <div

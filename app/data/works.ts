@@ -206,7 +206,7 @@ export const works: WorkItem[] = [
     subtitle: "Web Development",
     image: "/images/cases/checkrto/check1.webp",
     slug: "checkrto",
-    year: "2025",
+    year: "2024",
     task: "Mandatory vehicle technical inspection still runs on paper. An inspector fills a form by hand, the report is typed up somewhere else, and the certificate arrives later through a separate process. Nothing connects, so one inspection gets re-entered several times and neither the inspector nor the vehicle owner can see where it stands. CheckRTO had to hold the whole inspection in a single system.",
     solutions: "We built a platform that carries an inspection from intake to issued certificate without leaving the workflow. Inspectors record each review against a structured checklist, and the report generates itself from what was entered instead of being written a second time. Certificates are issued digitally from that same record, so the document and the inspection can never disagree. Two dashboards sit on top: one for inspectors working through their queue, one for vehicle owners following a vehicle's status and history. Compliance tracking runs through every step, so the audit trail is a by-product of the work.",
     description: "CheckRTO is a vehicle technical inspection platform that runs the whole lifecycle in one place. Inspectors record reviews, generate reports, and issue digital certificates without ever leaving the workflow. The paperwork of an inspection, finally digital.",

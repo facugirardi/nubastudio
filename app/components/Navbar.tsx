@@ -1,42 +1,37 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "./LocaleLink";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import LogoMark from "./LogoMark";
-import { useLanguage } from "../lib/i18n";
+import { getLenis } from "./SmoothScroll";
+import { useLanguage, type Lang } from "../lib/i18n";
 import { getUiText } from "../lib/uiText";
+import { CONTACT } from "../lib/seo";
+import Arrow from "./Arrow";
 
-const NAV_IDS = ["work", "about", "services", "contact"] as const;
+const NAV_IDS = ["home", "work", "services", "about", "contact"] as const;
+const LANGS: Lang[] = ["en", "es"];
+const PHONE_LABEL = "+54 9 351 347 1844";
 
-const CHIP_W = 92;
-const CHIP_H = 40;
-
-const LANG_OPTIONS = [
-  { code: "en", name: "English" },
-  { code: "es", name: "Español" },
-] as const;
-
-const SOCIALS = [
-  {
-    label: "LinkedIn",
-    href: "https://linkedin.com/company/nubastudio",
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
-      </svg>
-    ),
-  },
-  {
-    label: "WhatsApp",
-    href: "https://wa.me/5493513471844",
-    icon: (
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-      </svg>
-    ),
-  },
-];
+function useCordobaTime() {
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const fmt = () =>
+      new Intl.DateTimeFormat("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+        timeZone: "America/Argentina/Cordoba",
+      }).format(new Date());
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- la hora depende del cliente
+    setTime(fmt());
+    const id = setInterval(() => setTime(fmt()), 20000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
 
 export default function Navbar({
   visible,
@@ -53,335 +48,49 @@ export default function Navbar({
 }) {
   const navRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const labelRef = useRef<HTMLSpanElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const toggleRef = useRef<HTMLDivElement>(null);
-  const thumbRef = useRef<HTMLSpanElement>(null);
-  const dragRef = useRef({ active: false, moved: false, startX: 0, thumbStart: 0 });
-  const ignoreClickRef = useRef(false);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const menuBtnRef = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
   const [open, setOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [langMenuOpen, setLangMenuOpen] = useState(false);
-  const langMenuRef = useRef<HTMLDivElement>(null);
-  const langToggleRef = useRef<HTMLButtonElement>(null);
-  const langCodeRef = useRef<HTMLSpanElement>(null);
-  const langPanelRef = useRef<HTMLDivElement>(null);
-  const langContentRef = useRef<HTMLDivElement>(null);
-  const prevLangRef = useRef<string | null>(null);
   const pathname = usePathname();
-  const { lang, setLang } = useLanguage();
+  const { lang, setLang, lp } = useLanguage();
   const t = getUiText(lang);
-
-  const bounceLangChars = (delay = 0) => {
-    const chars = langCodeRef.current?.querySelectorAll<HTMLElement>(".lang-char");
-    if (!chars) return;
-    const tl = gsap.timeline({ overwrite: true, delay });
-    chars.forEach((char, i) => {
-      tl.to(char, { y: -5, rotation: 6, fontWeight: 700, fontSize: "0.84rem", duration: 0.2, ease: "power2.out" }, i * 0.07)
-        .to(char, { y: 0, rotation: 0, fontWeight: 500, fontSize: "0.78rem", duration: 0.25, ease: "power2.in" }, i * 0.07 + 0.2);
-    });
-  };
-
-  // Igual que el chip "Menu": el botón crece hasta ser el popover y al cerrar vuelve a chip.
-  const langMountedRef = useRef(false);
-  useEffect(() => {
-    const panel = langPanelRef.current;
-    const content = langContentRef.current;
-    const toggle = langToggleRef.current;
-    if (!panel || !content || !toggle) return;
-    if (!langMountedRef.current) {
-      langMountedRef.current = true;
-      return;
-    }
-    const chipW = toggle.offsetWidth;
-
-    if (langMenuOpen) {
-      gsap.set(panel, { visibility: "visible", width: chipW, height: CHIP_H, borderRadius: 999 });
-      gsap.to(panel, { width: content.offsetWidth, height: content.offsetHeight, borderRadius: 20, duration: 0.6, ease: "power4.inOut", overwrite: true });
-      gsap.to(content, { opacity: 1, duration: 0.4, delay: 0.25, ease: "power2.out", overwrite: true });
-      gsap.set(content.querySelectorAll(".nav-char"), { y: 0, rotation: 0 });
-      gsap.fromTo(
-        content.querySelectorAll("[data-stagger]"),
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.55, stagger: 0.07, delay: 0.35, ease: "power3.out", overwrite: true }
-      );
-    } else {
-      gsap.to(content, { opacity: 0, duration: 0.15, ease: "power2.in", overwrite: true });
-      gsap.timeline()
-        .to(panel, { width: chipW, height: CHIP_H, borderRadius: 999, duration: 0.5, ease: "power3.inOut", overwrite: true })
-        .set(panel, { visibility: "hidden" })
-        .to(toggle, { scaleX: 1.12, scaleY: 0.84, transformOrigin: "center center", duration: 0.16, ease: "power2.out" }, "-=0.1")
-        .to(toggle, { scaleX: 1, scaleY: 1, duration: 1, ease: "elastic.out(1, 0.5)" });
-      bounceLangChars(0.5);
-    }
-  }, [langMenuOpen]);
-
-  useEffect(() => {
-    const prev = prevLangRef.current;
-    prevLangRef.current = lang;
-    if (prev === null || prev === lang || !langCodeRef.current) return;
-    gsap.fromTo(
-      langCodeRef.current,
-      { y: 8, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }
-    );
-  }, [lang]);
-
-  useEffect(() => {
-    if (!langMenuOpen) return;
-    const onPointerDown = (e: PointerEvent) => {
-      if (langMenuRef.current && !langMenuRef.current.contains(e.target as Node)) {
-        setLangMenuOpen(false);
-      }
-    };
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLangMenuOpen(false);
-    };
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [langMenuOpen]);
-
-  const chooseView = (next: "spiral" | "list") => {
-    if (next === "spiral" && !webglAvailable) return;
-    setView(next);
-  };
-
-  useEffect(() => {
-    const update = () => setIsMobile(window.innerWidth < 768);
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
-  // Margen lateral del nav / anclaje del chip-panel (más chico en mobile)
-  const padX = isMobile ? "1.25rem" : "2.5rem";
-  // Chip: pill "menu" en desktop · botón cuadrado con hamburguesa en mobile
-  const chipW = isMobile ? 46 : CHIP_W;
-
-  // Scramble/decode: al hacer hover las letras ciclan suave y se fijan formando la palabra
-  const scrambleRafs = useRef(new WeakMap<HTMLElement, number>());
-  const runScramble = (el: HTMLElement, finalText: string, duration = 400) => {
-    const prev = scrambleRafs.current.get(el);
-    if (prev) cancelAnimationFrame(prev);
-    const chars = "abcdefghijklmnopqrstuvwxyz";
-    const len = finalText.length;
-    const cache = new Array(len).fill("");
-    const start = performance.now();
-    let lastSwap = 0;
-    const SWAP_MS = 70; // las letras random cambian cada 70ms → gentle, no frenético
-    // easeInOutCubic: el avance del "decode" entra y sale suave
-    const ease = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
-    const step = (now: number) => {
-      const raw = Math.min(1, (now - start) / duration);
-      const t = ease(raw);
-      const swap = now - lastSwap >= SWAP_MS;
-      if (swap) lastSwap = now;
-      el.replaceChildren();
-      for (let i = 0; i < len; i++) {
-        const c = finalText[i];
-        if (c === " ") { el.append(" "); continue; }
-        const span = document.createElement("span");
-        if (t >= (i + 1) / len) {
-          span.textContent = c; // esta letra ya se asentó (negro normal)
-        } else {
-          if (swap || !cache[i]) cache[i] = chars[(Math.random() * chars.length) | 0];
-          span.textContent = cache[i]; // encriptada: bloque negro + letra blanca
-          span.className = "enc";
-        }
-        el.append(span);
-      }
-      if (raw < 1) {
-        scrambleRafs.current.set(el, requestAnimationFrame(step));
-      } else {
-        el.textContent = finalText;
-        scrambleRafs.current.delete(el);
-      }
-    };
-    scrambleRafs.current.set(el, requestAnimationFrame(step));
-  };
-
-  // Bounce escalonado de las letras de "menu" (hover + al cerrar el panel)
-  const bounceMenuChars = (delay = 0) => {
-    const chars = labelRef.current?.querySelectorAll<HTMLElement>(".menu-char");
-    if (!chars) return;
-    const tl = gsap.timeline({ overwrite: true, delay });
-    chars.forEach((char, i) => {
-      tl.to(char, {
-        y: -5,
-        rotation: 6,
-        fontWeight: 700,
-        fontSize: "17px",
-        duration: 0.2,
-        ease: "power2.out",
-      }, i * 0.07)
-      .to(char, {
-        y: 0,
-        rotation: 0,
-        fontWeight: 400,
-        fontSize: "16px",
-        duration: 0.25,
-        ease: "power2.in",
-      }, i * 0.07 + 0.2);
-    });
-  };
-
-  const scatterNavChars = (el: HTMLElement, onDone: () => void) => {
-    const chars = el.querySelectorAll<HTMLElement>(".nav-char");
-    if (!chars.length) { onDone(); return; }
-    const tl = gsap.timeline({ overwrite: true, onComplete: onDone });
-    chars.forEach((char, i) => {
-      const rx = (Math.random() - 0.5) * 120;
-      const ry = (Math.random() - 0.5) * 80 - 20;
-      const rot = (Math.random() - 0.5) * 60;
-      tl.to(char, {
-        x: rx,
-        y: ry,
-        rotation: rot,
-        duration: 0.55,
-        ease: "power3.out",
-      }, i * 0.04);
-    });
-  };
-
-  const bounceNavChars = (el: HTMLElement) => {
-    const chars = el.querySelectorAll<HTMLElement>(".nav-char");
-    if (!chars.length) return;
-    const tl = gsap.timeline({ overwrite: true });
-    const offsets = [-6, -9, -5, -8, -4, -7, -6, -5];
-    const rotations = [5, -7, 8, -5, 6, -8, 4, -6];
-    chars.forEach((char, i) => {
-      tl.to(char, {
-        y: offsets[i % offsets.length],
-        rotation: rotations[i % rotations.length],
-        duration: 0.32,
-        ease: "power2.out",
-      }, i * 0.08)
-      .to(char, {
-        y: 0,
-        rotation: 0,
-        duration: 0.55,
-        ease: "elastic.out(1, 0.5)",
-      }, i * 0.08 + 0.32);
-    });
-  };
-
-  // Posición x del thumb para la opción "list" (spiral = 0)
-  const slotMax = () => {
-    const c = toggleRef.current;
-    return c ? c.clientWidth / 2 - 4 : 0;
-  };
-
-  // Sincroniza el thumb con la vista (cuando NO se está arrastrando), con overshoot
-  useEffect(() => {
-    if (dragRef.current.active) return;
-    gsap.to(thumbRef.current, {
-      x: view === "list" ? slotMax() : 0,
-      scale: 1,
-      duration: 0.5,
-      ease: "back.out(1.7)",
-      overwrite: true,
-    });
-  }, [view, isMobile]);
-
-  const onThumbDown = (e: React.PointerEvent) => {
-    // No capturamos el puntero todavía: un click simple debe seguir funcionando.
-    dragRef.current = {
-      active: true,
-      moved: false,
-      startX: e.clientX,
-      thumbStart: Number(gsap.getProperty(thumbRef.current, "x")),
-    };
-  };
-
-  const onThumbMove = (e: React.PointerEvent) => {
-    const d = dragRef.current;
-    if (!d.active) return;
-    const dx = e.clientX - d.startX;
-    if (!d.moved && Math.abs(dx) > 4) {
-      // Recién acá pasa a ser un arrastre real → capturamos el puntero.
-      d.moved = true;
-      try { toggleRef.current?.setPointerCapture(e.pointerId); } catch {}
-      gsap.to(thumbRef.current, { scale: 1.16, duration: 0.2, ease: "power3.out", overwrite: "auto" });
-    }
-    if (d.moved) {
-      const max = slotMax();
-      const nx = Math.max(0, Math.min(max, d.thumbStart + dx));
-      gsap.set(thumbRef.current, { x: nx });
-      // Color en vivo: la opción bajo el thumb se vuelve negra (índice 0 = spiral, 1 = list)
-      const listActive = nx >= max / 2;
-      toggleRef.current?.querySelectorAll(".view-opt").forEach((b, i) => {
-        const active = i === 0 ? !listActive : listActive;
-        (b as HTMLElement).style.color = active ? "#000" : "rgba(255,255,255,0.6)";
-      });
-    }
-  };
-
-  const onThumbUp = (e: React.PointerEvent) => {
-    const d = dragRef.current;
-    if (!d.active) return;
-    if (d.moved) toggleRef.current?.releasePointerCapture(e.pointerId);
-    d.active = false;
-    gsap.to(thumbRef.current, { scale: 1, duration: 0.35, ease: "back.out(2)", overwrite: "auto" });
-    if (d.moved) {
-      ignoreClickRef.current = true;
-      setTimeout(() => (ignoreClickRef.current = false), 60);
-      const max = slotMax();
-      const toList = Number(gsap.getProperty(thumbRef.current, "x")) > max / 2;
-      gsap.to(thumbRef.current, { x: toList ? max : 0, duration: 0.4, ease: "back.out(2)", overwrite: true });
-      const target = toList ? "list" : "spiral";
-      if (target !== view) chooseView(target);
-    }
-  };
+  const time = useCordobaTime();
 
   useEffect(() => {
     if (!visible) return;
-    gsap.fromTo(
-      navRef.current,
-      { y: -10, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.7, delay: 0.8, ease: "power3.out" }
-    );
+    gsap.fromTo(navRef.current, { opacity: 0 }, { opacity: 1, duration: 0.7, delay: 0.6, ease: "power2.out" });
   }, [visible]);
 
-  // El chip "Menu" y el panel son el MISMO elemento: al abrir crece de chip a panel.
+  // Panel: baja como una cortina; los links suben en cascada.
   useEffect(() => {
     const panel = panelRef.current;
-    const overlay = overlayRef.current;
-    const label = labelRef.current;
-    const content = contentRef.current;
-    if (!panel || !overlay || !label || !content) return;
-
-    // Mobile: casi fullscreen (margen simétrico = padX). Desktop: columna a la derecha.
-    const mobile = window.innerWidth < 768;
-    const mPad = 20; // 1.25rem en px → debe coincidir con padX en mobile
-    const chipW = mobile ? 46 : CHIP_W;
-    const openW = mobile ? window.innerWidth - mPad * 2 : Math.min(window.innerWidth * 0.34, 460);
-    const openH = window.innerHeight - 38.4; // top 1.5rem + bottom 0.9rem
+    if (!panel) return;
+    if (!open && !wasOpen.current) return;
+    wasOpen.current = open;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const items = panel.querySelectorAll("[data-menu-in]");
+    const lenis = getLenis();
 
     if (open) {
-      gsap.to(panel, { x: 0, y: 0, scaleX: 1, scaleY: 1, width: openW, height: openH, borderRadius: 24, duration: 0.7, ease: "power4.inOut", overwrite: true });
-      gsap.to(label, { opacity: 0, duration: 0.2, ease: "power2.out", overwrite: true });
-      gsap.to(content, { opacity: 1, duration: 0.45, delay: 0.3, ease: "power2.out", overwrite: true });
-      gsap.set(content.querySelectorAll(".nav-char"), { x: 0, y: 0, rotation: 0, opacity: 1 });
-      gsap.fromTo(
-        content.querySelectorAll("[data-stagger]"),
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.55, stagger: 0.07, delay: 0.42, ease: "power3.out", overwrite: true }
-      );
-      gsap.to(overlay, { opacity: 1, duration: 0.4, ease: "power2.out", overwrite: true });
+      lenis?.stop();
+      document.documentElement.style.overflow = "hidden";
+      gsap.set(panel, { visibility: "visible" });
+      if (reduce) {
+        gsap.set(panel, { clipPath: "inset(0 0 0% 0)" });
+        gsap.set(items, { yPercent: 0, opacity: 1 });
+      } else {
+        gsap.fromTo(panel, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.75, ease: "power4.inOut", overwrite: true });
+        gsap.fromTo(items, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.05, delay: 0.3, ease: "power3.out", overwrite: true });
+      }
+      firstLinkRef.current?.focus({ preventScroll: true });
     } else {
-      gsap.timeline()
-        .to(panel, { width: chipW, height: CHIP_H, borderRadius: 999, duration: 0.5, ease: "power3.inOut", overwrite: true })
-        .to(panel, { scaleX: 1.12, scaleY: 0.84, transformOrigin: "center center", duration: 0.16, ease: "power2.out" }, "-=0.1")
-        .to(panel, { scaleX: 1, scaleY: 1, duration: 1, ease: "elastic.out(1, 0.5)" });
-      gsap.to(label, { opacity: 1, duration: 0.3, delay: 0.3, ease: "power2.out", overwrite: true });
-      bounceMenuChars(0.5);
-      gsap.to(content, { opacity: 0, duration: 0.15, ease: "power2.in", overwrite: true });
-      gsap.to(overlay, { opacity: 0, duration: 0.4, ease: "power2.in", overwrite: true });
+      lenis?.start();
+      document.documentElement.style.overflow = "";
+      const hide = () => gsap.set(panel, { visibility: "hidden" });
+      if (reduce) hide();
+      else gsap.to(panel, { clipPath: "inset(0 0 100% 0)", duration: 0.6, ease: "power4.inOut", overwrite: true, onComplete: hide });
+      menuBtnRef.current?.focus({ preventScroll: true });
     }
   }, [open]);
 
@@ -393,523 +102,284 @@ export default function Navbar({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  const chooseView = (next: "spiral" | "list") => {
+    if (next === "spiral" && !webglAvailable) return;
+    setView(next);
+  };
+
+  const go = (id: (typeof NAV_IDS)[number]) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    setOpen(false);
+    if (id === "home") {
+      window.location.href = lp("/");
+      return;
+    }
+    if (id !== "work") {
+      window.location.href = lp(`/${id}`);
+      return;
+    }
+    if (pathname !== lp("/works")) {
+      window.location.href = lp("/works?view=list");
+      return;
+    }
+    if (view === "spiral") {
+      setView("list");
+      setTimeout(() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" }), 50);
+    }
+  };
+
   return (
     <>
       <style>{`
-        .menu-label, .view-opt, .menu-panel-link, .menu-close, .menu-email {
-          font-family: var(--font-outfit), sans-serif;
-          font-weight: 400;
-        }
-        .menu-label {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
+        .nb {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 1002;
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
           align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          letter-spacing: 0.01em;
-          color: #000;
-          pointer-events: auto;
-          white-space: nowrap;
+          gap: 1rem;
+          padding: 1.4rem clamp(1.25rem, 3vw, 2.5rem);
+          opacity: 0;
+          transition: color 0.4s, background 0.4s;
+          font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+          font-size: 0.72rem;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
         }
-
-        .view-toggle {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          display: flex;
-          align-items: center;
-          height: 40px;
-          padding: 4px;
-          border-radius: 999px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.12);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          overflow: hidden;
-        }
-        .view-thumb {
-          position: absolute;
-          top: 4px;
-          left: 4px;
-          bottom: 4px;
-          width: calc(50% - 4px);
-          background: #fff;
-          border-radius: 999px;
-          box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-          cursor: grab;
-          touch-action: none;
-        }
-        .view-thumb:active { cursor: grabbing; }
-        .view-opt {
+        .nb a, .nb button { color: inherit; }
+        .nb-logo { justify-self: start; display: flex; align-items: center; }
+        .nb-center { justify-self: center; display: flex; gap: 0.5rem; align-items: center; }
+        .nb-right { justify-self: end; display: flex; align-items: center; gap: clamp(1.2rem, 3vw, 2.4rem); }
+        .nb-sep { opacity: 0.4; }
+        .nb-btn {
+          all: unset;
+          cursor: pointer;
           position: relative;
-          z-index: 1;
-          width: 6rem;
-          height: 100%;
-          padding: 0;
-          background: none;
-          border: none;
+          padding-block: 0.3rem;
+          opacity: 0.45;
+          transition: opacity 0.3s;
+        }
+        .nb-btn:hover { opacity: 1; }
+        .nb-btn[aria-pressed="true"] { opacity: 1; }
+        .nb-btn::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 1px;
+          background: currentColor;
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 0.45s cubic-bezier(0.7, 0, 0.2, 1);
+        }
+        .nb-btn[aria-pressed="true"]::after { transform: scaleX(1); transform-origin: left; }
+        .nb-btn:disabled { cursor: not-allowed; opacity: 0.2; }
+        .nb-btn:focus-visible, .nb-menu:focus-visible, .mp a:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+        .nb-menu {
+          all: unset;
           cursor: pointer;
-          text-align: center;
-          font-weight: 400;
-          font-size: 0.78rem;
-          letter-spacing: -0.01em;
-          text-transform: lowercase;
-          transition: color 0.3s ease;
-        }
-
-        .menu-panel-link {
-          display: block;
-          font-size: clamp(3rem, min(7.2vw, 9.6vh), 6rem);
-          line-height: 1.06;
-          font-weight: 400;
-          letter-spacing: -0.025em;
-          color: #000;
-          text-decoration: none;
-          width: fit-content;
-          font-variant-numeric: tabular-nums;
-          cursor: pointer;
-        }
-        .menu-panel-link .enc {
-          background: #000;
-          color: #fff;
-          border-radius: 0;
-        }
-        .menu-close {
           display: inline-flex;
           align-items: center;
           gap: 0.6rem;
-          background: none;
-          border: none;
-          cursor: pointer;
-          color: #000;
-          font-size: 0.85rem;
-          letter-spacing: 0.02em;
+          padding-block: 0.3rem;
         }
-        .menu-close .x {
-          width: 38px;
-          height: 38px;
-          border-radius: 50%;
-          background: #000;
-          color: #fff;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-        }
-        .menu-close:hover .x { transform: rotate(90deg); }
-        .menu-email {
-          color: #000;
-          text-decoration: none;
-          font-size: 1rem;
-          opacity: 0.7;
-          transition: opacity 0.25s;
-        }
-        .menu-email:hover { opacity: 1; }
-        .menu-social {
+        .nb-plus {
           position: relative;
-          overflow: hidden;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: #000;
-          color: #fff;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          transition: color 0.3s ease;
+          width: 9px;
+          height: 9px;
+          transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
         }
-        .menu-social::before {
+        .nb-plus::before, .nb-plus::after {
           content: "";
           position: absolute;
+          background: currentColor;
+        }
+        .nb-plus::before { left: 0; right: 0; top: 4px; height: 1px; }
+        .nb-plus::after { top: 0; bottom: 0; left: 4px; width: 1px; }
+        .nb-menu[aria-expanded="true"] .nb-plus { transform: rotate(45deg); }
+
+        .mp {
+          position: fixed;
           inset: 0;
-          background: #C6FF00;
-          transform: translateY(101%);
-          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          z-index: 0;
-        }
-        .menu-social svg { position: relative; z-index: 1; }
-        .menu-social:hover { color: #000; }
-        .menu-social:hover::before { transform: translateY(0); }
-
-        @media (max-width: 767px) {
-          .view-opt { width: 4.4rem; font-size: 0.72rem; }
-        }
-
-        .lang-toggle {
-          font-family: var(--font-outfit), sans-serif;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          border: none;
-          background: #fff;
-          color: #000;
-          border-radius: 999px;
-          cursor: pointer;
-          font-size: 0.78rem;
-          font-weight: 500;
-          letter-spacing: 0.01em;
-          box-shadow: 0 18px 60px rgba(0,0,0,0.3);
-          transition: background 0.3s ease;
-        }
-        .lang-toggle:focus-visible { outline: 2px solid #C6FF00; outline-offset: 3px; }
-
-        .lang-menu {
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 46px;
-          height: ${CHIP_H}px;
-          background: #fff;
-          border-radius: 999px;
-          overflow: hidden;
-          box-shadow: 0 18px 60px rgba(0,0,0,0.3);
+          z-index: 1001;
           visibility: hidden;
+          clip-path: inset(0 0 100% 0);
+          background: #000;
+          color: #f3f2ee;
+          display: grid;
+          grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+          grid-template-rows: 1fr auto;
+          gap: 2rem clamp(1.5rem, 4vw, 4rem);
+          padding: clamp(6rem, 14vh, 9rem) clamp(1.25rem, 3vw, 2.5rem) 1.6rem;
         }
-        .lang-menu-content {
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 184px;
+        .mp-links { display: flex; flex-direction: column; justify-content: center; gap: 0.2rem; }
+        .mp-link {
+          display: flex;
+          align-items: baseline;
+          gap: 1.2rem;
+          overflow: hidden;
+          text-decoration: none;
+          font-family: var(--font-outfit), sans-serif;
+          font-size: clamp(2.6rem, min(7vw, 10.5vh), 6.6rem);
+          font-weight: 300;
+          letter-spacing: -0.045em;
+          line-height: 1.04;
+          padding-bottom: 0.14em;
+          margin-bottom: -0.14em;
+          transition: opacity 0.35s, font-weight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .mp-link > span { display: inline-flex; align-items: baseline; gap: 1.2rem; }
+        .mp-n {
+          font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+          font-size: 0.72rem;
+          letter-spacing: 0.08em;
+          font-weight: 400;
+          opacity: 0.5;
+          transform: translateY(-1.6em);
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .mp-links:has(.mp-link:hover) .mp-link:not(:hover) { opacity: 0.3; }
+          .mp-link:hover { font-weight: 700; }
+        }
+        .mp-side {
+          align-self: center;
           display: flex;
           flex-direction: column;
-          gap: 2px;
-          padding: 0 6px 6px;
-          opacity: 0;
-        }
-        .lang-menu-head {
-          font-family: var(--font-outfit), sans-serif;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          height: ${CHIP_H}px;
-          margin: 0 -6px 2px;
-          padding-left: 1.1rem;
-          border: none;
-          background: none;
-          color: #000;
-          cursor: pointer;
-          font-size: 0.78rem;
-        }
-        .lang-menu-head-title { opacity: 0.45; }
-        .lang-menu-head-code { font-weight: 500; text-align: center; }
-        .lang-menu-opt {
-          font-family: var(--font-outfit), sans-serif;
-          display: flex;
-          align-items: center;
-          gap: 0.7rem;
-          border: none;
-          background: transparent;
-          color: #000;
-          cursor: pointer;
-          font-size: 0.85rem;
-          letter-spacing: 0.01em;
-          padding: 0.7rem 0.85rem;
-          border-radius: 12px;
-          text-align: left;
-        }
-        .lang-menu-opt:focus-visible { outline: 2px solid #C6FF00; outline-offset: -2px; }
-        .lang-opt-code {
+          gap: 1.6rem;
+          font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
           font-size: 0.72rem;
-          font-weight: 600;
-          width: 1.6rem;
-          opacity: 0.4;
-          transition: opacity 0.3s ease;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
         }
-        .lang-opt-name { flex: 1; font-weight: 500; }
-        .lang-opt-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #000;
-          transform: scale(0);
-          transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+        .mp-side > div { overflow: hidden; display: flex; flex-direction: column; gap: 0.45rem; }
+        .mp-side dt, .mp-k { opacity: 0.45; }
+        .mp-side a { text-decoration: none; width: fit-content; background: linear-gradient(currentColor, currentColor) 0 100% / 0% 1px no-repeat; transition: background-size 0.45s cubic-bezier(0.7, 0, 0.2, 1); padding-bottom: 0.15rem; }
+        .mp-side a:hover { background-size: 100% 1px; }
+        .mp .arrow { display: inline-block; width: 0.85em; height: 0.85em; margin-left: 0.3em; vertical-align: -0.05em; }
+        .mp-foot {
+          grid-column: 1 / -1;
+          display: flex;
+          justify-content: space-between;
+          gap: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid rgba(243, 242, 238, 0.18);
+          font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+          font-size: 0.72rem;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          opacity: 0.6;
         }
-        .lang-menu-opt:hover .lang-opt-code,
-        .lang-menu-opt[aria-checked="true"] .lang-opt-code { opacity: 1; }
-        .lang-menu-opt[aria-checked="true"] .lang-opt-dot { transform: scale(1); }
+        @media (max-width: 767px) {
+          .nb { grid-template-columns: 1fr auto; }
+          .nb-center { display: none; }
+          .mp { grid-template-columns: 1fr; grid-template-rows: auto auto auto; align-content: start; }
+          .mp-side { align-self: start; }
+          .mp-n { display: none; }
+        }
       `}</style>
 
       <nav
         ref={navRef}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1000,
-          padding: `1.5rem ${padX}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          opacity: 0,
-          background: "transparent",
-        }}
+        className="nb"
+        aria-label="Nuba Studio"
+        style={{ color: open ? "#f3f2ee" : "var(--nav-fg, #fff)", background: open ? "transparent" : "var(--nav-bg, transparent)" }}
       >
-        {/* Logo */}
-        <a
-          href="/"
-          aria-label="Nuba Studio, inicio"
-          style={{ display: "flex", alignItems: "center" }}
-        >
+        <Link href="/" aria-label="Nuba Studio, inicio" className="nb-logo">
           <LogoMark play={visible} />
-        </a>
+        </Link>
 
-        {/* Spiral / List toggle (centro), thumb arrastrable */}
         {showToggle ? (
-          <div
-            className="view-toggle"
-            ref={toggleRef}
-            onPointerDown={onThumbDown}
-            onPointerMove={onThumbMove}
-            onPointerUp={onThumbUp}
-            onPointerCancel={onThumbUp}
-          >
-            <span ref={thumbRef} className="view-thumb" />
-            {(["spiral", "list"] as const).map((opt) => (
-              <button
-                key={opt}
-                className="view-opt"
-                onClick={() => { if (ignoreClickRef.current) return; chooseView(opt); }}
-                style={{ color: view === opt ? "#000" : "rgba(255,255,255,0.6)" }}
-              >
-                {opt === "spiral" ? t.nav.viewSpiral : t.nav.viewList}
-              </button>
+          <div className="nb-center" role="group" aria-label="View">
+            {(["spiral", "list"] as const).map((opt, i) => (
+              <span key={opt} style={{ display: "contents" }}>
+                {i > 0 && <span className="nb-sep" aria-hidden>/</span>}
+                <button
+                  type="button"
+                  className="nb-btn"
+                  aria-pressed={view === opt}
+                  disabled={opt === "spiral" && !webglAvailable}
+                  onClick={() => chooseView(opt)}
+                >
+                  {opt === "spiral" ? t.nav.viewSpiral : t.nav.viewList}
+                </button>
+              </span>
             ))}
           </div>
         ) : (
-          <span />
+          <span className="nb-center" aria-hidden />
         )}
 
-        {/* Espaciador para mantener el layout (el morph va por fuera del nav) */}
-        <span style={{ width: chipW, height: CHIP_H, display: "block" }} />
+        <div className="nb-right">
+          <div role="group" aria-label={t.nav.langToggleLabel} style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+            {LANGS.map((code, i) => (
+              <span key={code} style={{ display: "contents" }}>
+                {i > 0 && <span className="nb-sep" aria-hidden>/</span>}
+                <button type="button" className="nb-btn" aria-pressed={lang === code} onClick={() => setLang(code)}>
+                  {code}
+                </button>
+              </span>
+            ))}
+          </div>
+          <button
+            ref={menuBtnRef}
+            type="button"
+            className="nb-menu"
+            aria-expanded={open}
+            aria-controls="nuba-menu"
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? t.nav.close : t.nav.menuWord}
+            <i className="nb-plus" aria-hidden />
+          </button>
+        </div>
       </nav>
 
-      {/* Botón de idioma, a la izquierda del chip de menú */}
-      <div
-        ref={langMenuRef}
-        style={{
-          position: "fixed",
-          top: "1.5rem",
-          right: `calc(${padX} + ${chipW}px + 0.6rem)`,
-          zIndex: 1002,
-        }}
-      >
-        <button
-          type="button"
-          ref={langToggleRef}
-          className="lang-toggle"
-          onClick={() => setLangMenuOpen((v) => !v)}
-          onMouseEnter={() => {
-            if (langMenuOpen) return;
-            gsap.timeline({ overwrite: true })
-              .to(langToggleRef.current, { scaleX: 1.06, scaleY: 0.9, transformOrigin: "center center", duration: 0.4, ease: "power2.inOut" })
-              .to(langToggleRef.current, { scaleX: 1, scaleY: 1, duration: 1.1, ease: "elastic.out(1, 0.55)" });
-            bounceLangChars();
-          }}
-          aria-label={t.nav.langToggleLabel}
-          aria-haspopup="menu"
-          aria-expanded={langMenuOpen}
-          style={{ width: isMobile ? 40 : 46, height: CHIP_H }}
-        >
-          <span ref={langCodeRef} style={{ display: "inline-block" }}>
-            {lang.toUpperCase().split("").map((char, i) => (
-              <span key={i} className="lang-char" style={{ display: "inline-block" }}>{char}</span>
-            ))}
-          </span>
-        </button>
-
-        <div ref={langPanelRef} className="lang-menu">
-          <div ref={langContentRef} className="lang-menu-content" role="menu">
-            <button
-              type="button"
-              className="lang-menu-head"
-              tabIndex={langMenuOpen ? 0 : -1}
-              onClick={() => setLangMenuOpen(false)}
+      <div ref={panelRef} id="nuba-menu" className="mp" role="dialog" aria-modal="true" aria-label={t.nav.menuWord} aria-hidden={!open}>
+        <nav className="mp-links">
+          {NAV_IDS.map((id, i) => (
+            <a
+              key={id}
+              ref={i === 0 ? firstLinkRef : undefined}
+              href={lp(id === "home" ? "/" : id === "work" ? "/works" : `/${id}`)}
+              className="mp-link"
+              tabIndex={open ? 0 : -1}
+              onClick={go(id)}
             >
-              <span className="lang-menu-head-title">{t.nav.langToggleLabel}</span>
-              <span className="lang-menu-head-code" style={{ width: isMobile ? 40 : 46 }}>{lang.toUpperCase()}</span>
-            </button>
-            {LANG_OPTIONS.map((opt) => (
-              <button
-                key={opt.code}
-                type="button"
-                role="menuitemradio"
-                aria-checked={lang === opt.code}
-                tabIndex={langMenuOpen ? 0 : -1}
-                data-stagger
-                className="lang-menu-opt"
-                onMouseEnter={(e) => bounceNavChars(e.currentTarget)}
-                onClick={() => {
-                  setLang(opt.code);
-                  setLangMenuOpen(false);
-                }}
-              >
-                <span className="lang-opt-code">{opt.code.toUpperCase()}</span>
-                <span className="lang-opt-name">
-                  {opt.name.split("").map((char, i) => (
-                    <span key={i} className="nav-char" style={{ display: "inline-block" }}>{char}</span>
-                  ))}
-                </span>
-                <span className="lang-opt-dot" />
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Overlay */}
-      <div
-        ref={overlayRef}
-        onClick={() => setOpen(false)}
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 1001,
-          background: "rgba(0,0,0,0.45)",
-          opacity: 0,
-          pointerEvents: open ? "auto" : "none",
-        }}
-      />
-
-      {/* Morph: chip "Menu" ⇄ panel (mismo elemento) */}
-      <div
-        ref={panelRef}
-        onClick={() => { if (!open) setOpen(true); }}
-        style={{
-          position: "fixed",
-          top: "1.5rem",
-          right: padX,
-          zIndex: 1002,
-          width: chipW,
-          height: CHIP_H,
-          background: "#fff",
-          borderRadius: 999,
-          overflow: "hidden",
-          cursor: open ? "default" : "pointer",
-          boxShadow: "0 18px 60px rgba(0,0,0,0.3)",
-        }}
-      >
-        {/* Etiqueta del chip */}
-        <span
-          ref={labelRef}
-          className="menu-label"
-          onMouseEnter={() => {
-            if (open) return;
-            // El chip se deforma un poco (squash & stretch) y rebota
-            gsap.timeline({ overwrite: true })
-              .to(panelRef.current, { scaleX: 1.06, scaleY: 0.9, transformOrigin: "center center", duration: 0.4, ease: "power2.inOut" })
-              .to(panelRef.current, { scaleX: 1, scaleY: 1, duration: 1.1, ease: "elastic.out(1, 0.55)" });
-            bounceMenuChars();
-          }}
-          onMouseLeave={() => {}}
-        >
-          {isMobile ? (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <line x1="4" y1="7" x2="20" y2="7" />
-              <line x1="4" y1="12" x2="20" y2="12" />
-              <line x1="4" y1="17" x2="20" y2="17" />
-            </svg>
-          ) : (
-            t.nav.menuWord.split("").map((char, i) => (
-              <span key={i} className="menu-char" style={{ display: "inline-block" }}>{char}</span>
-            ))
-          )}
-        </span>
-
-        {/* Contenido del panel (tamaño abierto fijo, se revela al crecer) */}
-        <div
-          ref={contentRef}
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            width: isMobile ? "calc(100vw - 40px)" : "min(34vw, 460px)",
-            height: "100%",
-            padding: isMobile ? "1.4rem 1.6rem 1.7rem" : "1.6rem 2.5rem 1.8rem",
-            display: "flex",
-            flexDirection: "column",
-            opacity: 0,
-            pointerEvents: open ? "auto" : "none",
-          }}
-        >
-          {/* Close */}
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button
-              className="menu-close"
-              onClick={(e) => { e.stopPropagation(); setOpen(false); }}
-              aria-label="Close menu"
-            >
-              {t.nav.close}
-              <span className="x">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                </svg>
+              <span data-menu-in>
+                <span className="mp-n">({String(i + 1).padStart(2, "0")})</span>
+                {t.nav[id]}
               </span>
-            </button>
-          </div>
-
-          {/* Links */}
-          <nav style={{ marginTop: "auto", marginBottom: "auto", display: "flex", flexDirection: "column", gap: "calc(0.4rem + 10px)" }}>
-            {NAV_IDS.map((id) => (
-              <a
-                key={id}
-                data-stagger
-                href={id === "work" ? undefined : `/${id}`}
-                className="menu-panel-link"
-                onMouseEnter={(e) => bounceNavChars(e.currentTarget)}
-                onClick={(e) => {
-                  if (id === "work") {
-                    e.preventDefault();
-                    setOpen(false);
-                    if (pathname !== "/") {
-                      window.location.href = "/?view=list";
-                      return;
-                    }
-                    if (view === "spiral") {
-                      setView("list");
-                      setTimeout(() => {
-                        document.getElementById("work")?.scrollIntoView({ behavior: "smooth" });
-                      }, 50);
-                    }
-                  } else {
-                    e.preventDefault();
-                    setOpen(false);
-                    window.location.href = `/${id}`;
-                  }
-                }}
-              >
-                {t.nav[id].toLowerCase().split("").map((char, i) => (
-                  <span key={i} className="nav-char" style={{ display: "inline-block" }}>{char}</span>
-                ))}
-              </a>
-            ))}
-          </nav>
-
-          {/* Footer */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-            <a data-stagger href="tel:+5493513471844" className="menu-email">
-              +54 9 351 347 1844
             </a>
-            <div data-stagger style={{ display: "flex", gap: "0.7rem" }}>
-              {SOCIALS.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="menu-social"
-                  aria-label={s.label}
-                >
-                  {s.icon}
-                </a>
-              ))}
-            </div>
+          ))}
+        </nav>
+
+        <dl className="mp-side">
+          <div>
+            <dt data-menu-in>Córdoba, AR</dt>
+            <dd data-menu-in style={{ margin: 0 }}>{time || "--:--"}</dd>
           </div>
+          <div>
+            <dt data-menu-in>{t.nav.contact}</dt>
+            <dd data-menu-in style={{ margin: 0 }}>
+              <a href={`tel:${CONTACT.phone}`} tabIndex={open ? 0 : -1}>{PHONE_LABEL}</a>
+            </dd>
+          </div>
+          <div>
+            <dt data-menu-in className="mp-k">Social</dt>
+            <dd data-menu-in style={{ margin: 0, display: "flex", flexDirection: "column", gap: "0.45rem" }}>
+              <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" tabIndex={open ? 0 : -1}>WhatsApp <Arrow /></a>
+              <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer" tabIndex={open ? 0 : -1}>LinkedIn <Arrow /></a>
+            </dd>
+          </div>
+        </dl>
+
+        <div className="mp-foot">
+          <span>© 2026 Nuba Studio</span>
+          <span>{t.landing.hero.discipline}</span>
         </div>
       </div>
     </>

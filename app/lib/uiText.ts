@@ -8,6 +8,7 @@ import type { Lang } from "./i18n";
 const dict = {
   en: {
     nav: {
+      home: "Home",
       work: "Works",
       about: "About",
       services: "Services",
@@ -27,25 +28,48 @@ const dict = {
       viewMore: "View more",
     },
     about: {
-      lead1: "We turn",
-      lead2: "into experiences",
-      lead3: "that move people.",
-      rotatingWords: ["branding", "interaction", "code"],
-      sub: "Three disciplines, one process. Nothing is handed off, so every experience holds together, and every detail earns its place.",
-      origin: [
-        "Nuba started from a simple conviction: the best products come from teams that never hand the work off. One table, three disciplines, the same conversation from first sketch to last deploy.",
-        "We design and build sites, apps, marketplaces and platforms. The scope changes with every project. The way we work doesn't.",
-      ],
-      theStudio: "The studio",
-      basedIn: "Based in",
-      since: "Since",
-      projectsShipped: "Projects shipped",
-      thePeople: "The people",
-      roles: { Design: "Design", Development: "Development", Strategy: "Strategy" },
-      getInTouch: "Get in touch",
-      ctaHeadingPre: "Let's build something",
-      ctaHeadingAccent: "great",
-      footerLeft: "Design & Development",
+      hero: {
+        title: "A small *studio* from *Córdoba* where *design,* *code* and *strategy* share the same *table.*",
+        lead: "We design and build sites, apps, marketplaces and platforms. The scope changes with every project. The way we work doesn't.",
+        cta: "Start a project",
+      },
+      strip: { label: "Recent work" },
+      studio: {
+        label: "(01) Studio",
+        title: "One table, three disciplines.",
+        body: [
+          "Nuba started from a simple conviction: the best products come from teams that never hand the work off. Design, interaction and code happen in the same conversation, from the first sketch to the last deploy.",
+          "We work remotely with clients across Latin America and beyond, in Spanish or English, and we stay on after launch when the product needs us.",
+        ],
+        facts: {
+          basedIn: "Based in",
+          basedInValue: "Córdoba, Argentina",
+          since: "Since",
+          shipped: "Projects shipped",
+          languages: "Languages",
+          languagesValue: "Spanish · English",
+        },
+      },
+      principles: {
+        label: "(02) Principles",
+        title: "How we like to work.",
+        items: [
+          { title: "One table", desc: "Design, interaction and code in the same team. Nothing gets handed off, so nothing gets lost along the way." },
+          { title: "No black boxes", desc: "You see the work while it moves: short loops, decisions made in the open." },
+          { title: "The right tool", desc: "We pick the stack for what the product needs to do, not the other way around." },
+          { title: "After launch", desc: "Shipping is the start. We measure, iterate and stay on when you need us." },
+        ],
+      },
+      team: {
+        label: "(03) Team",
+        title: "The people at the table.",
+        roles: { Design: "Design", Development: "Development", Strategy: "Strategy" },
+      },
+      record: {
+        label: "(04) Record",
+        title: "What we shipped, year by year.",
+        view: "View case",
+      },
     },
     services: {
       intro: "We design and build digital products end to end, from the first idea to the moment they ship.",
@@ -72,6 +96,126 @@ const dict = {
       ctaTitleLine1: "Let's build",
       ctaTitleLine2Pre: "something",
       ctaTitleAccent: "real",
+    },
+    landing: {
+      hero: {
+        manifesto: "*Nuba* is a *studio* that *designs* and *builds* websites, apps, *marketplaces* and *more*",
+        index: "Nuba Studio",
+        since: "Since 2024",
+        discipline: "Design + development",
+        fine: "Fine",
+        bold: "Bold",
+        cta: "Start a project",
+      },
+      studio: {
+        label: "(01) Studio",
+        text: "There are studios that design and studios that write code. *Nuba* does both, at the same table, from the first sketch to the last deploy.",
+        link: "About the studio",
+      },
+      works: {
+        label: "(02) Selected work",
+        all: "All work",
+        view: "View case",
+      },
+      services: {
+        label: "(03) Services",
+        title: "Everything a digital product needs.",
+        all: "All services",
+      },
+      process: {
+        label: "(04) Process",
+        title: "Four steps. No black boxes.",
+      },
+      faq: {
+        label: "(05) Questions",
+        title: "What people usually ask.",
+      },
+      contact: {
+        phone: "Phone",
+        social: "Social",
+        location: "Córdoba, AR",
+        index: "Index",
+        rights: "© 2026 Nuba Studio",
+        top: "Back to top",
+      },
+    },
+    servicesPage: {
+      hero: {
+        title: "Five ways we help: *websites,* *apps,* *marketplaces,* *brands* and the *strategy* behind them.",
+        cta: "Start a project",
+      },
+      capabilities: {
+        label: "(01) Capabilities",
+        title: "What happens at the table.",
+        groups: [
+          { name: "Design", items: ["UX/UI design", "Design systems", "Prototyping", "Brand identity", "Motion"] },
+          { name: "Development", items: ["Websites in Next.js", "iOS & Android apps", "Backends & APIs", "Payments & dashboards", "CMS"] },
+          { name: "Product", items: ["Discovery", "MVP scoping", "Roadmaps", "Launch", "Maintenance"] },
+        ],
+      },
+      list: {
+        label: "(02) Services",
+        title: "What we do, in detail.",
+        cases: "Related work",
+      },
+      process: {
+        label: "(03) Process",
+        title: "Four steps. No black boxes.",
+        deliverablesLabel: "Deliverables",
+        deliverables: [
+          ["Kickoff workshop", "User and market research", "Scope and priorities"],
+          ["Wireframes", "UI design and design system", "Clickable prototype"],
+          ["Front-end and back-end", "Integrations and payments", "QA on real devices"],
+          ["Deploy and monitoring", "Analytics", "Iterations after launch"],
+        ],
+      },
+      stack: {
+        label: "(04) Stack",
+        title: "The tools we pick, and why.",
+        note: "We choose the stack that fits the product, not the other way around.",
+        groups: [
+          { name: "Web", items: ["Next.js", "React", "TypeScript", "Tailwind", "GSAP", "Three.js"] },
+          { name: "Mobile", items: ["React Native", "Expo", "iOS", "Android"] },
+          { name: "Backend", items: ["Node", "Python", "PostgreSQL", "APIs"] },
+          { name: "Design", items: ["Figma", "Framer", "Design systems"] },
+        ],
+      },
+      faq: {
+        label: "(05) Questions",
+        title: "What people usually ask.",
+        items: [
+          {
+            question: "Can you work with our existing team or codebase?",
+            answer:
+              "Yes. We can join a product that already exists: we review the code first and pick it up from there. That is how we work with Kennedy's Group, where we are the ongoing full-stack team.",
+          },
+          {
+            question: "Do you build MVPs?",
+            answer:
+              "Yes. We help you define the smallest version worth launching, then design and build it, so you can test it with real users before investing more.",
+          },
+          {
+            question: "Can you redesign something that already exists?",
+            answer:
+              "Yes. We can redesign a site or an app and rebuild only what needs it. We start by reviewing what works today, so nothing useful gets thrown away.",
+          },
+          {
+            question: "Do you build for both iOS and Android?",
+            answer:
+              "Yes. We use React Native and Expo, which lets us ship to both platforms from a single codebase while the app still feels native.",
+          },
+          {
+            question: "Can you handle payments and dashboards?",
+            answer:
+              "Yes. We integrate payment providers such as Mercado Pago and build the admin dashboards, authentication and APIs behind them. Nubapay is an example: QR orders, mobile payments and a live dashboard for organizers.",
+          },
+          {
+            question: "Do you also design the brand?",
+            answer:
+              "Yes. We design visual identities and design systems, on their own or together with the product, so the brand and the interface speak the same language.",
+          },
+        ],
+      },
     },
     faq: [
       {
@@ -102,12 +246,50 @@ const dict = {
       {
         question: "What technologies do you work with?",
         answer:
-          "Next.js, React and TypeScript on the web; React Native and Expo for iOS and Android; Node and Python on the backend, usually with PostgreSQL. We pick the stack that fits the product, not the other way around.",
+          "We adapt. We are not tied to a single stack: we look for the right technology for each project, based on what it needs to do, how it has to grow and who will maintain it. We often end up with Next.js, React Native, Node or Python, but if your product calls for something else, or already runs on something else, we work with that.",
       },
     ],
     contact: {
-      headline: "Let's build something together.",
+      title: "Tell us what you *want* to *build.*",
+      cta: "Write your message",
       sub: "Write what you need, however rough. We'll tidy it into a proper message and open it in WhatsApp.",
+      messageLabel: "(01) Message",
+      startWith: "Start with",
+      fieldLabel: "Your message",
+      fieldHint: "Rough is fine",
+      sendLong: "Send via WhatsApp",
+      directLabel: "(02) Direct",
+      directTitle: "Or reach us straight away.",
+      channels: { whatsapp: "WhatsApp", phone: "Phone", linkedin: "LinkedIn" },
+      faqLabel: "(03) Questions",
+      faqTitle: "Before you write.",
+      faqItems: [
+        {
+          question: "What should I include in my first message?",
+          answer:
+            "What you want to build, who it is for and when you would like it ready. If you have a budget, links or references, add them too. It does not need to be polished: rough notes are enough to start the conversation.",
+        },
+        {
+          question: "I only have an idea. Is that enough?",
+          answer:
+            "Yes. Many projects start that way. We help you turn the idea into something concrete: what the first version needs to do, what can wait and what it will take to build it.",
+        },
+        {
+          question: "What happens after I send it?",
+          answer:
+            "We read it and reply to understand what you need. Once the project is clear, we scope the work and agree on what is included before anything starts, so you know exactly what you are getting.",
+        },
+        {
+          question: "What does \"Polish with AI\" do with my text?",
+          answer:
+            "It rewrites your notes into a clearer message in the language you are browsing in. Nothing reaches us until you press send, and you can undo the change if you prefer your own words.",
+        },
+        {
+          question: "I don't use WhatsApp. How else can I reach you?",
+          answer:
+            "You can call us at +54 9 351 347 1844 or write to us on LinkedIn. Both are listed in the section above.",
+        },
+      ],
       placeholder: "A website for my coffee shop, with online booking. Ready before December.",
       seeds: [
         { label: "a website", text: "I need a website for " },
@@ -121,8 +303,6 @@ const dict = {
       polish: "Polish with AI",
       polishBusy: "Polishing",
       send: "Send",
-      recentWork: "Recent work",
-      place: "Córdoba, Argentina",
     },
     caseStudy: {
       home: "Home",
@@ -149,6 +329,7 @@ const dict = {
   },
   es: {
     nav: {
+      home: "Inicio",
       work: "Trabajos",
       about: "Nosotros",
       services: "Servicios",
@@ -168,25 +349,48 @@ const dict = {
       viewMore: "Ver más",
     },
     about: {
-      lead1: "Convertimos",
-      lead2: "en experiencias",
-      lead3: "que mueven a la gente.",
-      rotatingWords: ["marca", "interacción", "código"],
-      sub: "Tres disciplinas, un solo proceso. Nada se delega a otro equipo, así cada experiencia se sostiene y cada detalle tiene su lugar.",
-      origin: [
-        "Nuba nació de una convicción simple: los mejores productos salen de equipos que nunca delegan el trabajo. Una sola mesa, tres disciplinas, la misma conversación desde el primer boceto hasta el último deploy.",
-        "Diseñamos y construimos sitios, apps, marketplaces y plataformas. El alcance cambia en cada proyecto. La forma de trabajar, no.",
-      ],
-      theStudio: "El estudio",
-      basedIn: "Ubicados en",
-      since: "Desde",
-      projectsShipped: "Proyectos lanzados",
-      thePeople: "El equipo",
-      roles: { Design: "Diseño", Development: "Desarrollo", Strategy: "Estrategia" },
-      getInTouch: "Hablemos",
-      ctaHeadingPre: "Construyamos algo",
-      ctaHeadingAccent: "grande",
-      footerLeft: "Diseño y Desarrollo",
+      hero: {
+        title: "Un *estudio* chico de *Córdoba* donde *diseño,* *código* y *estrategia* comparten la misma *mesa.*",
+        lead: "Diseñamos y construimos sitios, apps, marketplaces y plataformas. El alcance cambia en cada proyecto. La forma de trabajar, no.",
+        cta: "Empezar un proyecto",
+      },
+      strip: { label: "Trabajo reciente" },
+      studio: {
+        label: "(01) Estudio",
+        title: "Una mesa, tres disciplinas.",
+        body: [
+          "Nuba nació de una convicción simple: los mejores productos salen de equipos que nunca delegan el trabajo. Diseño, interacción y código pasan por la misma conversación, del primer boceto al último deploy.",
+          "Trabajamos de forma remota con clientes en toda Latinoamérica y más allá, en español o en inglés, y seguimos después del lanzamiento cuando el producto nos necesita.",
+        ],
+        facts: {
+          basedIn: "Ubicados en",
+          basedInValue: "Córdoba, Argentina",
+          since: "Desde",
+          shipped: "Proyectos lanzados",
+          languages: "Idiomas",
+          languagesValue: "Español · Inglés",
+        },
+      },
+      principles: {
+        label: "(02) Principios",
+        title: "Cómo nos gusta trabajar.",
+        items: [
+          { title: "Una sola mesa", desc: "Diseño, interacción y código en el mismo equipo. Nada se delega, así nada se pierde en el camino." },
+          { title: "Sin cajas negras", desc: "Ves el trabajo mientras avanza: ciclos cortos y decisiones a la vista." },
+          { title: "La herramienta justa", desc: "Elegimos el stack según lo que el producto tiene que hacer, no al revés." },
+          { title: "Después del lanzamiento", desc: "Lanzar es el comienzo. Medimos, iteramos y seguimos cuando nos necesitás." },
+        ],
+      },
+      team: {
+        label: "(03) Equipo",
+        title: "Las personas en la mesa.",
+        roles: { Design: "Diseño", Development: "Desarrollo", Strategy: "Estrategia" },
+      },
+      record: {
+        label: "(04) Trayectoria",
+        title: "Lo que lanzamos, año por año.",
+        view: "Ver caso",
+      },
     },
     services: {
       intro: "Diseñamos y construimos productos digitales de punta a punta, desde la primera idea hasta el lanzamiento.",
@@ -213,6 +417,126 @@ const dict = {
       ctaTitleLine1: "Construyamos",
       ctaTitleLine2Pre: "algo",
       ctaTitleAccent: "real",
+    },
+    landing: {
+      hero: {
+        manifesto: "*Nuba* es un *estudio* que *diseña* y *construye* webs, apps, *marketplaces* y *más*",
+        index: "Nuba Studio",
+        since: "Desde 2024",
+        discipline: "Diseño + desarrollo",
+        fine: "Fine",
+        bold: "Bold",
+        cta: "Empezar un proyecto",
+      },
+      studio: {
+        label: "(01) Estudio",
+        text: "Hay estudios que diseñan y estudios que programan. En *Nuba* hacemos las dos cosas, en la misma mesa, del primer boceto al último deploy.",
+        link: "Conocé el estudio",
+      },
+      works: {
+        label: "(02) Trabajos",
+        all: "Todos los trabajos",
+        view: "Ver caso",
+      },
+      services: {
+        label: "(03) Servicios",
+        title: "Todo lo que un producto digital necesita.",
+        all: "Todos los servicios",
+      },
+      process: {
+        label: "(04) Proceso",
+        title: "Cuatro pasos. Sin cajas negras.",
+      },
+      faq: {
+        label: "(05) Preguntas",
+        title: "Lo que nos suelen preguntar.",
+      },
+      contact: {
+        phone: "Teléfono",
+        social: "Redes",
+        location: "Córdoba, AR",
+        index: "Índice",
+        rights: "© 2026 Nuba Studio",
+        top: "Volver arriba",
+      },
+    },
+    servicesPage: {
+      hero: {
+        title: "Cinco formas de ayudarte: *webs,* *apps,* *marketplaces,* *marcas* y la *estrategia* detrás.",
+        cta: "Empezar un proyecto",
+      },
+      capabilities: {
+        label: "(01) Capacidades",
+        title: "Lo que pasa en la mesa.",
+        groups: [
+          { name: "Diseño", items: ["Diseño UX/UI", "Sistemas de diseño", "Prototipado", "Identidad de marca", "Motion"] },
+          { name: "Desarrollo", items: ["Webs en Next.js", "Apps iOS y Android", "Backends y APIs", "Pagos y dashboards", "CMS"] },
+          { name: "Producto", items: ["Discovery", "Alcance de MVP", "Roadmaps", "Lanzamiento", "Mantenimiento"] },
+        ],
+      },
+      list: {
+        label: "(02) Servicios",
+        title: "Qué hacemos, en detalle.",
+        cases: "Trabajos relacionados",
+      },
+      process: {
+        label: "(03) Proceso",
+        title: "Cuatro pasos. Sin cajas negras.",
+        deliverablesLabel: "Entregables",
+        deliverables: [
+          ["Workshop de arranque", "Investigación de usuarios y mercado", "Alcance y prioridades"],
+          ["Wireframes", "Diseño UI y sistema de diseño", "Prototipo navegable"],
+          ["Front-end y back-end", "Integraciones y pagos", "QA en dispositivos reales"],
+          ["Deploy y monitoreo", "Analítica", "Iteraciones después del lanzamiento"],
+        ],
+      },
+      stack: {
+        label: "(04) Stack",
+        title: "Las herramientas que elegimos, y por qué.",
+        note: "Elegimos el stack que le sirve al producto, no al revés.",
+        groups: [
+          { name: "Web", items: ["Next.js", "React", "TypeScript", "Tailwind", "GSAP", "Three.js"] },
+          { name: "Mobile", items: ["React Native", "Expo", "iOS", "Android"] },
+          { name: "Backend", items: ["Node", "Python", "PostgreSQL", "APIs"] },
+          { name: "Diseño", items: ["Figma", "Framer", "Sistemas de diseño"] },
+        ],
+      },
+      faq: {
+        label: "(05) Preguntas",
+        title: "Lo que nos suelen preguntar.",
+        items: [
+          {
+            question: "¿Pueden trabajar con nuestro equipo o código existente?",
+            answer:
+              "Sí. Podemos sumarnos a un producto que ya existe: primero revisamos el código y seguimos desde ahí. Así trabajamos con Kennedy's Group, donde somos el equipo full-stack permanente.",
+          },
+          {
+            question: "¿Hacen MVPs?",
+            answer:
+              "Sí. Te ayudamos a definir la versión más chica que vale la pena lanzar, la diseñamos y la construimos, para que la pruebes con usuarios reales antes de invertir más.",
+          },
+          {
+            question: "¿Pueden rediseñar algo que ya existe?",
+            answer:
+              "Sí. Podemos rediseñar un sitio o una app y reconstruir solo lo que hace falta. Empezamos revisando lo que hoy funciona, para no tirar nada útil.",
+          },
+          {
+            question: "¿Desarrollan para iOS y Android?",
+            answer:
+              "Sí. Usamos React Native y Expo, que nos permite publicar en las dos plataformas desde un mismo código sin que la app deje de sentirse nativa.",
+          },
+          {
+            question: "¿Pueden integrar pagos y dashboards?",
+            answer:
+              "Sí. Integramos proveedores de pago como Mercado Pago y construimos los dashboards de administración, la autenticación y las APIs detrás. Nubapay es un ejemplo: pedidos por QR, pagos desde el celular y un dashboard en vivo para los organizadores.",
+          },
+          {
+            question: "¿También diseñan la marca?",
+            answer:
+              "Sí. Diseñamos identidades visuales y sistemas de diseño, solos o junto con el producto, para que la marca y la interfaz hablen el mismo idioma.",
+          },
+        ],
+      },
     },
     faq: [
       {
@@ -243,12 +567,50 @@ const dict = {
       {
         question: "¿Con qué tecnologías trabajan?",
         answer:
-          "Next.js, React y TypeScript en la web; React Native y Expo para iOS y Android; Node y Python en el backend, generalmente con PostgreSQL. Elegimos el stack que le queda al producto, no al revés.",
+          "Nos adaptamos. No estamos atados a un único stack: buscamos la tecnología adecuada para cada proyecto, según lo que tiene que hacer, cómo tiene que crecer y quién lo va a mantener. Muchas veces terminamos en Next.js, React Native, Node o Python, pero si tu producto pide otra cosa, o ya corre sobre otra cosa, trabajamos con eso.",
       },
     ],
     contact: {
-      headline: "Construyamos algo juntos.",
+      title: "Contanos qué *querés* *construir.*",
+      cta: "Escribir tu mensaje",
       sub: "Escribí lo que necesitás, aunque sea en borrador. Lo prolijamos en un mensaje claro y lo abrimos en WhatsApp.",
+      messageLabel: "(01) Mensaje",
+      startWith: "Empezá con",
+      fieldLabel: "Tu mensaje",
+      fieldHint: "Vale en borrador",
+      sendLong: "Enviar por WhatsApp",
+      directLabel: "(02) Directo",
+      directTitle: "O escribinos directo.",
+      channels: { whatsapp: "WhatsApp", phone: "Teléfono", linkedin: "LinkedIn" },
+      faqLabel: "(03) Preguntas",
+      faqTitle: "Antes de escribirnos.",
+      faqItems: [
+        {
+          question: "¿Qué pongo en el primer mensaje?",
+          answer:
+            "Qué querés construir, para quién y para cuándo lo necesitás. Si tenés un presupuesto, links o referencias, sumalos también. No hace falta que esté prolijo: con unas notas en borrador alcanza para arrancar la conversación.",
+        },
+        {
+          question: "Solo tengo una idea. ¿Alcanza?",
+          answer:
+            "Sí. Muchos proyectos arrancan así. Te ayudamos a bajar la idea a algo concreto: qué tiene que hacer la primera versión, qué puede esperar y qué hace falta para construirla.",
+        },
+        {
+          question: "¿Qué pasa después de que lo envío?",
+          answer:
+            "Lo leemos y te respondemos para entender qué necesitás. Cuando el proyecto está claro, definimos el alcance y acordamos qué está incluido antes de arrancar, así sabés exactamente qué recibís.",
+        },
+        {
+          question: "¿Qué hace \"Mejorar con IA\" con mi texto?",
+          answer:
+            "Reescribe tus notas como un mensaje más claro, en el idioma en el que estás navegando. Nada nos llega hasta que tocás enviar, y podés deshacer el cambio si preferís tus propias palabras.",
+        },
+        {
+          question: "No uso WhatsApp. ¿Cómo más los contacto?",
+          answer:
+            "Podés llamarnos al +54 9 351 347 1844 o escribirnos por LinkedIn. Los dos están en la sección de arriba.",
+        },
+      ],
       placeholder: "Un sitio web para mi cafetería, con reservas online. Listo antes de diciembre.",
       seeds: [
         { label: "un sitio web", text: "Necesito un sitio web para " },
@@ -262,8 +624,6 @@ const dict = {
       polish: "Mejorar con IA",
       polishBusy: "Mejorando",
       send: "Enviar",
-      recentWork: "Trabajo reciente",
-      place: "Córdoba, Argentina",
     },
     caseStudy: {
       home: "Inicio",

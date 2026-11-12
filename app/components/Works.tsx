@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "./LocaleLink";
 import { useMotionValue, type MotionValue } from "./motionValue";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Line, useTexture } from "@react-three/drei";
@@ -16,6 +16,7 @@ import { visibleWorks } from "../data/works";
 import { localizeWork } from "../lib/localizeWork";
 import { useLanguage } from "../lib/i18n";
 import { getUiText } from "../lib/uiText";
+import { useNavTone } from "./landing/useNavTone";
 
 const DEBUG_PATH = false; // dibuja el path punteado + un punto donde cae cada card (spacing/orientación)
 // Probar formas del resorte: "vertical" = columna que sube coileando · "spiral" = remolino hacia la cámara
@@ -207,6 +208,7 @@ export default function Works({
   const effectiveView = webglAvailable ? view : "list";
   const prevViewRef = useRef(effectiveView);
   const sectionRef = useRef<HTMLElement>(null);
+  useNavTone(sectionRef, "#0b0b0a", "transparent");
   const [mobile, setMobile] = useState(false);
   const [inView, setInView] = useState(false);
   const [labelTitle, setLabelTitle] = useState("");   // nombre del proyecto en hover
@@ -404,7 +406,7 @@ export default function Works({
         height: effectiveView === "list" ? "auto" : mobile ? "600dvh" : "600vh",
         minHeight: effectiveView === "list" ? "100dvh" : undefined,
         position: "relative",
-        background: "#000",
+        background: "#ffffff",
       }}
     >
       <style>{`
@@ -434,14 +436,14 @@ export default function Works({
           font-size: clamp(1.05rem, 1.8vw, 1.6rem);
           font-weight: 500;
           letter-spacing: -0.02em;
-          color: rgba(255, 255, 255, 0.28);
+          color: rgba(11, 11, 10, 0.28);
           transition: color 0.25s ease;
         }
         .works-mode-btn:hover {
-          color: rgba(255, 255, 255, 0.6);
+          color: rgba(11, 11, 10, 0.6);
         }
         .works-mode-btn.is-on {
-          color: #fff;
+          color: #0b0b0a;
         }
         @keyframes worksBodyIn {
           from {
@@ -463,12 +465,12 @@ export default function Works({
           font-weight: 500;
           letter-spacing: -0.03em;
           line-height: 1.05;
-          color: #fff;
+          color: #0b0b0a;
         }
         .works-list-count {
           font-size: 0.38em;
           font-weight: 400;
-          color: rgba(255, 255, 255, 0.45);
+          color: rgba(11, 11, 10, 0.45);
           vertical-align: super;
           letter-spacing: 0;
           margin-left: 0.15em;
@@ -533,22 +535,22 @@ export default function Works({
           font-weight: 500;
           letter-spacing: -0.01em;
           line-height: 1.2;
-          color: #fff;
+          color: #0b0b0a;
           transition: color 0.25s ease, opacity 0.3s ease;
         }
         .works-list-row.is-active .works-list-title,
         .works-list-row:hover .works-list-title {
-          color: #fff;
+          color: #0b0b0a;
         }
         .works-list-cat {
           display: block;
           font-size: clamp(0.8rem, 1vw, 0.9rem);
           line-height: 1.4;
-          color: rgba(255, 255, 255, 0.42);
+          color: rgba(11, 11, 10, 0.42);
         }
         .works-list-year {
           font-size: clamp(0.8rem, 1vw, 0.9rem);
-          color: rgba(255, 255, 255, 0.42);
+          color: rgba(11, 11, 10, 0.42);
           font-variant-numeric: tabular-nums;
           justify-self: end;
         }
@@ -592,11 +594,11 @@ export default function Works({
         .works-grid-title {
           font-size: clamp(0.88rem, 1.1vw, 1rem);
           font-weight: 500;
-          color: #fff;
+          color: #0b0b0a;
         }
         .works-grid-year {
           font-size: clamp(0.78rem, 0.95vw, 0.88rem);
-          color: rgba(255, 255, 255, 0.42);
+          color: rgba(11, 11, 10, 0.42);
           font-variant-numeric: tabular-nums;
         }
         .works-grid-item,
@@ -649,16 +651,16 @@ export default function Works({
         .works-feed-title {
           font-size: clamp(1rem, 1.4vw, 1.2rem);
           font-weight: 500;
-          color: #fff;
+          color: #0b0b0a;
         }
         .works-feed-cat {
           font-size: clamp(0.8rem, 1vw, 0.9rem);
-          color: rgba(255, 255, 255, 0.42);
+          color: rgba(11, 11, 10, 0.42);
           margin-left: 0.9rem;
         }
         .works-feed-year {
           font-size: clamp(0.8rem, 1vw, 0.9rem);
-          color: rgba(255, 255, 255, 0.42);
+          color: rgba(11, 11, 10, 0.42);
           font-variant-numeric: tabular-nums;
         }
         @media (max-width: 1023px) {
@@ -707,7 +709,7 @@ export default function Works({
             position: "absolute",
             inset: 0,
             backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px)",
+              "linear-gradient(rgba(11,11,10,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(11,11,10,0.06) 1px, transparent 1px)",
             backgroundSize: "55px 55px",
             maskImage: "radial-gradient(ellipse 78% 68% at 54% 50%, black 25%, transparent 80%)",
             WebkitMaskImage: "radial-gradient(ellipse 78% 68% at 54% 50%, black 25%, transparent 80%)",
@@ -727,7 +729,7 @@ export default function Works({
             height: "55vw",
             transform: "translate(-50%, -50%)",
             background:
-              "radial-gradient(circle, rgba(198,255,0,0.06) 0%, rgba(255,255,255,0.035) 22%, transparent 60%)",
+              "radial-gradient(circle, rgba(11,11,10,0.04) 0%, rgba(11,11,10,0.02) 22%, transparent 60%)",
             filter: "blur(20px)",
             zIndex: 1,
             pointerEvents: "none",
@@ -748,7 +750,7 @@ export default function Works({
             pointerEvents: "none",
             zIndex: 7,
             background:
-              "radial-gradient(ellipse 82% 76% at 54% 50%, transparent 38%, rgba(0,0,0,0.72) 100%)",
+              "radial-gradient(ellipse 82% 76% at 54% 50%, transparent 38%, rgba(255,255,255,0.85) 100%)",
             opacity: effectiveView === "spiral" ? 1 : 0,
             transition: "opacity 0.4s ease",
           }}
@@ -778,8 +780,8 @@ export default function Works({
               display: "flex",
               alignItems: "center",
               gap: mobile ? "0.6rem" : "0.85rem",
-              background: "#fff",
-              color: "#000",
+              background: "#0b0b0a",
+              color: "#ffffff",
               whiteSpace: "nowrap",
               fontFamily: "var(--font-outfit), sans-serif",
               fontSize: mobile ? "0.95rem" : "1.3rem",
@@ -788,7 +790,7 @@ export default function Works({
               fontWeight: 400,
               padding: mobile ? "0.4rem 0.9rem 0.4rem 0.4rem" : "0.45rem 1.4rem 0.45rem 0.45rem",
               borderRadius: "10px",
-              boxShadow: "0 12px 36px rgba(0,0,0,0.4)",
+              boxShadow: "0 12px 36px rgba(0,0,0,0.18)",
             }}
           >
             {labelImage && (
@@ -819,7 +821,7 @@ export default function Works({
             fontSize: "0.6rem",
             letterSpacing: "0.25em",
             textTransform: "uppercase",
-            color: "rgba(255,255,255,0.3)",
+            color: "rgba(11,11,10,0.4)",
             pointerEvents: "none",
             display: mobile ? "none" : "block",
           }}
@@ -906,7 +908,7 @@ export default function Works({
                   onMouseLeave={() => setHovered(null)}
                 >
                   <div className="works-grid-thumb">
-                    <Image src={w.image} alt="" fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" />
+                    <Image src={w.image} alt={`${w.title} — ${w.subtitle}`} fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" />
                   </div>
                   <div className="works-grid-caption">
                     <span className="works-grid-title">{w.title}</span>
@@ -928,7 +930,7 @@ export default function Works({
                   onMouseLeave={() => setHovered(null)}
                 >
                   <div className="works-feed-thumb">
-                    <Image src={w.image} alt="" fill sizes="(max-width: 900px) 100vw, 900px" />
+                    <Image src={w.image} alt={`${w.title} — ${w.subtitle}`} fill sizes="(max-width: 900px) 100vw, 900px" />
                   </div>
                   <div className="works-feed-caption">
                     <span>
