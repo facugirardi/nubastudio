@@ -88,12 +88,12 @@ const dict = {
       {
         question: "Do you work with clients outside Argentina?",
         answer:
-          "Yes. The studio is based in Córdoba and works remotely with clients across Latin America and beyond. We work in English or Spanish, whichever suits your team.",
+          "Yes. We work with clients from all over the world. The studio is based in Córdoba and works fully remotely, in English or Spanish, whichever suits your team.",
       },
       {
         question: "Do you offer maintenance after launch?",
         answer:
-          "Yes. Launch is rarely the end of a product. We stay on for maintenance and continuous improvement when you want us to: for Kennedy's Group we are the ongoing full-stack team, still shipping features long after the first release.",
+          "Yes. Launch is rarely the end of a product. We stay on for maintenance and continuous improvement when you want us to: fixing, monitoring and shipping new features long after the first release.",
       },
       {
         question: "How do you structure contracts?",
@@ -103,7 +103,7 @@ const dict = {
       {
         question: "What technologies do you work with?",
         answer:
-          "Next.js, React and TypeScript on the web; React Native and Expo for iOS and Android; Node and Python on the backend, usually with PostgreSQL. We pick the stack that fits the product, not the other way around.",
+          "We adapt. We are not tied to a single stack: we look for the right technology for each project, based on what it needs to do, how it has to grow and who will maintain it. We often end up with Next.js, React Native, Node or Python, but if your product calls for something else, or already runs on something else, we work with that.",
       },
     ],
     contact: {
@@ -233,12 +233,12 @@ const dict = {
       {
         question: "¿Trabajan con clientes fuera de Argentina?",
         answer:
-          "Sí. El estudio está en Córdoba y trabaja de forma remota con clientes en toda Latinoamérica y más allá. Trabajamos en inglés o en español, según lo que le quede mejor a tu equipo.",
+          "Sí. Trabajamos con clientes de todas partes del mundo. El estudio está en Córdoba y trabaja 100% en remoto, en inglés o en español, según lo que le quede mejor a tu equipo.",
       },
       {
         question: "¿Ofrecen mantenimiento después del lanzamiento?",
         answer:
-          "Sí. El lanzamiento casi nunca es el final de un producto. Seguimos con mantenimiento y mejora continua cuando lo necesitás: para Kennedy's Group somos el equipo full-stack permanente, todavía entregando funcionalidades mucho después del primer release.",
+          "Sí. El lanzamiento casi nunca es el final de un producto. Seguimos con mantenimiento y mejora continua cuando lo necesitás: corregimos, monitoreamos y entregamos funcionalidades nuevas mucho después del primer release.",
       },
       {
         question: "¿Cómo estructuran los contratos?",
@@ -248,7 +248,7 @@ const dict = {
       {
         question: "¿Con qué tecnologías trabajan?",
         answer:
-          "Next.js, React y TypeScript en la web; React Native y Expo para iOS y Android; Node y Python en el backend, generalmente con PostgreSQL. Elegimos el stack que le queda al producto, no al revés.",
+          "Nos adaptamos. No estamos atados a un único stack: buscamos la tecnología adecuada para cada proyecto, según lo que tiene que hacer, cómo tiene que crecer y quién lo va a mantener. Muchas veces terminamos en Next.js, React Native, Node o Python, pero si tu producto pide otra cosa, o ya corre sobre otra cosa, trabajamos con eso.",
       },
     ],
     contact: {
