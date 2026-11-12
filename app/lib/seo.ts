@@ -40,7 +40,7 @@ export const PROFILES: string[] = [
   // Clutch, Google Business Profile, GitHub, Dribbble.
 ];
 
-export const FOUNDED = "2024";
+export const FOUNDED = "2025";
 
 export const TEAM_MEMBERS = [
   { name: "Alejo Vaquero", role: "Design" },

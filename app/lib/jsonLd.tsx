@@ -74,7 +74,6 @@ export function organizationJsonLd(lang: Lang) {
       "Marketplace development",
       "Product design",
       "UI/UX design",
-      "Brand identity",
     ],
     sameAs: PROFILES,
     contactPoint: [

@@ -14,11 +14,10 @@ import { useNavTone } from "../landing/useNavTone";
 gsap.registerPlugin(ScrollTrigger);
 
 const META = [
-  { tags: ["Next.js", "React", "CMS", "Motion"], cases: ["checkrto", "mes", "provia-consulting"], image: "/images/cases/checkrto/check-v3-1.webp" },
-  { tags: ["React Native", "Expo", "iOS", "Android"], cases: ["nuddo", "ushuaia360"], image: "/images/cases/nuddo/nuddo-mock-1.webp" },
-  { tags: ["Payments", "Dashboards", "Auth", "APIs"], cases: ["nubapay", "nuddo"], image: "/images/cases/nubapay/nubapay-v2-1.webp" },
-  { tags: ["Identity", "Art direction", "Systems"], cases: [] as string[], image: "/images/cases/kennedys/kennedys-v2-1.webp" },
-  { tags: ["Discovery", "Prototyping", "Roadmap"], cases: ["nubapay"], image: "/images/cases/nuddo/nuddo4.webp" },
+  { tags: ["Next.js", "React", "CMS", "Motion"], cases: ["checkrto", "mes", "provia-consulting"], image: "/images/cases/nubapay/nubapay-v2-1.webp" },
+  { tags: ["React Native", "Expo", "iOS", "Android"], cases: ["nuddo", "ushuaia360"], image: "/images/cases/ushuaia360/ushuaia-v2-1.webp" },
+  { tags: ["Payments", "Dashboards", "Auth", "APIs"], cases: ["nubapay", "nuddo"], image: "/images/cases/nuddo/nuddo-mock-1.webp" },
+  { tags: ["Discovery", "Prototyping", "Roadmap"], cases: ["nubapay"], image: "/images/cases/mes/mes-v3-1.webp" },
 ];
 
 export default function SvcList() {

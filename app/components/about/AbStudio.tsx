@@ -17,7 +17,7 @@ export default function AbStudio() {
 
   const facts = [
     { k: t.facts.basedIn, v: t.facts.basedInValue },
-    { k: t.facts.since, v: "2024" },
+    { k: t.facts.since, v: "2025" },
     { k: t.facts.shipped, v: String(visibleWorks.length).padStart(2, "0") },
     { k: t.facts.languages, v: t.facts.languagesValue },
   ];
