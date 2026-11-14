@@ -219,8 +219,31 @@ export function caseStudyJsonLd(work: WorkItem, lang: Lang) {
   };
 }
 
+/** Landing de un servicio: el Service con su URL, ligado a la página y a la organización. */
+export function serviceJsonLd(
+  lang: Lang,
+  { path, name, description, keywords }: { path: string; name: string; description: string; keywords: string[] }
+) {
+  const url = langUrl(lang, path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${url}#service`,
+    url,
+    name,
+    serviceType: name,
+    description,
+    keywords: keywords.join(", "),
+    inLanguage: lang,
+    provider: { "@id": ORG_ID },
+    areaServed: AREA_SERVED,
+    availableChannel: { "@type": "ServiceChannel", serviceUrl: langUrl(lang, "/contact") },
+    mainEntityOfPage: { "@id": `${url}#webpage` },
+  };
+}
+
 export function servicesJsonLd(
-  services: { name: string; description: string }[],
+  services: { name: string; description: string; path?: string }[],
   lang: Lang
 ) {
   return {
@@ -236,6 +259,7 @@ export function servicesJsonLd(
         name: service.name,
         description: service.description,
         serviceType: service.name,
+        ...(service.path ? { url: langUrl(lang, service.path) } : {}),
         provider: { "@id": ORG_ID },
         areaServed: AREA_SERVED,
       },

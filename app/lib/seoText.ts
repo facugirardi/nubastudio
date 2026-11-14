@@ -1,3 +1,4 @@
+import type { ServiceId } from "../data/services/slugs";
 import type { Lang } from "./lang";
 
 /**
@@ -21,8 +22,8 @@ export type SeoText = {
   blog: { title: string; description: string; ogTitle: string; name: string };
   /** Migas de pan del JSON-LD. */
   crumbs: { home: string; about: string; services: string; contact: string; works: string; blog: string };
-  /** Servicios del JSON-LD de /services. */
-  serviceItems: { name: string; description: string }[];
+  /** Servicios del JSON-LD de /services (`service`: la landing que lo desarrolla). */
+  serviceItems: { name: string; description: string; service?: ServiceId }[];
   worksCollection: { name: string; description: string };
   servicesListName: string;
   contactPageName: string;
@@ -109,21 +110,25 @@ export const seoText: Record<Lang, SeoText> = {
     serviceItems: [
       {
         name: "Web Development",
+        service: "web",
         description:
           "Sites and platforms that load fast, feel alive and turn visitors into clients. Built with Next.js, React and a CMS when you need one.",
       },
       {
         name: "Mobile Apps",
+        service: "mobile",
         description:
           "Native-feeling iOS and Android products people actually want to open, built with React Native and Expo.",
       },
       {
         name: "Marketplaces & Platforms",
+        service: "marketplaces",
         description:
           "Two-sided products with payments, dashboards, authentication and APIs, built to scale.",
       },
       {
         name: "Product Strategy & MVP",
+        service: "mvp",
         description:
           "From raw idea to a shipped MVP: discovery, prototyping and a roadmap validated and scoped to grow.",
       },
@@ -249,16 +254,19 @@ export const seoText: Record<Lang, SeoText> = {
     serviceItems: [
       {
         name: "Desarrollo web",
+        service: "web",
         description:
           "Sitios y plataformas que cargan rápido, se sienten vivos y convierten visitantes en clientes. Hechos con Next.js, React y un CMS cuando lo necesitás.",
       },
       {
         name: "Apps móviles",
+        service: "mobile",
         description:
           "Productos iOS y Android con sensación nativa que la gente quiere abrir, hechos con React Native y Expo.",
       },
       {
         name: "Marketplaces y plataformas",
+        service: "marketplaces",
         description:
           "Productos de dos lados con pagos, dashboards, autenticación y APIs, pensados para escalar.",
       },
@@ -269,6 +277,7 @@ export const seoText: Record<Lang, SeoText> = {
       },
       {
         name: "Estrategia de producto y MVP",
+        service: "mvp",
         description:
           "De la idea cruda a un MVP en producción: descubrimiento, prototipado y una hoja de ruta validada y dimensionada para crecer.",
       },

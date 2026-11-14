@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { LANG_COOKIE, isLang } from "./app/lib/lang";
+import { translatePath } from "./app/lib/translatePath";
 
 /**
  * El inglés es el idioma raíz y el español vive bajo /es. Las páginas están en
@@ -61,7 +62,8 @@ export function proxy(request: NextRequest) {
     prefersSpanish(request)
   ) {
     const redirect = request.nextUrl.clone();
-    redirect.pathname = pathname === "/" ? "/es" : `/es${pathname}`;
+    // Los artículos y las landings de servicio tienen otro slug en español.
+    redirect.pathname = pathname === "/" ? "/es" : `/es${translatePath(pathname, "en", "es")}`;
     const res = NextResponse.redirect(redirect, 307);
     res.headers.set("Cache-Control", "private, no-store");
     return res;

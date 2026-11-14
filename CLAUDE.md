@@ -68,6 +68,7 @@ Puede ser one-pager o multi-página — está por definir.
 - Rutas: `/` landing, `/works` portfolio (espiral), `/about`, `/services`, `/contact`, `/cases/[slug]`. Los casos con `hidden: true` salen con `noindex`.
 - GSAP: `SmoothScroll` no registra ScrollTrigger; cada componente o hook que lo use hace `gsap.registerPlugin(ScrollTrigger)`.
 - **Blog:** artículos en `app/data/blog/posts/` (un archivo por post, en/es). El slug en español sale de `app/data/blog/slugs.ts` (agregar ahí cada post nuevo); en el cuerpo los links a otros posts van con el slug en inglés y sin idioma, `PostBody` los traduce. Un post con `date` futura queda programado: da 404 y no aparece en listados, sitemap ni llms.txt hasta ese día (medianoche de Argentina, ISR cada 1 h). El autor sale de `postAuthor` (por categoría, o `author` en el post).
+- **Landings de servicio** (`/services/[slug]`): contenido en `app/data/services/pages/` (un archivo por servicio, en/es, con H1, body, FAQ, casos y posts relacionados) y slugs por idioma en `app/data/services/slugs.ts`. Salen solas en el dropdown del Navbar, sitemap, llms.txt y JSON-LD. `translatePath` (`app/lib/translatePath.ts`) traduce slugs de blog y servicios al cambiar de idioma y en el redirect del proxy.
 - Una página nueva: crearla en `app/[lang]/…`, usar `pageMetadata`, agregarla a `app/sitemap.ts` y sumar sus textos a `seoText.ts`. `llms.txt` sale de `app/lib/llms.ts` (`/llms.txt` en inglés, `/es/llms.txt` en español).
 
 ## Convenciones

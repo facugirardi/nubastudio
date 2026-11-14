@@ -49,7 +49,7 @@ export function pageOpenGraph(
  */
 export function pageMetadata(
   lang: Lang,
-  path: string,
+  path: LocalizedPath,
   {
     title,
     description,
@@ -71,7 +71,7 @@ export function pageMetadata(
     title: absoluteTitle ? { absolute: title } : title,
     description,
     alternates: pageAlternates(lang, path),
-    openGraph: pageOpenGraph(lang, path, { title: social, description, type }),
+    openGraph: pageOpenGraph(lang, pathIn(path, lang), { title: social, description, type }),
     twitter: { card: "summary_large_image", title: social, description },
     ...(noindex ? { robots: { index: false, follow: true } } : {}),
   };

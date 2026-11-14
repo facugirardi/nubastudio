@@ -6,6 +6,7 @@ import { getUiText } from "../../lib/uiText";
 import SectionHeading from "./SectionHeading";
 import { useReveal } from "./useReveal";
 import { ArrowRight } from "../icons";
+import { isServiceId, servicePath } from "../../data/services/slugs";
 
 const LINE = { fill: "none", stroke: "currentColor", strokeWidth: 1, vectorEffect: "non-scaling-stroke" } as const;
 const MOVE = "transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] [transform-box:fill-box]";
@@ -143,7 +144,15 @@ export default function HomeServices() {
                 <div className="my-8 h-36 text-white/45 transition-colors duration-500 group-hover/cell:text-white/80 group-data-[active=true]/cell:text-white/80 lg:h-40">
                   <Fig />
                 </div>
-                <h3 className="text-[19px] font-medium tracking-[-0.02em] text-[#EDEDED]">{service.title}</h3>
+                <h3 className="text-[19px] font-medium tracking-[-0.02em] text-[#EDEDED]">
+                  {isServiceId(service.id) ? (
+                    <a href={path(servicePath(service.id, lang))} className="after:absolute after:inset-0 focus-visible:outline-none">
+                      {service.title}
+                    </a>
+                  ) : (
+                    service.title
+                  )}
+                </h3>
                 <p className="mt-2 max-w-[34ch] text-[15px] leading-[1.55] text-white/50">{service.desc}</p>
               </li>
             );

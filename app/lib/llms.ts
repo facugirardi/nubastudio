@@ -1,4 +1,5 @@
 import { getPost, isPublished, lastModified, postAuthor, postPath, publishedPosts } from "../data/blog";
+import { services, servicePath } from "../data/services";
 import { visibleWorks } from "../data/works";
 import { getWorkFaq } from "../data/worksFaq";
 import { LANGS, localePath, type Lang } from "./lang";
@@ -14,12 +15,6 @@ and build websites, mobile apps, marketplaces and digital products end to end, f
 product strategy and design through development and launch. We work with founders and
 companies in Argentina, across Latin America and internationally.`,
     services: "Services",
-    serviceLines: [
-      "- **Web development** - sites and platforms built with Next.js, React and TypeScript.",
-      "- **Mobile apps** - iOS and Android products built with React Native and Expo.",
-      "- **Marketplaces & platforms** - two-sided products with payments, dashboards and APIs.",
-      "- **Product strategy & MVP** - discovery, prototyping and roadmap through to a shipped MVP.",
-    ],
     pages: "Pages",
     pageLines: {
       home: "studio overview and selected work.",
@@ -73,12 +68,6 @@ y desarrollamos sitios web, apps móviles, marketplaces y productos digitales de
 desde la estrategia y el diseño de producto hasta el desarrollo y el lanzamiento. Trabajamos con
 emprendedores y empresas de Argentina, de Latinoamérica y del resto del mundo.`,
     services: "Servicios",
-    serviceLines: [
-      "- **Desarrollo web** - sitios y plataformas hechos con Next.js, React y TypeScript.",
-      "- **Apps móviles** - productos iOS y Android hechos con React Native y Expo.",
-      "- **Marketplaces y plataformas** - productos de dos lados con pagos, dashboards y APIs.",
-      "- **Estrategia de producto y MVP** - descubrimiento, prototipado y hoja de ruta hasta un MVP en producción.",
-    ],
     pages: "Páginas",
     pageLines: {
       home: "resumen del estudio y trabajos seleccionados.",
@@ -147,6 +136,10 @@ export function buildLlms(lang: Lang): Response {
     .map((p) => `- [${p.content[lang].title}](${url(postPath(p, lang))}): ${p.content[lang].description}`)
     .join("\n");
 
+  const serviceLinks = services
+    .map((sv) => `- [${sv.content[lang].name}](${url(servicePath(sv.id, lang))}): ${sv.content[lang].description}`)
+    .join("\n");
+
   const body = `# ${SITE_NAME}
 
 > ${seoText[lang].siteDescription}
@@ -155,7 +148,7 @@ ${c.about}
 
 ## ${c.services}
 
-${c.serviceLines.join("\n")}
+${serviceLinks}
 
 ## ${c.pages}
 
@@ -229,7 +222,14 @@ export function buildLlmsFull(lang: Lang): Response {
 
   const team = TEAM_MEMBERS.map((m) => `- **${m.name}** - ${m.jobTitle}${m.profiles.length ? ` (${m.profiles.join(", ")})` : ""}`).join("\n");
 
-  const services = text.serviceItems.map((s) => `### ${s.name}\n\n${s.description}`).join("\n\n");
+  const serviceSections = [
+    ...services.map((sv) => {
+      const sc = sv.content[lang];
+      const body = absoluteLinks(sc.body.trim(), lang).replace(/^(#{2,3}) /gm, (_, h: string) => `#${h} `);
+      return `## ${sc.name}\n\n${url(servicePath(sv.id, lang))}\n\n> ${sc.description}\n\n${body}\n\n### ${f.faq}\n\n${faqBlock(sc.faq).replace(/^### /gm, "#### ")}`;
+    }),
+    ...text.serviceItems.filter((s) => !s.service).map((s) => `## ${s.name}\n\n${s.description}`),
+  ].join("\n\n---\n\n");
 
   const cases = visibleWorks
     .map((raw) => {
@@ -287,7 +287,7 @@ ${team}
 
 # ${c.services}
 
-${services}
+${serviceSections}
 
 ## ${f.faq}
 

@@ -10,12 +10,13 @@ import SectionHeading from "../home/SectionHeading";
 import { useReveal } from "../home/useReveal";
 import { openCase } from "../home/WorkCard";
 import { prefetchCase } from "../caseTransition";
-import { ArrowUpRight } from "../icons";
+import { ArrowRight, ArrowUpRight } from "../icons";
 import { visibleWorks } from "../../data/works";
 import { localizeWork } from "../../lib/localizeWork";
 import { useLanguage } from "../../lib/i18n";
 import { getUiText } from "../../lib/uiText";
 import { TECH_LOGOS } from "./techLogos";
+import { isServiceId, servicePath } from "../../data/services/slugs";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -140,11 +141,28 @@ function ServiceRows() {
                   FIG 0.{i + 1}
                 </p>
                 <h2 data-reveal className="mt-5 text-[clamp(2rem,3.4vw,3rem)] font-[450] leading-[1.02] tracking-[-0.05em] text-[#EDEDED]">
-                  {service.title}
+                  {isServiceId(service.id) ? (
+                    <a href={path(servicePath(service.id, lang))} className="transition-colors duration-200 hover:text-white">
+                      {service.title}
+                    </a>
+                  ) : (
+                    service.title
+                  )}
                 </h2>
                 <p data-reveal className="mt-4 max-w-[40ch] text-[16px] leading-[1.6] text-white/55">
                   {service.desc}
                 </p>
+                {isServiceId(service.id) && (
+                  <a
+                    data-reveal
+                    href={path(servicePath(service.id, lang))}
+                    className="group/more mt-6 inline-flex items-center gap-2 text-[15px] font-medium text-[#C6FF00]"
+                  >
+                    {ui.servicesPage.learnMore}
+                    <span className="sr-only">: {service.title}</span>
+                    <ArrowRight className="transition-transform duration-300 ease-out group-hover/more:translate-x-1" />
+                  </a>
+                )}
                 <ul data-reveal className="mt-8 flex flex-wrap gap-1.5">
                   {meta.tags[lang].map((tag) => (
                     <li key={tag} className="rounded-full border border-white/[0.1] px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.04em] text-white/50">
@@ -187,7 +205,7 @@ function ServiceRows() {
             <div className="relative px-5 pb-12 sm:px-8 lg:px-10 lg:py-20">
               <div
                 data-reveal
-                className="relative isolate flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-white/[0.08] bg-[#050505] lg:sticky lg:top-32"
+                className="relative isolate flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-white/[0.08] bg-[#050505]"
               >
                 <div
                   aria-hidden

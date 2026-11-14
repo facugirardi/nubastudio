@@ -7,7 +7,8 @@ import { useLenis } from "./SmoothScroll";
 import { useLanguage } from "../lib/i18n";
 import { LANGS, LANG_COOKIE, localePath, stripLocale, type Lang } from "../lib/lang";
 import { getUiText } from "../lib/uiText";
-import { translateBlogPath } from "../data/blog/slugs";
+import { SERVICE_IDS, servicePath } from "../data/services/slugs";
+import { translatePath } from "../lib/translatePath";
 import NubaMark from "./NubaMark";
 import { ArrowUpRight, ChevronDown } from "./icons";
 
@@ -15,6 +16,68 @@ const NAV_IDS = ["work", "services", "about", "blog", "contact"] as const;
 type NavId = (typeof NAV_IDS)[number];
 
 const LANG_NAMES: Record<Lang, string> = { en: "English", es: "Español" };
+
+/** Menú de servicios del navbar: se abre con hover o foco y los links están siempre en el HTML. */
+function ServicesMenu({
+  open,
+  onClose,
+  current,
+}: {
+  open: boolean;
+  onClose: () => void;
+  current: string;
+}) {
+  const { lang, path } = useLanguage();
+  const t = getUiText(lang).nav.servicesMenu;
+
+  return (
+    <div
+      className={`absolute left-1/2 top-full z-10 -translate-x-1/2 pt-3 transition-[opacity,transform,visibility] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+        open ? "visible translate-y-0 opacity-100" : "pointer-events-none invisible -translate-y-1 opacity-0"
+      }`}
+    >
+      <div className="w-[min(560px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-white/[0.1] bg-[#0a0a0a]/95 shadow-[0_24px_60px_-16px_rgba(0,0,0,0.85)] backdrop-blur-xl">
+        <ul aria-label={t.label} className="grid grid-cols-2 gap-1 p-2">
+          {SERVICE_IDS.map((id, i) => {
+            const href = servicePath(id, lang);
+            const active = current === href;
+            return (
+              <li key={id}>
+                <a
+                  href={path(href)}
+                  onClick={onClose}
+                  aria-current={active ? "page" : undefined}
+                  className="group/svc flex h-full gap-3 rounded-xl p-3 transition-colors duration-150 hover:bg-white/[0.06] focus-visible:bg-white/[0.06] focus-visible:outline-none"
+                >
+                  <span className="mt-[3px] font-mono text-[10px] text-white/30">0{i + 1}</span>
+                  <span className="min-w-0">
+                    <span className={`block text-[14px] font-medium tracking-[-0.01em] ${active ? "text-[#C6FF00]" : "text-[#EDEDED]"}`}>
+                      {t.items[id].title}
+                    </span>
+                    <span className="mt-0.5 block text-[13px] leading-[1.4] text-white/45 transition-colors group-hover/svc:text-white/60">
+                      {t.items[id].desc}
+                    </span>
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+        <a
+          href={path("/services")}
+          onClick={onClose}
+          className="group/all flex items-center justify-between gap-4 border-t border-white/[0.08] bg-white/[0.02] px-5 py-3.5 transition-colors duration-150 hover:bg-white/[0.05] focus-visible:bg-white/[0.05] focus-visible:outline-none"
+        >
+          <span>
+            <span className="block text-[14px] font-medium text-[#EDEDED]">{t.all}</span>
+            <span className="block text-[13px] text-white/45">{t.allDesc}</span>
+          </span>
+          <ArrowUpRight className="text-white/40 transition-[transform,color] duration-200 group-hover/all:-translate-y-px group-hover/all:translate-x-px group-hover/all:text-[#C6FF00]" />
+        </a>
+      </div>
+    </div>
+  );
+}
 
 function LangMenu({
   lang,
@@ -122,13 +185,33 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [hover, setHover] = useState<{ left: number; width: number } | null>(null);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const closeTimer = useRef<number | undefined>(undefined);
 
   const barRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const hrefFor = (id: NavId) => path(id === "work" ? "/works" : `/${id}`);
   const isActive = (id: NavId) => current.startsWith(id === "work" ? "/works" : `/${id}`);
-  const langHref = (code: Lang) => localePath(code, translateBlogPath(current, lang, code));
+  const langHref = (code: Lang) => localePath(code, translatePath(current, lang, code));
+
+  const openServices = () => {
+    window.clearTimeout(closeTimer.current);
+    setServicesOpen(true);
+  };
+  const closeServices = (delay = 120) => {
+    window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setServicesOpen(false), delay);
+  };
+
+  useEffect(() => {
+    if (!servicesOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setServicesOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [servicesOpen]);
+
+  useEffect(() => () => window.clearTimeout(closeTimer.current), []);
 
   useEffect(() => {
     const bar = barRef.current;
@@ -189,10 +272,12 @@ export default function Navbar() {
 
   const onNavClick = () => setOpen(false);
 
-  const onLinkEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const el = e.currentTarget;
-    setHover({ left: el.offsetLeft, width: el.offsetWidth });
+  const pillFor = (el: HTMLElement) => {
+    const list = el.closest("ul");
+    const left = list ? el.getBoundingClientRect().left - list.getBoundingClientRect().left : el.offsetLeft;
+    setHover({ left, width: el.offsetWidth });
   };
+  const onLinkEnter = (e: React.MouseEvent<HTMLAnchorElement>) => pillFor(e.currentTarget);
 
   const solid = scrolled || open;
 
@@ -223,22 +308,42 @@ export default function Navbar() {
               style={{ left: hover?.left ?? 0, width: hover?.width ?? 0, opacity: hover ? 1 : 0 }}
             />
             <ul className="relative flex items-center">
-              {NAV_IDS.map((id) => (
-                <li key={id}>
-                  <a
-                    href={hrefFor(id)}
-                    onClick={onNavClick}
-                    onMouseEnter={onLinkEnter}
-                    onFocus={(e) => setHover({ left: e.currentTarget.offsetLeft, width: e.currentTarget.offsetWidth })}
-                    aria-current={isActive(id) ? "page" : undefined}
-                    className={`relative block rounded-full px-3.5 py-1.5 text-[14px] transition-colors duration-150 focus-visible:outline-none ${
-                      isActive(id) ? "text-[#EDEDED]" : "text-white/55 hover:text-[#EDEDED] focus-visible:text-[#EDEDED]"
-                    }`}
+              {NAV_IDS.map((id) => {
+                const services = id === "services";
+                return (
+                  <li
+                    key={id}
+                    {...(services
+                      ? {
+                          className: "relative",
+                          onMouseEnter: openServices,
+                          onMouseLeave: () => closeServices(),
+                          onFocus: openServices,
+                          onBlur: (e: React.FocusEvent<HTMLLIElement>) => {
+                            if (!e.currentTarget.contains(e.relatedTarget as Node | null)) closeServices(0);
+                          },
+                        }
+                      : {})}
                   >
-                    {t.nav[id]}
-                  </a>
-                </li>
-              ))}
+                    <a
+                      href={hrefFor(id)}
+                      onClick={onNavClick}
+                      onMouseEnter={onLinkEnter}
+                      onFocus={(e) => pillFor(e.currentTarget)}
+                      aria-current={isActive(id) ? "page" : undefined}
+                      className={`relative flex items-center gap-1 rounded-full px-3.5 py-1.5 text-[14px] transition-colors duration-150 focus-visible:outline-none ${
+                        isActive(id) || (services && servicesOpen) ? "text-[#EDEDED]" : "text-white/55 hover:text-[#EDEDED] focus-visible:text-[#EDEDED]"
+                      }`}
+                    >
+                      {t.nav[id]}
+                      {services && (
+                        <ChevronDown className={`text-white/40 transition-transform duration-200 ${servicesOpen ? "rotate-180" : ""}`} />
+                      )}
+                    </a>
+                    {services && <ServicesMenu open={servicesOpen} onClose={() => setServicesOpen(false)} current={current} />}
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 
@@ -282,7 +387,7 @@ export default function Navbar() {
         id="mobile-menu"
         aria-hidden={!open}
         inert={!open}
-        className="invisible fixed inset-0 z-[99] flex flex-col bg-black px-5 pb-8 pt-24 font-display text-[#EDEDED] [clip-path:inset(0_0_100%_0)] sm:px-8 md:hidden"
+        className="invisible fixed inset-0 z-[99] flex flex-col overflow-y-auto overscroll-contain bg-black px-5 pb-8 pt-24 font-display text-[#EDEDED] [clip-path:inset(0_0_100%_0)] sm:px-8 md:hidden"
       >
         <div
           aria-hidden
@@ -301,6 +406,22 @@ export default function Navbar() {
                   <span className="transition-transform duration-300 ease-out group-active/m:translate-x-1">{t.nav[id]}</span>
                   <span className="font-mono text-[11px] tracking-normal text-white/35">0{i + 1}</span>
                 </a>
+                {id === "services" && (
+                  <ul aria-label={t.nav.servicesMenu.label} className="-mt-1 grid grid-cols-2 gap-x-4 gap-y-2 pb-4">
+                    {SERVICE_IDS.map((sid) => (
+                      <li key={sid}>
+                        <a
+                          href={path(servicePath(sid, lang))}
+                          onClick={onNavClick}
+                          aria-current={current === servicePath(sid, lang) ? "page" : undefined}
+                          className="block py-1 text-[15px] tracking-[-0.01em] text-white/55 active:text-[#EDEDED] aria-[current=page]:text-[#C6FF00]"
+                        >
+                          {t.nav.servicesMenu.items[sid].title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>

@@ -7,6 +7,7 @@ import HomeProcess from "../../components/home/HomeProcess";
 import HomeCta from "../../components/home/HomeCta";
 import Footer from "../../components/home/Footer";
 import { JsonLd, breadcrumbJsonLd, webPageJsonLd, faqJsonLd, servicesJsonLd } from "../../lib/jsonLd";
+import { servicePath } from "../../data/services/slugs";
 import { isLang, localePath } from "../../lib/lang";
 import { pageMetadata } from "../../lib/pageMeta";
 import { seoText } from "../../lib/seoText";
@@ -30,7 +31,10 @@ export default async function Page({ params }: Props) {
       <JsonLd
         data={[
           webPageJsonLd(lang, "/services", { name: text.services.title, description: text.services.description, type: "WebPage" }),
-          servicesJsonLd(text.serviceItems, lang),
+          servicesJsonLd(
+            text.serviceItems.map((item) => ({ ...item, path: item.service && servicePath(item.service, lang) })),
+            lang
+          ),
           // Las preguntas del JSON-LD son las mismas que se ven en la página.
           faqJsonLd(getUiText(lang).faq),
           breadcrumbJsonLd([

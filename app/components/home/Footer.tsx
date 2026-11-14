@@ -9,6 +9,7 @@ import { CONTACT } from "../../lib/seo";
 import { useLanguage } from "../../lib/i18n";
 import { getUiText } from "../../lib/uiText";
 import { ArrowUp, ArrowUpRight } from "../icons";
+import { isServiceId, servicePath } from "../../data/services/slugs";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -118,7 +119,10 @@ export default function Footer() {
     },
     {
       title: t.footerServices,
-      links: ui.services.list.map((s) => ({ label: s.title, href: path("/services") })),
+      links: ui.services.list.map((s) => ({
+        label: s.title,
+        href: path(isServiceId(s.id) ? servicePath(s.id, lang) : "/services"),
+      })),
     },
     {
       title: t.footerContact,

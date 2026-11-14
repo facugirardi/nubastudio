@@ -114,6 +114,11 @@ function inline(text: string, lang: Lang): ReactNode[] {
   return out;
 }
 
+/** Texto en línea con **negrita**, `código` y links (internos traducidos al idioma de la página). */
+export function Inline({ text, lang }: { text: string; lang: Lang }) {
+  return <>{inline(text, lang)}</>;
+}
+
 export default function PostBody({ body, lang }: { body: string; lang: Lang }) {
   return (
     <div className="text-[17px] leading-[1.75] text-white/65">
