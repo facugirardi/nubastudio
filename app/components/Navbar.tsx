@@ -7,10 +7,11 @@ import { useLenis } from "./SmoothScroll";
 import { useLanguage } from "../lib/i18n";
 import { LANGS, LANG_COOKIE, localePath, stripLocale, type Lang } from "../lib/lang";
 import { getUiText } from "../lib/uiText";
+import { translateBlogPath } from "../data/blog/slugs";
 import NubaMark from "./NubaMark";
 import { ArrowUpRight, ChevronDown } from "./icons";
 
-const NAV_IDS = ["work", "services", "about", "contact"] as const;
+const NAV_IDS = ["work", "services", "about", "blog", "contact"] as const;
 type NavId = (typeof NAV_IDS)[number];
 
 const LANG_NAMES: Record<Lang, string> = { en: "English", es: "Español" };
@@ -127,7 +128,7 @@ export default function Navbar() {
 
   const hrefFor = (id: NavId) => path(id === "work" ? "/works" : `/${id}`);
   const isActive = (id: NavId) => current.startsWith(id === "work" ? "/works" : `/${id}`);
-  const langHref = (code: Lang) => localePath(code, current);
+  const langHref = (code: Lang) => localePath(code, translateBlogPath(current, lang, code));
 
   useEffect(() => {
     const bar = barRef.current;

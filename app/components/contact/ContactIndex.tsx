@@ -76,6 +76,7 @@ export default function ContactIndex() {
   const [text, setText] = useState("");
   const [beforePolish, setBeforePolish] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
+  const [budget, setBudget] = useState("");
   const filled = text.trim().length > 0;
   const nearLimit = text.length > MAX_CHARS * 0.6;
   const busy = status === "polishing";
@@ -139,7 +140,8 @@ export default function ContactIndex() {
   function send() {
     const value = text.trim();
     if (!value) return;
-    window.open(`${CONTACT.whatsapp}?text=${encodeURIComponent(value)}`, "_blank", "noopener,noreferrer");
+    const message = budget ? `${value}\n\n${p.budget}: ${budget}` : value;
+    window.open(`${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   }
 
   const channels = [
@@ -206,6 +208,48 @@ export default function ContactIndex() {
               className="pointer-events-none absolute inset-0 -z-0 [background-image:linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_45%,black,transparent_80%)]"
             />
             <div data-intro className="relative">
+              <div className="mb-8">
+                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{p.startWith}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {t.seeds.map((seed) => (
+                    <button
+                      key={seed.label}
+                      type="button"
+                      onClick={() => applySeed(seed.text)}
+                      disabled={busy}
+                      className="rounded-full border border-white/[0.1] bg-white/[0.02] px-3.5 py-2 text-[14px] text-white/65 transition-colors duration-200 hover:border-white/25 hover:bg-white/[0.06] hover:text-[#EDEDED] disabled:opacity-40"
+                    >
+                      {seed.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-8">
+                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{p.budget}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {p.budgets.map((option) => {
+                    const active = budget === option;
+                    return (
+                      <button
+                        key={option}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() => setBudget(active ? "" : option)}
+                        disabled={busy}
+                        className={`rounded-full border px-3.5 py-2 text-[14px] tabular-nums transition-colors duration-200 disabled:opacity-40 ${
+                          active
+                            ? "border-[#C6FF00]/60 bg-[#C6FF00]/[0.08] text-[#C6FF00]"
+                            : "border-white/[0.1] bg-white/[0.02] text-white/65 hover:border-white/25 hover:bg-white/[0.06] hover:text-[#EDEDED]"
+                        }`}
+                      >
+                        {option}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div className={`rounded-[18px] p-px transition-colors duration-500 ${busy ? "composer-busy" : "bg-white/[0.1] focus-within:bg-white/[0.22]"}`}>
                 <div className="rounded-[17px] bg-[#070707]">
                   <div className="flex items-center justify-between gap-4 border-b border-white/[0.07] px-5 py-3.5">
@@ -291,23 +335,6 @@ export default function ContactIndex() {
               </div>
 
               <p className="mt-3 text-right font-mono text-[10.5px] uppercase tracking-[0.06em] text-white/30">{p.hint}</p>
-
-              <div className="mt-8">
-                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{p.startWith}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {t.seeds.map((seed) => (
-                    <button
-                      key={seed.label}
-                      type="button"
-                      onClick={() => applySeed(seed.text)}
-                      disabled={busy}
-                      className="rounded-full border border-white/[0.1] bg-white/[0.02] px-3.5 py-2 text-[14px] text-white/65 transition-colors duration-200 hover:border-white/25 hover:bg-white/[0.06] hover:text-[#EDEDED] disabled:opacity-40"
-                    >
-                      {seed.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </div>

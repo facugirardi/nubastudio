@@ -23,7 +23,8 @@ const SPANISH_COUNTRIES = new Set([
   "AR", "UY", "CL", "PY", "BO", "PE", "EC", "CO", "VE", "MX", "ES",
   "GT", "HN", "SV", "NI", "CR", "PA", "CU", "DO", "PR", "GQ",
 ]);
-const BOT = /bot|crawl|spider|slurp|facebookexternalhit|embedly|preview|whatsapp|telegram|linkedin|twitter|discord|lighthouse/i;
+const BOT =
+  /bot|crawl|spider|slurp|facebookexternalhit|embedly|preview|whatsapp|telegram|linkedin|twitter|discord|lighthouse|chatgpt|openai|claude|anthropic|perplexity|google-extended|googleother|meta-externalagent|cohere|mistral|duckassist|-user\b/i;
 
 /** Español si el país (IP) o el idioma principal del navegador lo es; los bots siempre ven el inglés. */
 function prefersSpanish(request: NextRequest) {

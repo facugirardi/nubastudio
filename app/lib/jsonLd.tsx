@@ -8,6 +8,7 @@ import {
   SITE_URL,
   TEAM_MEMBERS,
   absoluteUrl,
+  type TeamMember,
 } from "./seo";
 import { seoText } from "./seoText";
 
@@ -19,6 +20,33 @@ function compact<T extends object>(obj: T): T {
 }
 
 const ORG_ID = `${SITE_URL}/#organization`;
+const personId = (m: TeamMember) => `${SITE_URL}/about#${m.id}`;
+
+const AREA_SERVED = [
+  { "@type": "Country", name: "Argentina" },
+  { "@type": "Place", name: "Latin America" },
+  { "@type": "Place", name: "Worldwide" },
+];
+
+/** Persona del equipo: una sola entidad por persona (mismo @id en todo el sitio). */
+export function personJsonLd(member: TeamMember, lang: Lang) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": personId(member),
+    name: member.name,
+    jobTitle: member.jobTitle,
+    image: absoluteUrl(member.photo),
+    url: langUrl(lang, "/about"),
+    worksFor: { "@id": ORG_ID },
+    knowsAbout: member.knowsAbout,
+    knowsLanguage: ["es", "en"],
+    homeLocation: { "@type": "Place", name: `${CONTACT.city}, Argentina` },
+    ...(member.profiles.length ? { sameAs: member.profiles } : {}),
+  };
+}
+
+export const teamJsonLd = (lang: Lang) => TEAM_MEMBERS.map((m) => personJsonLd(m, lang));
 /** Cada idioma es su propio WebSite (su URL y su inLanguage); la organización es una sola. */
 const siteId = (lang: Lang) => (lang === "en" ? `${SITE_URL}/#website` : `${SITE_URL}/es#website`);
 const langUrl = (lang: Lang, path: string) => absoluteUrl(localePath(lang, path));
@@ -31,7 +59,12 @@ export function organizationJsonLd(lang: Lang) {
     name: SITE_NAME,
     alternateName: "Nuba",
     url: langUrl(lang, "/"),
-    logo: absoluteUrl("/icon-512.png"),
+    logo: {
+      "@type": "ImageObject",
+      url: absoluteUrl("/icon-512.png"),
+      width: 512,
+      height: 512,
+    },
     image: absoluteUrl("/icon-512.png"),
     description: seoText[lang].siteDescription,
     slogan: seoText[lang].slogan,
@@ -56,17 +89,15 @@ export function organizationJsonLd(lang: Lang) {
           },
         }
       : {}),
+    founder: TEAM_MEMBERS.map((m) => ({ "@type": "Person", "@id": personId(m), name: m.name })),
     employee: TEAM_MEMBERS.map((m) => ({
       "@type": "Person",
+      "@id": personId(m),
       name: m.name,
-      jobTitle: m.role,
-      worksFor: { "@id": ORG_ID },
+      jobTitle: m.jobTitle,
     })),
-    areaServed: [
-      { "@type": "Country", name: "Argentina" },
-      { "@type": "Place", name: "Latin America" },
-      { "@type": "Place", name: "Worldwide" },
-    ],
+    numberOfEmployees: { "@type": "QuantitativeValue", value: TEAM_MEMBERS.length },
+    areaServed: AREA_SERVED,
     knowsAbout: [
       "Web design",
       "Web development",
@@ -74,6 +105,13 @@ export function organizationJsonLd(lang: Lang) {
       "Marketplace development",
       "Product design",
       "UI/UX design",
+      "MVP development",
+      "Custom software development",
+      "E-commerce development",
+      "Payment platforms",
+      "Next.js",
+      "React Native",
+      "Generative engine optimization",
     ],
     sameAs: PROFILES,
     contactPoint: [
@@ -197,10 +235,73 @@ export function servicesJsonLd(
         "@type": "Service",
         name: service.name,
         description: service.description,
+        serviceType: service.name,
         provider: { "@id": ORG_ID },
-        areaServed: { "@type": "Country", name: "Argentina" },
+        areaServed: AREA_SERVED,
       },
     })),
+  };
+}
+
+export function blogJsonLd(lang: Lang, items: { title: string; path: string }[]) {
+  const url = langUrl(lang, "/blog");
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": `${url}#blog`,
+    url,
+    name: seoText[lang].blog.name,
+    description: seoText[lang].blog.description,
+    inLanguage: lang,
+    publisher: { "@id": ORG_ID },
+    isPartOf: { "@id": siteId(lang) },
+    blogPost: items.map((item) => ({
+      "@type": "BlogPosting",
+      headline: item.title,
+      url: langUrl(lang, item.path),
+    })),
+  };
+}
+
+export function blogPostingJsonLd(
+  lang: Lang,
+  post: {
+    path: string;
+    title: string;
+    description: string;
+    date: string;
+    modified: string;
+    section: string;
+    words: number;
+    author: TeamMember;
+  }
+) {
+  const url = langUrl(lang, post.path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${url}#article`,
+    url,
+    mainEntityOfPage: url,
+    headline: post.title,
+    description: post.description,
+    image: `${url}/opengraph-image`,
+    datePublished: post.date,
+    dateModified: post.modified,
+    inLanguage: lang,
+    articleSection: post.section,
+    wordCount: post.words,
+    author: {
+      "@type": "Person",
+      "@id": personId(post.author),
+      name: post.author.name,
+      jobTitle: post.author.jobTitle,
+      url: langUrl(lang, "/about"),
+      worksFor: { "@id": ORG_ID },
+      ...(post.author.profiles.length ? { sameAs: post.author.profiles } : {}),
+    },
+    publisher: { "@id": ORG_ID },
+    isPartOf: { "@id": `${langUrl(lang, "/blog")}#blog` },
   };
 }
 

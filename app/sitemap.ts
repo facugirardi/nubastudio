@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
+import { lastModified, postPath, publishedPosts } from "./data/blog";
 import { visibleWorks } from "./data/works";
 import { LANGS, localePath } from "./lib/lang";
+import { hreflangMap, pathIn, type LocalizedPath } from "./lib/pageMeta";
 import { absoluteUrl } from "./lib/seo";
 
 /**
@@ -8,27 +10,29 @@ import { absoluteUrl } from "./lib/seo";
  * Usar `new Date()` marcaba todas las URLs como modificadas en cada deploy,
  * que es una señal ruidosa para el crawler. Actualizar a mano al editar copy.
  */
-const CONTENT_UPDATED = new Date("2026-11-12");
+const CONTENT_UPDATED = new Date("2026-11-14");
 
 type Entry = Pick<MetadataRoute.Sitemap[number], "changeFrequency" | "priority"> & {
-  path: string;
+  path: LocalizedPath;
   images?: string[];
+  modified?: Date;
 };
 
 /** Una entrada por idioma y página, cada una con la lista completa de hreflang. */
-function entriesFor({ path, images, ...rest }: Entry): MetadataRoute.Sitemap {
-  const languages: Record<string, string> = {};
-  for (const lang of LANGS) languages[lang] = absoluteUrl(localePath(lang, path));
-  languages["x-default"] = absoluteUrl(localePath("en", path));
+function entriesFor({ path, images, modified, ...rest }: Entry): MetadataRoute.Sitemap {
+  const languages = hreflangMap(path);
 
   return LANGS.map((lang) => ({
-    url: absoluteUrl(localePath(lang, path)),
-    lastModified: CONTENT_UPDATED,
+    url: absoluteUrl(localePath(lang, pathIn(path, lang))),
+    lastModified: modified ?? CONTENT_UPDATED,
     ...rest,
     alternates: { languages },
     ...(images ? { images: images.map((src) => absoluteUrl(src)) } : {}),
   }));
 }
+
+/** Los artículos programados entran solos al sitemap el día que se publican. */
+export const revalidate = 3600;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: Entry[] = [
@@ -37,6 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/about", changeFrequency: "monthly", priority: 0.8 },
     { path: "/services", changeFrequency: "monthly", priority: 0.9 },
     { path: "/contact", changeFrequency: "yearly", priority: 0.7 },
+    { path: "/blog", changeFrequency: "weekly", priority: 0.8 },
   ];
 
   const caseRoutes: Entry[] = visibleWorks.map((work) => ({
@@ -46,5 +51,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     images: work.images ?? [work.image],
   }));
 
-  return [...staticRoutes, ...caseRoutes].flatMap(entriesFor);
+  const postRoutes: Entry[] = publishedPosts().map((post) => ({
+    path: { en: postPath(post, "en"), es: postPath(post, "es") },
+    changeFrequency: "monthly",
+    priority: 0.7,
+    modified: new Date(lastModified(post)),
+  }));
+
+  return [...staticRoutes, ...caseRoutes, ...postRoutes].flatMap(entriesFor);
 }

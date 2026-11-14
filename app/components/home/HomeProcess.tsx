@@ -3,8 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { works } from "../../data/works";
-import { FOUNDED } from "../../lib/seo";
+import { FOUNDED, PROJECTS_SHIPPED } from "../../lib/seo";
 import { useLanguage } from "../../lib/i18n";
 import { getUiText } from "../../lib/uiText";
 import SectionHeading from "./SectionHeading";
@@ -64,7 +63,7 @@ export default function HomeProcess({ index = "03" }: { index?: string }) {
       count.textContent = "00";
       const state = { v: 0 };
       gsap.to(state, {
-        v: works.length,
+        v: PROJECTS_SHIPPED,
         duration: 1.6,
         ease: "power3.out",
         scrollTrigger: { trigger: count, start: "top 90%", once: true },
@@ -79,7 +78,7 @@ export default function HomeProcess({ index = "03" }: { index?: string }) {
 
   const stats = [
     { label: ui.about.since, value: FOUNDED },
-    { label: ui.about.projectsShipped, value: String(works.length).padStart(2, "0"), counter: true },
+    { label: ui.about.projectsShipped, value: String(PROJECTS_SHIPPED).padStart(2, "0"), counter: true },
     { label: ui.about.basedIn, value: "Córdoba, AR" },
   ];
 

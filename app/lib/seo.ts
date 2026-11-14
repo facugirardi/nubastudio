@@ -44,11 +44,47 @@ export const PROFILES: string[] = [
 ];
 
 export const FOUNDED = "2025";
+export const PROJECTS_SHIPPED = 9;
 
-export const TEAM_MEMBERS = [
-  { name: "Alejo Vaquero", role: "Design" },
-  { name: "Facundo Girardi", role: "Development" },
-  { name: "Ángel Vaquero", role: "Strategy" },
+export type TeamMember = {
+  id: string;
+  name: string;
+  role: "Design" | "Development" | "Strategy";
+  jobTitle: string;
+  photo: string;
+  /** Perfiles personales (LinkedIn, GitHub, Behance…): alimentan `sameAs` del Person. */
+  profiles: string[];
+  knowsAbout: string[];
+};
+
+export const TEAM_MEMBERS: TeamMember[] = [
+  {
+    id: "alejo-vaquero",
+    name: "Alejo Vaquero",
+    role: "Design",
+    jobTitle: "Product Designer",
+    photo: "/images/alejo.webp",
+    profiles: [],
+    knowsAbout: ["Product design", "UI/UX design", "Design systems", "Web design"],
+  },
+  {
+    id: "facundo-girardi",
+    name: "Facundo Girardi",
+    role: "Development",
+    jobTitle: "Software Developer",
+    photo: "/images/facu.webp",
+    profiles: [],
+    knowsAbout: ["Software development", "Next.js", "React Native", "TypeScript", "Web performance"],
+  },
+  {
+    id: "angel-vaquero",
+    name: "Ángel Vaquero",
+    role: "Strategy",
+    jobTitle: "Product Strategist",
+    photo: "/images/angelito.webp",
+    profiles: [],
+    knowsAbout: ["Product strategy", "MVP development", "Marketplaces", "Software project estimation"],
+  },
 ];
 
 export function absoluteUrl(path = "/"): string {

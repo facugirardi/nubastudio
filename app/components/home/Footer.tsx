@@ -13,6 +13,8 @@ import { ArrowUp, ArrowUpRight } from "../icons";
 gsap.registerPlugin(ScrollTrigger);
 
 const WORDMARK = "Nuba Studio";
+const wordClass =
+  "flex justify-center whitespace-pre text-[clamp(3.5rem,17.2vw,16rem)] font-semibold leading-[0.85] tracking-[-0.06em] text-transparent";
 
 function FooterLink({ href, children, external }: { href: string; children: React.ReactNode; external?: boolean }) {
   return (
@@ -34,7 +36,8 @@ export default function Footer() {
   const ui = getUiText(lang);
   const t = ui.home;
   const lenis = useLenis();
-  const wordRef = useRef<HTMLParagraphElement>(null);
+  const wordRef = useRef<HTMLDivElement>(null);
+  const spotRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const word = wordRef.current;
@@ -55,6 +58,48 @@ export default function Footer() {
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    const word = wordRef.current;
+    const spot = spotRef.current;
+    if (!word || !spot || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    const pos = { x: 0, y: 0 };
+    const apply = () => {
+      spot.style.setProperty("--x", `${pos.x}px`);
+      spot.style.setProperty("--y", `${pos.y}px`);
+    };
+    const move = (e: PointerEvent) => {
+      const r = word.getBoundingClientRect();
+      gsap.to(pos, { x: e.clientX - r.left, y: e.clientY - r.top, duration: 0.6, ease: "power3.out", overwrite: true, onUpdate: apply });
+    };
+    const enter = (e: PointerEvent) => {
+      const r = word.getBoundingClientRect();
+      pos.x = e.clientX - r.left;
+      pos.y = e.clientY - r.top;
+      apply();
+      gsap.to(spot, { opacity: 1, duration: 0.4, ease: "power2.out", overwrite: "auto" });
+    };
+    const leave = () => gsap.to(spot, { opacity: 0, duration: 0.6, ease: "power2.out", overwrite: "auto" });
+    word.addEventListener("pointerenter", enter);
+    word.addEventListener("pointermove", move);
+    word.addEventListener("pointerleave", leave);
+    return () => {
+      word.removeEventListener("pointerenter", enter);
+      word.removeEventListener("pointermove", move);
+      word.removeEventListener("pointerleave", leave);
+      gsap.killTweensOf(pos);
+      gsap.killTweensOf(spot);
+    };
+  }, []);
+
+  const renderWord = (gradient: string) =>
+    WORDMARK.split("").map((ch, i) => (
+      <span key={i} className="inline-block overflow-hidden">
+        <span data-char className={`inline-block bg-gradient-to-b bg-clip-text ${gradient}`}>
+          {ch}
+        </span>
+      </span>
+    ));
+
   const toTop = () => {
     if (lenis) lenis.scrollTo(0, { duration: 1.6 });
     else window.scrollTo({ top: 0, behavior: "smooth" });
@@ -67,6 +112,7 @@ export default function Footer() {
         { label: ui.nav.work, href: path("/works") },
         { label: ui.nav.services, href: path("/services") },
         { label: ui.nav.about, href: path("/about") },
+        { label: ui.nav.blog, href: path("/blog") },
         { label: ui.nav.contact, href: path("/contact") },
       ],
     },
@@ -128,19 +174,19 @@ export default function Footer() {
         </div>
 
         <div className="overflow-hidden border-t border-white/[0.07] px-3 pt-6 sm:px-6">
-          <p
-            ref={wordRef}
-            aria-hidden
-            className="flex translate-y-[14%] justify-center whitespace-pre text-[clamp(3.5rem,17.2vw,16rem)] font-semibold leading-[0.85] tracking-[-0.06em] text-transparent"
-          >
-            {WORDMARK.split("").map((ch, i) => (
-              <span key={i} className="inline-block overflow-hidden">
-                <span data-char className="inline-block bg-gradient-to-b from-white/[0.18] to-white/[0.02] bg-clip-text">
-                  {ch}
-                </span>
-              </span>
-            ))}
-          </p>
+          <div ref={wordRef} aria-hidden className="relative translate-y-[14%]">
+            <p className={wordClass}>{renderWord("from-white/[0.18] to-white/[0.02]")}</p>
+            <p
+              ref={spotRef}
+              className={`${wordClass} pointer-events-none absolute inset-0 opacity-0`}
+              style={{
+                maskImage: "radial-gradient(circle 18vw at var(--x, 50%) var(--y, 50%), #000 0%, rgba(0,0,0,0.45) 45%, transparent 100%)",
+                WebkitMaskImage: "radial-gradient(circle 18vw at var(--x, 50%) var(--y, 50%), #000 0%, rgba(0,0,0,0.45) 45%, transparent 100%)",
+              }}
+            >
+              {renderWord("from-[#C6FF00] to-[#C6FF00]/25")}
+            </p>
+          </div>
         </div>
       </div>
     </footer>

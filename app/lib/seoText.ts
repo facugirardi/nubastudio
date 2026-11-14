@@ -18,8 +18,9 @@ export type SeoText = {
   services: { title: string; description: string; ogTitle: string };
   contact: { title: string; description: string; ogTitle: string };
   works: { title: string; description: string; ogTitle: string };
+  blog: { title: string; description: string; ogTitle: string; name: string };
   /** Migas de pan del JSON-LD. */
-  crumbs: { home: string; works: string; about: string; services: string; contact: string };
+  crumbs: { home: string; about: string; services: string; contact: string; works: string; blog: string };
   /** Servicios del JSON-LD de /services. */
   serviceItems: { name: string; description: string }[];
   worksCollection: { name: string; description: string };
@@ -32,6 +33,7 @@ export type SeoText = {
     services: { title: string; accent: string; subtitle: string; footer: string };
     contact: { title: string; accent: string; subtitle: string; footer: string };
     works: { title: string; accent: string; subtitle: string; footer: string };
+    blog: { title: string; accent: string; subtitle: string; footer: string };
     caseLabel: string;
   };
   /** Texto del contenido que lee Google en la home sin tener que usar la espiral. */
@@ -96,7 +98,14 @@ export const seoText: Record<Lang, SeoText> = {
         "Case studies of websites, iOS and Android apps, marketplaces and platforms designed and built by Nuba Studio for clients in Argentina and abroad.",
       ogTitle: "Portfolio - Nuba Studio",
     },
-    crumbs: { home: "Home", works: "Work", about: "About", services: "Services", contact: "Contact" },
+    blog: {
+      title: "Blog - app, web and marketplace development guides",
+      description:
+        "Guides on what it costs to build an app or marketplace, how to scope an MVP and how to choose a development partner, from the Nuba Studio team.",
+      ogTitle: "Blog - Nuba Studio",
+      name: "Nuba Studio Blog",
+    },
+    crumbs: { home: "Home", about: "About", services: "Services", contact: "Contact", works: "Work", blog: "Blog" },
     serviceItems: [
       {
         name: "Web Development",
@@ -154,6 +163,12 @@ export const seoText: Record<Lang, SeoText> = {
         accent: "work",
         subtitle: "Websites, apps, marketplaces and platforms designed and built by Nuba Studio.",
         footer: "Portfolio",
+      },
+      blog: {
+        title: "Notes on building",
+        accent: "digital products",
+        subtitle: "Costs, MVPs, marketplaces and the tech behind them, from a studio that ships them.",
+        footer: "Blog",
       },
       caseLabel: "Case study by Nuba Studio",
     },
@@ -223,7 +238,14 @@ export const seoText: Record<Lang, SeoText> = {
         "Casos de estudio de sitios web, apps iOS y Android, marketplaces y plataformas que Nuba Studio diseñó y desarrolló para clientes de Argentina y el mundo.",
       ogTitle: "Portfolio - Nuba Studio",
     },
-    crumbs: { home: "Inicio", works: "Trabajos", about: "Nosotros", services: "Servicios", contact: "Contacto" },
+    blog: {
+      title: "Blog: guías para desarrollar apps y marketplaces",
+      description:
+        "Guías sobre cuánto cuesta desarrollar una app o un marketplace, cómo definir un MVP y cómo elegir con quién desarrollarlo, del equipo de Nuba Studio.",
+      ogTitle: "Blog - Nuba Studio",
+      name: "Blog de Nuba Studio",
+    },
+    crumbs: { home: "Inicio", about: "Nosotros", services: "Servicios", contact: "Contacto", works: "Trabajos", blog: "Blog" },
     serviceItems: [
       {
         name: "Desarrollo web",
@@ -286,6 +308,12 @@ export const seoText: Record<Lang, SeoText> = {
         accent: "seleccionados",
         subtitle: "Webs, apps, marketplaces y plataformas diseñadas y desarrolladas por Nuba Studio.",
         footer: "Portfolio",
+      },
+      blog: {
+        title: "Notas sobre cómo construir",
+        accent: "productos digitales",
+        subtitle: "Costos, MVPs, marketplaces y la tecnología detrás, de un estudio que los lanza.",
+        footer: "Blog",
       },
       caseLabel: "Caso de estudio de Nuba Studio",
     },

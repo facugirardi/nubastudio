@@ -6,13 +6,24 @@ import { seoText } from "./seoText";
 /**
  * canonical y hreflang de una página. Cada idioma tiene su canonical (apunta a
  * su propia URL: ninguna traducción apunta al inglés) y todas comparten la misma
- * lista de alternates, con x-default en la versión inglesa.
+ * lista de alternates, con x-default en la versión inglesa. `path` puede ser
+ * uno por idioma cuando la URL se traduce (los artículos del blog).
  */
-export function pageAlternates(lang: Lang, path: string): NonNullable<Metadata["alternates"]> {
+export type LocalizedPath = string | Record<Lang, string>;
+
+export function pathIn(path: LocalizedPath, lang: Lang): string {
+  return typeof path === "string" ? path : path[lang];
+}
+
+export function hreflangMap(path: LocalizedPath): Record<string, string> {
   const languages: Record<string, string> = {};
-  for (const l of LANGS) languages[l] = absoluteUrl(localePath(l, path));
-  languages["x-default"] = absoluteUrl(localePath("en", path));
-  return { canonical: absoluteUrl(localePath(lang, path)), languages };
+  for (const l of LANGS) languages[l] = absoluteUrl(localePath(l, pathIn(path, l)));
+  languages["x-default"] = absoluteUrl(localePath("en", pathIn(path, "en")));
+  return languages;
+}
+
+export function pageAlternates(lang: Lang, path: LocalizedPath): NonNullable<Metadata["alternates"]> {
+  return { canonical: absoluteUrl(localePath(lang, pathIn(path, lang))), languages: hreflangMap(path) };
 }
 
 /** Open Graph con la URL y el locale del idioma de la página (y el otro como alternativo). */

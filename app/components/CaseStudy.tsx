@@ -15,36 +15,20 @@ import {
   PORTRAIT_HERO_TOP,
   consumeCaseEntryDelay,
   markCaseHeroReady,
+  prefetchCase,
   startCaseTransition,
 } from "./caseTransition";
+import { useReveal } from "./home/useReveal";
+import { ArrowRight, ArrowUpRight } from "./icons";
+import FaqList from "./FaqList";
 import type { WorkItem } from "../data/works";
+import { getWorkFaq } from "../data/worksFaq";
 import { HERO_QUALITY, HERO_SIZES, heroImageSet } from "../lib/optimizedImage";
 import { localizeWork } from "../lib/localizeWork";
 import { useLanguage } from "../lib/i18n";
 import { getUiText, type UiText } from "../lib/uiText";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const ACCENT = "#C6FF00";
-
-function ExternalLinkIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <line x1="7" y1="17" x2="17" y2="7" />
-      <polyline points="7 7 17 7 17 17" />
-    </svg>
-  );
-}
 
 function platforms(links: WorkItem["links"] | undefined, t: UiText) {
   if (!links) return [];
@@ -57,16 +41,49 @@ function platforms(links: WorkItem["links"] | undefined, t: UiText) {
   return out;
 }
 
-export default function CaseStudy({ work: rawWork, next: rawNext }: { work: WorkItem; next: WorkItem }) {
+const pad = (n: number) => String(n).padStart(2, "0");
+
+function Label({ index, children }: { index: string; children: React.ReactNode }) {
+  return (
+    <p data-reveal className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
+      <span className="text-white/25">[{index}]</span> {children}
+    </p>
+  );
+}
+
+function MetaRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="grid grid-cols-[7rem_minmax(0,1fr)] items-baseline gap-4 border-b border-white/[0.08] py-4">
+      <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{label}</dt>
+      <dd className="m-0 text-[15px] text-[#EDEDED]">{children}</dd>
+    </div>
+  );
+}
+
+export type CaseArticle = { title: string; excerpt: string; href: string };
+
+export default function CaseStudy({
+  work: rawWork,
+  next: rawNext,
+  articles = [],
+}: {
+  work: WorkItem;
+  next: WorkItem;
+  articles?: CaseArticle[];
+}) {
   const router = useRouter();
   const lenis = useLenis();
   const rootRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const heroImgRef = useRef<HTMLDivElement>(null);
   const nextImgRef = useRef<HTMLImageElement>(null);
   const { lang, path } = useLanguage();
   const t = getUiText(lang);
+  const cs = t.caseStudy;
+  const faq = getWorkFaq(rawWork.slug, lang);
   const work = localizeWork(rawWork, lang);
   const next = localizeWork(rawNext, lang);
+  useReveal(contentRef);
 
   const links = platforms(work.links, t);
   const pairImages =
@@ -78,6 +95,15 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
   const gallery = (work.images ?? []).filter(
     (src) => (work.coverInGallery || src !== work.image) && !pairImages.includes(src)
   );
+
+  const chapters = [
+    { label: cs.challenge, body: work.task },
+    { label: cs.solution, body: work.solutions },
+    { label: cs.process, body: work.process },
+  ].filter((b): b is { label: string; body: string } => Boolean(b.body));
+
+  let section = 1;
+  const nextIndex = () => pad(++section);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -102,17 +128,21 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
     preload.src = nextSet.src;
 
     const entryDelay = consumeCaseEntryDelay();
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const ctx = gsap.context(() => {
-      // Hero: título + meta entran (el overlay de transición ya reveló la imagen)
-      gsap.from("[data-hero]", {
-        y: 40,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        stagger: 0.12,
-        delay: entryDelay,
-      });
+      if (!reduced) {
+        gsap.from("[data-hero]", {
+          y: 28,
+          opacity: 0,
+          filter: "blur(8px)",
+          duration: 1.2,
+          ease: "expo.out",
+          stagger: 0.07,
+          delay: entryDelay,
+          clearProps: "filter",
+        });
+      }
 
       // Parallax del hero: scrub numérico → la imagen persigue al scroll con
       // inercia propia en vez de pegarse frame a frame.
@@ -133,53 +163,25 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
         });
       }
 
-      // Reveal escalonado de bloques de texto
-      gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) => {
-        gsap.from(el, {
-          y: 46,
-          opacity: 0,
-          duration: 0.95,
-          ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 85%" },
+      if (!reduced) {
+        gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { yPercent: -5 },
+            {
+              yPercent: 5,
+              ease: "none",
+              force3D: true,
+              scrollTrigger: {
+                trigger: el.parentElement,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1,
+                invalidateOnRefresh: true,
+              },
+            }
+          );
         });
-      });
-
-      // Líneas lima de las features crecen al entrar
-      gsap.utils.toArray<HTMLElement>("[data-line]").forEach((el) => {
-        gsap.from(el, {
-          scaleX: 0,
-          transformOrigin: "left",
-          duration: 0.9,
-          ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 90%" },
-        });
-      });
-
-      // Parallax sutil en las imágenes de galería
-      gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el, i) => {
-        gsap.fromTo(
-          el,
-          // El wrapper sobra 16% arriba y abajo: el recorrido se queda dentro.
-          { yPercent: i % 2 === 0 ? 8 : 12 },
-          {
-            yPercent: i % 2 === 0 ? -8 : -12,
-            ease: "none",
-            force3D: true,
-            scrollTrigger: {
-              trigger: el.parentElement,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
-          }
-        );
-      });
-
-      // Marquee infinito del stack
-      const track = document.querySelector<HTMLElement>("[data-marquee]");
-      if (track) {
-        gsap.to(track, { xPercent: -50, duration: 22, ease: "none", repeat: -1 });
       }
     }, rootRef);
 
@@ -205,37 +207,20 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
   };
 
   return (
-    <div ref={rootRef} style={{ background: "#000", color: "#fff", position: "relative", overflow: "hidden" }}>
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: -1,
-          pointerEvents: "none",
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-          backgroundSize: "55px 55px",
-        }}
-      />
+    <div ref={rootRef} className="relative overflow-hidden bg-black font-display text-[#EDEDED]">
       <Navbar />
 
-      {/* ───────── Hero fullscreen (match con el final del morph) ───────── */}
-      <section className="cs-hero" style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
-        {/* El box mide 120vh centrado: el overlay del morph aterriza en este mismo encuadre. */}
+      {/* Hero fullscreen: el morph de la card aterriza en este mismo encuadre. */}
+      <section className="cs-hero relative h-screen overflow-hidden">
         <div
           ref={heroImgRef}
-          className="cs-hero-media"
-          style={{
-            position: "absolute",
-            inset: `${(-HERO_OVERSCAN / 2) * 100}% 0`,
-            zIndex: 0,
-            willChange: "transform",
-          }}
+          className="cs-hero-media absolute inset-x-0 z-0 will-change-transform"
+          style={{ top: `${(-HERO_OVERSCAN / 2) * 100}%`, bottom: `${(-HERO_OVERSCAN / 2) * 100}%` }}
         >
           <Image
             className="cs-hero-img"
             src={work.image}
-            alt={`${work.title} - ${work.subtitle} ${t.caseStudy.caseByline}`}
+            alt={`${work.title} - ${work.subtitle} ${cs.caseByline}`}
             fill
             priority
             quality={HERO_QUALITY}
@@ -244,342 +229,346 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
           />
         </div>
         <div
-          className="cs-hero-shade"
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 1,
-            background: "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.2) 45%, rgba(0,0,0,0.45) 100%)",
-          }}
+          aria-hidden
+          className="cs-hero-shade absolute inset-0 z-[1] bg-[linear-gradient(to_top,#000_0%,rgba(0,0,0,0.55)_32%,rgba(0,0,0,0.05)_62%,rgba(0,0,0,0.4)_100%)]"
         />
-        <div
-          className="cs-hero-text"
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 2,
-            padding: "0 6vw 6vh",
-          }}
-        >
-          {/* Breadcrumb visible que refleja el BreadcrumbList del JSON-LD. */}
-          <nav
-            data-hero
-            aria-label={t.caseStudy.breadcrumb}
-            style={{ marginBottom: "1rem", fontSize: "0.72rem", letterSpacing: "0.12em", textTransform: "uppercase" }}
-          >
-            <ol style={{ display: "flex", alignItems: "center", gap: "0.55rem", listStyle: "none", margin: 0, padding: 0 }}>
-              <li>
-                <Link href={path("/")} style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
-                  {t.caseStudy.home}
-                </Link>
-              </li>
-              <li aria-hidden style={{ color: "rgba(255,255,255,0.28)" }}>/</li>
-              <li aria-current="page" style={{ color: "rgba(255,255,255,0.72)" }}>
-                {work.title}
-              </li>
-            </ol>
-          </nav>
 
-          <div data-hero style={{ display: "flex", alignItems: "center", marginBottom: "1.4rem" }}>
-            <span style={{ textTransform: "uppercase", letterSpacing: "0.22em", fontSize: "0.72rem", color: ACCENT }}>
-              {work.subtitle}
-            </span>
-          </div>
-          <h1
-            data-hero
-            style={{
-              fontSize: "clamp(3rem, 11vw, 11rem)",
-              lineHeight: 0.92,
-              letterSpacing: "-0.04em",
-              fontWeight: 600,
-              margin: 0,
-            }}
-          >
-            {work.title}
-          </h1>
-        </div>
-        <div
-          data-hero
-          style={{
-            position: "absolute",
-            right: "6vw",
-            bottom: "6vh",
-            zIndex: 2,
-            fontSize: "0.6rem",
-            letterSpacing: "0.25em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.4)",
-          }}
-        >
-          {t.caseStudy.scroll}
-        </div>
-      </section>
+        <div className="cs-hero-text absolute inset-x-0 bottom-0 z-[2]">
+          <div className="mx-auto max-w-[1400px] px-5 pb-10 sm:px-8 lg:px-10 lg:pb-14">
+            <nav data-hero aria-label={cs.breadcrumb} className="font-mono text-[11px] uppercase tracking-[0.08em]">
+              <ol className="flex flex-wrap items-center gap-2">
+                <li>
+                  <Link href={path("/")} className="text-white/45 transition-colors hover:text-[#EDEDED]">
+                    {cs.home}
+                  </Link>
+                </li>
+                <li aria-hidden className="text-white/25">/</li>
+                <li>
+                  <Link href={path("/works")} className="text-white/45 transition-colors hover:text-[#EDEDED]">
+                    {cs.work}
+                  </Link>
+                </li>
+                <li aria-hidden className="text-white/25">/</li>
+                <li aria-current="page" className="text-white/75">
+                  {work.title}
+                </li>
+              </ol>
+            </nav>
 
-      {/* ───────── Intro / overview ───────── */}
-      <section style={{ padding: "clamp(5rem, 12vw, 11rem) 6vw", maxWidth: 1400, margin: "0 auto" }}>
-        <div style={{ display: "grid", gap: "3rem", gridTemplateColumns: "minmax(0, 1fr)" }} className="cs-intro-grid">
-          <div data-reveal style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", alignSelf: "start" }}>
-            {(work.technologies ?? []).slice(0, 4).map((t) => (
-              <span
-                key={t}
-                style={{
-                  border: "1px solid rgba(255,255,255,0.16)",
-                  borderRadius: 999,
-                  padding: "0.35rem 0.9rem",
-                  fontSize: "0.72rem",
-                  color: "rgba(255,255,255,0.7)",
-                  whiteSpace: "nowrap",
-                }}
+            <div className="mt-6 flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+              <h1
+                data-hero
+                className="max-w-[14ch] text-[clamp(3rem,9vw,8.5rem)] font-[450] leading-[0.92] tracking-[-0.06em]"
               >
-                {t}
-              </span>
-            ))}
+                {work.title}
+              </h1>
+              <div data-hero className="flex flex-wrap items-center gap-2 pb-2">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.14] bg-black/40 px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.06em] text-white/70 backdrop-blur-md">
+                  <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-[#C6FF00]" />
+                  {work.subtitle}
+                </span>
+                {work.year ? (
+                  <span className="rounded-full border border-white/[0.14] bg-black/40 px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.06em] text-white/50 backdrop-blur-md">
+                    {work.year}
+                  </span>
+                ) : null}
+              </div>
+            </div>
           </div>
-          <p
-            data-reveal
-            style={{
-              fontSize: "clamp(1.4rem, 3.2vw, 2.6rem)",
-              lineHeight: 1.28,
-              letterSpacing: "-0.02em",
-              color: "rgba(255,255,255,0.92)",
-              margin: 0,
-            }}
-          >
-            {work.description}
-          </p>
         </div>
       </section>
 
-      {/* ───────── Challenge / Solution / Process (sticky bicolumna) ───────── */}
-      {[
-        { label: t.caseStudy.challenge, body: work.task },
-        { label: t.caseStudy.solution, body: work.solutions },
-        { label: t.caseStudy.process, body: work.process },
-      ]
-        .filter((b) => b.body)
-        .map((b) => (
-          <section
-            key={b.label}
-            style={{ padding: "0 6vw clamp(4rem, 9vw, 8rem)", maxWidth: 1400, margin: "0 auto" }}
-          >
-            <div className="cs-two-col" style={{ display: "grid", gap: "2.5rem", gridTemplateColumns: "1fr" }}>
-              <div>
-                <h2
+      <div ref={contentRef} className="relative">
+        <div className="mx-auto max-w-[1400px] border-x border-white/[0.07]">
+          {/* Overview */}
+          <section className="grid gap-12 border-b border-white/[0.07] px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-20 lg:px-10 lg:py-28">
+            <div>
+              <Label index="01">{cs.overview}</Label>
+              {work.description ? (
+                <p
                   data-reveal
-                  style={{
-                    position: "sticky",
-                    top: "18vh",
-                    fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-                    letterSpacing: "-0.03em",
-                    fontWeight: 500,
-                    margin: 0,
-                  }}
+                  className="mt-6 text-[clamp(1.5rem,2.6vw,2.25rem)] font-[450] leading-[1.22] tracking-[-0.035em] text-[#EDEDED]"
                 >
-                  <span
-                    aria-hidden
-                    style={{ display: "inline-block", width: "0.9em", height: "0.07em", background: ACCENT, verticalAlign: "0.28em" }}
-                  />{" "}
-                  {b.label}
-                </h2>
+                  {work.description}
+                </p>
+              ) : null}
+            </div>
+
+            <dl data-reveal className="m-0 self-end border-t border-white/[0.08]">
+              {work.year ? <MetaRow label={cs.year}>{work.year}</MetaRow> : null}
+              <MetaRow label={cs.discipline}>{work.subtitle}</MetaRow>
+              {work.technologies?.length ? (
+                <MetaRow label={cs.stack}>
+                  <ul className="flex flex-wrap gap-1.5">
+                    {work.technologies.map((tech) => (
+                      <li
+                        key={tech}
+                        className="rounded-full border border-white/[0.1] px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.04em] text-white/55"
+                      >
+                        {tech}
+                      </li>
+                    ))}
+                  </ul>
+                </MetaRow>
+              ) : null}
+              {links.length ? (
+                <MetaRow label={cs.links}>
+                  <ul className="flex flex-col gap-2">
+                    {links.map((l) => (
+                      <li key={l.href}>
+                        <a
+                          href={l.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group/l inline-flex items-center gap-1.5 text-[#EDEDED] underline decoration-white/20 underline-offset-4 transition-colors hover:decoration-[#C6FF00]"
+                        >
+                          {l.label}
+                          <ArrowUpRight
+                            size={10}
+                            className="text-white/40 transition-transform duration-200 group-hover/l:-translate-y-px group-hover/l:translate-x-px"
+                          />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </MetaRow>
+              ) : null}
+            </dl>
+          </section>
+
+          {/* Desafío / Solución / Proceso */}
+          {chapters.length ? (
+            <ol className="border-b border-white/[0.07]">
+              {chapters.map((b, i) => (
+                <li
+                  key={b.label}
+                  className={`grid lg:grid-cols-2 ${i > 0 ? "border-t border-white/[0.07]" : ""}`}
+                >
+                  <div className="px-5 pb-6 pt-16 sm:px-8 lg:border-r lg:border-white/[0.07] lg:px-10 lg:py-24">
+                    <div className="lg:sticky lg:top-32">
+                      <Label index={nextIndex()}>{pad(i + 1)} / {pad(chapters.length)}</Label>
+                      <h2
+                        data-reveal
+                        className="mt-5 text-[clamp(2rem,3.4vw,3rem)] font-[450] leading-[1.02] tracking-[-0.05em] text-[#EDEDED]"
+                      >
+                        {b.label}
+                      </h2>
+                    </div>
+                  </div>
+                  <p
+                    data-reveal
+                    className="m-0 max-w-[60ch] px-5 pb-16 text-[17px] leading-[1.7] text-white/60 sm:px-8 lg:px-10 lg:py-24 lg:text-[18px]"
+                  >
+                    {b.body}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          ) : null}
+
+          {/* Galería */}
+          {gallery.length || pairImages.length ? (
+            <section className="border-b border-white/[0.07] px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
+              <Label index={nextIndex()}>{cs.gallery}</Label>
+              <div className="mt-10 grid gap-4 sm:gap-5 lg:grid-cols-2">
+                {gallery.map((src, i) => {
+                  const wide = i % 3 === 0 || (i % 3 === 1 && i === gallery.length - 1);
+                  return (
+                    <figure
+                      key={src}
+                      data-reveal
+                      className={`relative m-0 aspect-[16/10] overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] ${
+                        wide ? "lg:col-span-2" : ""
+                      }`}
+                    >
+                      <div data-parallax className="absolute inset-x-0 -inset-y-[6%] will-change-transform">
+                        <Image
+                          src={src}
+                          alt={`${work.title} - ${work.subtitle}, ${cs.screenWord} ${i + 1}`}
+                          fill
+                          quality={95}
+                          sizes={wide ? "(max-width: 1440px) 100vw, 1320px" : "(max-width: 1023px) 100vw, 660px"}
+                          className="object-cover"
+                        />
+                      </div>
+                      <span aria-hidden className="pointer-events-none absolute inset-0 rounded-xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]" />
+                      <figcaption className="absolute left-4 top-3 font-mono text-[10.5px] uppercase tracking-[0.08em] text-white/50 mix-blend-difference">
+                        {pad(i + 1)} / {pad(gallery.length)}
+                      </figcaption>
+                    </figure>
+                  );
+                })}
+
+                {pairImages.map((src, i) => (
+                  <figure
+                    key={src}
+                    data-reveal
+                    className="relative m-0 flex items-center justify-center overflow-hidden rounded-xl border border-white/[0.08] bg-[#050505] p-6 sm:p-10"
+                  >
+                    <Image
+                      src={src}
+                      alt={`${work.title} - ${work.subtitle}, ${cs.screenWord} ${gallery.length + i + 1}`}
+                      width={2400}
+                      height={1600}
+                      quality={95}
+                      sizes="(max-width: 1023px) 100vw, 660px"
+                      className="h-auto w-full max-w-[520px] object-contain"
+                    />
+                  </figure>
+                ))}
               </div>
+            </section>
+          ) : null}
+
+          {/* Funcionalidades */}
+          {work.features?.length ? (
+            <section className="border-b border-white/[0.07]">
+              <div className="px-5 pb-10 pt-20 sm:px-8 lg:px-10 lg:pb-12 lg:pt-28">
+                <Label index={nextIndex()}>{cs.keyFeatures}</Label>
+              </div>
+              <ul className="grid sm:grid-cols-2">
+                {work.features.map((f, i) => (
+                  <li
+                    key={f}
+                    data-reveal
+                    className="group/f relative flex items-baseline gap-5 border-t border-white/[0.07] px-5 py-6 transition-colors duration-300 hover:bg-white/[0.02] sm:px-8 sm:odd:border-r lg:px-10 lg:py-8"
+                  >
+                    <span className="font-mono text-[11px] text-white/30 transition-colors duration-300 group-hover/f:text-[#C6FF00]">
+                      {pad(i + 1)}
+                    </span>
+                    <span className="text-[clamp(1.05rem,1.5vw,1.3rem)] tracking-[-0.025em] text-white/80">{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
+          {/* Resultado */}
+          {work.result ? (
+            <section className="relative isolate overflow-hidden border-b border-white/[0.07] px-5 py-20 sm:px-8 lg:px-10 lg:py-32">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 -z-10 [background-image:linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_60%_80%_at_30%_50%,black,transparent_75%)]"
+              />
+              <Label index={nextIndex()}>{cs.theResult}</Label>
               <p
                 data-reveal
-                style={{
-                  fontSize: "clamp(1.05rem, 1.5vw, 1.4rem)",
-                  lineHeight: 1.7,
-                  color: "rgba(255,255,255,0.62)",
-                  margin: 0,
-                  maxWidth: 720,
-                }}
+                className="mt-6 max-w-[34ch] text-[clamp(1.6rem,3vw,2.6rem)] font-[450] leading-[1.18] tracking-[-0.04em]"
               >
-                {b.body}
+                {work.result}
               </p>
-            </div>
-          </section>
-        ))}
-
-      {/* ───────── Galería con parallax alternado ───────── */}
-      {(gallery.length > 0 || pairImages.length > 0) && (
-        <section style={{ padding: "clamp(2rem, 6vw, 5rem) 6vw", display: "flex", flexDirection: "column", gap: "clamp(4rem, 9vw, 8rem)" }}>
-          {gallery.length > 0 &&
-            gallery.map((src, i) => (
-              <figure
-                key={src}
-                style={{
-                  margin: 0,
-                  overflow: "hidden",
-                  borderRadius: 16,
-                  alignSelf: i % 3 === 0 ? "stretch" : i % 3 === 1 ? "flex-end" : "flex-start",
-                  width: i % 3 === 0 ? "100%" : "min(78%, 1000px)",
-                  aspectRatio: "16 / 10",
-                  position: "relative",
-                }}
-              >
-                {/* El sobreancho vertical vive en el wrapper: la Image con fill
-                    no admite height propio y el transform va sobre el div. */}
-                <div
-                  data-parallax
-                  style={{ position: "absolute", inset: "-16% 0", willChange: "transform" }}
-                >
-                  <Image
-                    src={src}
-                    alt={`${work.title} - ${work.subtitle}, ${t.caseStudy.screenWord} ${i + 1}`}
-                    fill
-                    quality={95}
-                    sizes={i % 3 === 0 ? "110vw" : "(max-width: 1460px) 86vw, 1240px"}
-                    style={{ objectFit: "cover", display: "block" }}
-                  />
+              {links.length ? (
+                <div data-reveal className="mt-10 flex flex-wrap gap-2.5 sm:gap-3">
+                  {links.map((l, i) => (
+                    <a
+                      key={l.href}
+                      href={l.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={
+                        i === 0
+                          ? "group/cta inline-flex h-11 items-center gap-2 rounded-full bg-[#EDEDED] pl-5 pr-4 text-[15px] font-medium text-black transition-colors duration-150 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C6FF00]"
+                          : "group/cta inline-flex h-11 items-center gap-2 rounded-full border border-white/[0.14] bg-white/[0.02] px-5 text-[15px] font-medium text-[#EDEDED] transition-colors duration-150 hover:border-white/25 hover:bg-white/[0.07] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C6FF00]"
+                      }
+                    >
+                      {l.label}
+                      <ArrowUpRight
+                        size={11}
+                        className={`transition-transform duration-200 group-hover/cta:-translate-y-px group-hover/cta:translate-x-px ${i === 0 ? "" : "text-white/45"}`}
+                      />
+                    </a>
+                  ))}
                 </div>
-              </figure>
-            ))}
+              ) : null}
+            </section>
+          ) : null}
 
-          {pairImages.length > 0 && (
-            <div className="cs-pair-row">
-              {pairImages.map((src, i) => (
-                <figure key={src} className="cs-pair-figure">
-                  <Image
-                    src={src}
-                    alt={`${work.title} - ${work.subtitle}, ${t.caseStudy.screenWord} ${i + 1}`}
-                    width={2400}
-                    height={1600}
-                    quality={95}
-                    sizes="(max-width: 900px) 100vw, 50vw"
-                  />
-                </figure>
-              ))}
-            </div>
-          )}
-        </section>
-      )}
+          {faq.length ? (
+            <section className="grid gap-10 border-b border-white/[0.07] px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-20 lg:px-10 lg:py-28">
+              <Label index={nextIndex()}>{cs.faq}</Label>
+              <div data-reveal>
+                <FaqList items={faq} />
+              </div>
+            </section>
+          ) : null}
 
-      {/* ───────── Features numeradas ───────── */}
-      {work.features && work.features.length > 0 && (
-        <section style={{ padding: "clamp(4rem, 10vw, 9rem) 6vw", maxWidth: 1200, margin: "0 auto" }}>
-          <h2 data-reveal style={{ fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginBottom: "2.5rem" }}>
-            {t.caseStudy.keyFeatures}
-          </h2>
-          <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-            {work.features.map((f, i) => (
-              <li key={f} data-reveal style={{ padding: "1.4rem 0", position: "relative" }}>
-                <div data-line style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "rgba(255,255,255,0.12)" }} />
-                <div style={{ display: "flex", alignItems: "baseline", gap: "1.5rem" }}>
-                  <span style={{ color: ACCENT, fontSize: "0.8rem", fontVariantNumeric: "tabular-nums", minWidth: "2rem" }}>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.7rem)", letterSpacing: "-0.02em" }}>{f}</span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+          {articles.length ? (
+            <section className="grid gap-10 border-b border-white/[0.07] px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-20 lg:px-10 lg:py-28">
+              <Label index={nextIndex()}>{cs.relatedArticles}</Label>
+              <ul data-reveal className="border-t border-white/[0.08]">
+                {articles.map((article) => (
+                  <li key={article.href} className="border-b border-white/[0.08]">
+                    <a href={article.href} className="group/article flex items-start justify-between gap-6 py-6">
+                      <span>
+                        <span className="block text-[clamp(1.15rem,1.6vw,1.4rem)] font-[450] leading-[1.25] tracking-[-0.03em] text-[#EDEDED]">
+                          {article.title}
+                        </span>
+                        <span className="mt-2 line-clamp-2 block max-w-[60ch] text-[15px] leading-[1.6] text-white/50">{article.excerpt}</span>
+                      </span>
+                      <ArrowUpRight
+                        size={12}
+                        className="mt-2 shrink-0 text-white/40 transition-colors group-hover/article:text-[#C6FF00]"
+                      />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
 
-      {/* ───────── Result ───────── */}
-      {work.result && (
-        <section style={{ padding: "clamp(4rem, 9vw, 8rem) 6vw", maxWidth: 1100, margin: "0 auto" }}>
-          <h2 data-reveal style={{ fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: ACCENT, marginBottom: "1.6rem" }}>
-            {t.caseStudy.theResult}
-          </h2>
-          <p data-reveal style={{ fontSize: "clamp(1.3rem, 2.8vw, 2.2rem)", lineHeight: 1.4, letterSpacing: "-0.02em", margin: 0 }}>
-            {work.result}
-          </p>
-          {links.length > 0 && (
-            <div data-reveal style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginTop: "2.8rem" }}>
-              {links.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cs-cta"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.6rem",
-                    padding: "0.85rem 1.6rem",
-                    borderRadius: 999,
-                    background: ACCENT,
-                    color: "#000",
-                    fontWeight: 500,
-                    fontSize: "0.95rem",
-                    textDecoration: "none",
-                  }}
-                >
-                  {l.label}
-                  <ExternalLinkIcon />
-                </a>
-              ))}
-            </div>
-          )}
-        </section>
-      )}
-
-      {/* ───────── Marquee del stack ───────── */}
-      {work.technologies && work.technologies.length > 0 && (
-        <section style={{ padding: "clamp(3rem, 7vw, 6rem) 0", borderTop: "1px solid rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(255,255,255,0.1)", overflow: "hidden" }}>
-          <div data-marquee style={{ display: "flex", width: "max-content", gap: "3rem", whiteSpace: "nowrap" }}>
-            {[...work.technologies, ...work.technologies, ...work.technologies, ...work.technologies].map((t, i) => (
-              <span key={i} style={{ fontSize: "clamp(1.4rem, 3vw, 2.6rem)", letterSpacing: "-0.02em", color: "rgba(255,255,255,0.5)", display: "inline-flex", alignItems: "center", gap: "3rem" }}>
-                {t}
-                <span style={{ color: ACCENT, fontSize: "0.9em" }}>✦</span>
+          {/* Próximo proyecto */}
+          <Link
+            href={path(`/cases/${next.slug}`)}
+            onClick={(e) => {
+              // Deja pasar cmd/ctrl/shift-click y el boton del medio al navegador.
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+              e.preventDefault();
+              goNext();
+            }}
+            onPointerEnter={() => prefetchCase(next.slug)}
+            aria-label={`${cs.nextProject}: ${next.title} - ${next.subtitle}`}
+            className="group/next grid gap-8 px-5 py-16 outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-[#C6FF00] sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-center lg:gap-16 lg:px-10 lg:py-24"
+          >
+            <div className="flex flex-col gap-6">
+              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
+                <span className="text-white/25">[→]</span> {cs.nextProject}
+              </p>
+              <div>
+                <p className="text-[clamp(2.5rem,6vw,5.5rem)] font-[450] leading-[0.95] tracking-[-0.06em] transition-colors duration-300 group-hover/next:text-white">
+                  {next.title}
+                </p>
+                <p className="mt-3 text-[15px] text-white/50">{next.subtitle}</p>
+              </div>
+              <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.12] text-white/60 transition-[background-color,color,border-color,transform] duration-300 ease-out group-hover/next:translate-x-1 group-hover/next:border-[#EDEDED] group-hover/next:bg-[#EDEDED] group-hover/next:text-black">
+                <ArrowRight />
               </span>
-            ))}
-          </div>
-        </section>
-      )}
+            </div>
+            <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]">
+              <Image
+                ref={nextImgRef}
+                src={next.image}
+                alt={`${next.title} - ${next.subtitle}`}
+                fill
+                sizes="(max-width: 1023px) 100vw, 760px"
+                className="object-cover opacity-70 transition-[opacity,transform] duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/next:scale-[1.035] group-hover/next:opacity-100"
+              />
+              <span aria-hidden className="pointer-events-none absolute inset-0 rounded-xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]" />
+            </div>
+          </Link>
 
-      {/* ───────── Next case ───────── */}
-      <Link
-        href={path(`/cases/${next.slug}`)}
-        onClick={(e) => {
-          // Deja pasar cmd/ctrl/shift-click y el boton del medio al navegador.
-          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-          e.preventDefault();
-          goNext();
-        }}
-        style={{ position: "relative", height: "70vh", overflow: "hidden", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", color: "inherit" }}
-        className="cs-next"
-        aria-label={`${t.caseStudy.nextProject}: ${next.title} - ${next.subtitle}`}
-      >
-        <Image
-          ref={nextImgRef}
-          src={next.image}
-          alt={`${next.title} - ${next.subtitle}`}
-          fill
-          sizes="100vw"
-          style={{ objectFit: "cover", opacity: 0.35, transition: "opacity 0.5s ease, transform 0.8s ease" }}
-        />
-        <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} />
-        <div style={{ position: "relative", zIndex: 2, textAlign: "center" }}>
-          <div style={{ textTransform: "uppercase", letterSpacing: "0.25em", fontSize: "0.72rem", color: ACCENT, marginBottom: "1rem" }}>
-            {t.caseStudy.nextProject}
-          </div>
-          <div style={{ fontSize: "clamp(2.6rem, 9vw, 8rem)", lineHeight: 0.95, letterSpacing: "-0.04em", fontWeight: 600 }}>
-            {next.title}
+          <div className="flex justify-center border-t border-white/[0.07] py-6">
+            <Link
+              href={path("/works")}
+              className="group/all inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-white/45 transition-colors hover:text-[#EDEDED]"
+            >
+              {cs.allWork}
+              <ArrowRight size={12} className="transition-transform duration-200 group-hover/all:translate-x-0.5" />
+            </Link>
           </div>
         </div>
-      </Link>
+      </div>
 
       <style>{`
-        .cs-pair-row {
-          display: flex;
-          gap: clamp(1rem, 2.5vw, 2rem);
-          justify-content: center;
-          align-items: flex-start;
-          width: 100%;
-          max-width: 1100px;
-          margin: 0 auto;
-        }
-        .cs-pair-figure {
-          margin: 0;
-          flex: 1 1 calc(50% - 1rem);
-          max-width: 520px;
-          min-width: 0;
-          border-radius: 16;
-          overflow: hidden;
-        }
         .cs-hero-img { object-fit: cover; }
         @media ${PORTRAIT} {
           .cs-hero-img { object-fit: contain; }
@@ -596,34 +585,9 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
             transform: none !important;
           }
           .cs-hero-shade { display: none; }
-          .cs-hero-text { position: relative !important; padding: 1.75rem 6vw 2.5rem !important; }
+          .cs-hero-text { position: relative !important; }
+          .cs-hero-text > div { padding-top: 1.75rem; }
         }
-        .cs-pair-figure img {
-          width: 100%;
-          height: auto;
-          display: block;
-          object-fit: contain;
-        }
-        @media (min-width: 900px) {
-          .cs-intro-grid { grid-template-columns: 280px 1fr !important; gap: 5rem !important; }
-          .cs-two-col { grid-template-columns: 1fr 1fr !important; gap: 5rem !important; }
-        }
-        @media (max-width: 699px) {
-          .cs-pair-row {
-            flex-direction: column;
-            align-items: center;
-            max-width: 100%;
-          }
-          .cs-pair-row figure,
-          .cs-pair-figure {
-            flex: 1 1 100%;
-            max-width: min(520px, 100%) !important;
-            width: 100%;
-          }
-        }
-        .cs-cta { transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), background 0.3s ease; }
-        .cs-cta:hover { transform: translateY(-3px); background: #d4ff33; }
-        .cs-next:hover img { opacity: 0.6 !important; transform: scale(1.04); }
       `}</style>
     </div>
   );

@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SmoothScroll from "../../../components/SmoothScroll";
 import CaseStudy from "../../../components/CaseStudy";
+import Footer from "../../../components/home/Footer";
+import { postPath, postsForCase } from "../../../data/blog";
 import { getWork, getNextWork, works } from "../../../data/works";
-import { JsonLd, breadcrumbJsonLd, caseStudyJsonLd } from "../../../lib/jsonLd";
+import { getWorkFaq } from "../../../data/worksFaq";
+import { JsonLd, breadcrumbJsonLd, caseStudyJsonLd, faqJsonLd } from "../../../lib/jsonLd";
 import { isLang, localePath } from "../../../lib/lang";
 import { localizeWork } from "../../../lib/localizeWork";
 import { pageMetadata } from "../../../lib/pageMeta";
@@ -18,6 +21,8 @@ export function generateStaticParams() {
 }
 
 export const dynamicParams = false;
+/** Los artículos que recomiendan el caso aparecen el día que se publican. */
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang, slug } = await params;
@@ -46,6 +51,12 @@ export default async function CasePage({ params }: Props) {
   const found = getWork(slug);
   if (!isLang(lang) || !found) notFound();
   const work = localizeWork(found, lang);
+  const faq = getWorkFaq(work.slug, lang);
+  const articles = postsForCase(work.slug).map((post) => ({
+    title: post.content[lang].title,
+    excerpt: post.content[lang].excerpt,
+    href: localePath(lang, postPath(post, lang)),
+  }));
 
   return (
     <>
@@ -57,12 +68,14 @@ export default async function CasePage({ params }: Props) {
             { name: seoText[lang].crumbs.works, path: localePath(lang, "/works") },
             { name: work.title, path: localePath(lang, `/cases/${work.slug}`) },
           ]),
+          ...(faq.length ? [faqJsonLd(faq)] : []),
         ]}
       />
       <SmoothScroll>
         <main>
-          <CaseStudy work={found} next={getNextWork(slug)} />
+          <CaseStudy work={found} next={getNextWork(slug)} articles={articles} />
         </main>
+        <Footer />
       </SmoothScroll>
     </>
   );

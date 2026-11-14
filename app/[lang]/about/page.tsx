@@ -5,7 +5,7 @@ import HomeCta from "../../components/home/HomeCta";
 import Footer from "../../components/home/Footer";
 import Navbar from "../../components/Navbar";
 import SmoothScroll from "../../components/SmoothScroll";
-import { JsonLd, breadcrumbJsonLd, webPageJsonLd } from "../../lib/jsonLd";
+import { JsonLd, breadcrumbJsonLd, teamJsonLd, webPageJsonLd } from "../../lib/jsonLd";
 import { isLang, localePath } from "../../lib/lang";
 import { pageMetadata } from "../../lib/pageMeta";
 import { seoText } from "../../lib/seoText";
@@ -32,6 +32,7 @@ export default async function Page({ params }: Props) {
             { name: text.crumbs.home, path: localePath(lang, "/") },
             { name: text.crumbs.about, path: localePath(lang, "/about") },
           ]),
+          ...teamJsonLd(lang),
         ]}
       />
       <SmoothScroll>

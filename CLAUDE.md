@@ -67,6 +67,7 @@ Puede ser one-pager o multi-página — está por definir.
 - El dominio canónico es `https://www.nuba.studio` (Vercel redirige el apex a www). No hay cuenta de X: no usar `twitter:site`.
 - Rutas: `/` landing, `/works` portfolio (espiral), `/about`, `/services`, `/contact`, `/cases/[slug]`. Los casos con `hidden: true` salen con `noindex`.
 - GSAP: `SmoothScroll` no registra ScrollTrigger; cada componente o hook que lo use hace `gsap.registerPlugin(ScrollTrigger)`.
+- **Blog:** artículos en `app/data/blog/posts/` (un archivo por post, en/es). El slug en español sale de `app/data/blog/slugs.ts` (agregar ahí cada post nuevo); en el cuerpo los links a otros posts van con el slug en inglés y sin idioma, `PostBody` los traduce. Un post con `date` futura queda programado: da 404 y no aparece en listados, sitemap ni llms.txt hasta ese día (medianoche de Argentina, ISR cada 1 h). El autor sale de `postAuthor` (por categoría, o `author` en el post).
 - Una página nueva: crearla en `app/[lang]/…`, usar `pageMetadata`, agregarla a `app/sitemap.ts` y sumar sus textos a `seoText.ts`. `llms.txt` sale de `app/lib/llms.ts` (`/llms.txt` en inglés, `/es/llms.txt` en español).
 
 ## Convenciones

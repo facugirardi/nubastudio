@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Outfit } from "next/font/google";
+import { Geist_Mono, Outfit } from "next/font/google";
 import "./globals.css";
 import NotFoundContent from "./components/NotFoundContent";
 import { LanguageProvider } from "./lib/i18n";
@@ -11,6 +11,12 @@ const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -34,7 +40,7 @@ export default async function GlobalNotFound() {
   const lang = await requestLang();
   return (
     <html lang={lang} suppressHydrationWarning>
-      <body className={`${outfit.variable} antialiased`}>
+      <body className={`${outfit.variable} ${geistMono.variable} antialiased`}>
         <LanguageProvider lang={lang}>
           <NotFoundContent />
         </LanguageProvider>

@@ -10,7 +10,7 @@ import { openCase } from "../home/WorkCard";
 import { prefetchCase } from "../caseTransition";
 import { visibleWorks } from "../../data/works";
 import { localizeWork } from "../../lib/localizeWork";
-import { CONTACT, FOUNDED } from "../../lib/seo";
+import { CONTACT, FOUNDED, PROJECTS_SHIPPED } from "../../lib/seo";
 import { useLanguage } from "../../lib/i18n";
 import { getUiText } from "../../lib/uiText";
 
@@ -109,7 +109,7 @@ function Header() {
   const facts = [
     { label: ui.about.basedIn, value: CONTACT.city },
     { label: ui.about.since, value: FOUNDED },
-    { label: ui.about.projectsShipped, value: String(visibleWorks.length).padStart(2, "0") },
+    { label: ui.about.projectsShipped, value: String(PROJECTS_SHIPPED).padStart(2, "0") },
     { label: ui.about.thePeople, value: String(TEAM.length).padStart(2, "0") },
   ];
 
@@ -273,7 +273,9 @@ function Studio() {
       <div className="grid border-t border-white/[0.07] lg:grid-cols-2">
         <p
           data-reveal
-          className="px-5 py-12 text-[clamp(1.4rem,2.4vw,2rem)] font-[450] leading-[1.3] tracking-[-0.03em] text-[#EDEDED] sm:px-8 lg:border-r lg:border-white/[0.07] lg:px-10 lg:py-16"
+          className={`px-5 py-12 font-[450] leading-[1.3] tracking-[-0.03em] text-[#EDEDED] sm:px-8 lg:border-r lg:border-white/[0.07] lg:px-10 lg:py-16 ${
+            lang === "es" ? "text-[clamp(1.05rem,1.7vw,1.4rem)]" : "text-[clamp(1.4rem,2.4vw,2rem)]"
+          }`}
         >
           {ui.about.origin[0]}
         </p>

@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import ContactFaq from "../../components/contact/ContactFaq";
 import ContactIndex from "../../components/contact/ContactIndex";
 import Footer from "../../components/home/Footer";
 import Navbar from "../../components/Navbar";
 import SmoothScroll from "../../components/SmoothScroll";
-import { JsonLd, breadcrumbJsonLd, webPageJsonLd } from "../../lib/jsonLd";
+import { JsonLd, breadcrumbJsonLd, faqJsonLd, webPageJsonLd } from "../../lib/jsonLd";
 import { isLang, localePath } from "../../lib/lang";
 import { pageMetadata } from "../../lib/pageMeta";
 import { seoText } from "../../lib/seoText";
+import { getUiText } from "../../lib/uiText";
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -31,12 +33,14 @@ export default async function Page({ params }: Props) {
             { name: text.crumbs.home, path: localePath(lang, "/") },
             { name: text.crumbs.contact, path: localePath(lang, "/contact") },
           ]),
+          faqJsonLd(getUiText(lang).contact.faq),
         ]}
       />
       <SmoothScroll>
         <Navbar />
         <main>
           <ContactIndex />
+          <ContactFaq lang={lang} />
         </main>
         <Footer />
       </SmoothScroll>
