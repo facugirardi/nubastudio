@@ -15,25 +15,11 @@ type Sky = { outer: string; mid: string; core: string; edge: string; rim: string
 
 const SKIES: Sky[] = [
   {
-    outer: "radial-gradient(circle, rgba(198,255,0,0.07) 0%, rgba(198,255,0,0.025) 35%, transparent 62%)",
+    outer: "radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.018) 35%, transparent 62%)",
     mid: "radial-gradient(circle, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.07) 38%, transparent 68%)",
     core: "radial-gradient(circle, #fff 0%, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.15) 55%, transparent 72%)",
     edge: "rgba(255,255,255,0.22)",
     rim: "rgba(255,255,255,0.95)",
-  },
-  {
-    outer: "radial-gradient(circle, rgba(170,120,255,0.11) 0%, rgba(140,150,255,0.05) 30%, rgba(120,200,255,0.035) 45%, transparent 64%)",
-    mid: "radial-gradient(circle, rgba(255,150,100,0.3) 0%, rgba(220,120,190,0.12) 30%, rgba(150,130,255,0.07) 46%, rgba(120,200,255,0.04) 58%, transparent 70%)",
-    core: "radial-gradient(circle, #fff1dc 0%, rgba(255,184,120,0.85) 26%, rgba(240,120,150,0.3) 46%, rgba(160,130,255,0.16) 60%, transparent 74%)",
-    edge: "rgba(255,170,120,0.35)",
-    rim: "rgba(255,206,170,0.95)",
-  },
-  {
-    outer: "radial-gradient(circle, rgba(70,90,220,0.12) 0%, rgba(70,90,220,0.04) 35%, transparent 62%)",
-    mid: "radial-gradient(circle, rgba(120,150,255,0.26) 0%, rgba(90,120,255,0.07) 38%, transparent 68%)",
-    core: "radial-gradient(circle, #e6eeff 0%, rgba(140,165,255,0.75) 28%, rgba(80,100,230,0.2) 55%, transparent 72%)",
-    edge: "rgba(150,175,255,0.32)",
-    rim: "rgba(176,194,255,0.95)",
   },
   {
     outer: "radial-gradient(circle, rgba(198,255,0,0.14) 0%, rgba(198,255,0,0.045) 35%, transparent 62%)",
@@ -44,7 +30,7 @@ const SKIES: Sky[] = [
   },
 ];
 
-const NIGHT = 2;
+const NIGHT = -1;
 const REST_INTENSITY = 0.4;
 
 const RIM_CONE = "conic-gradient(from calc(var(--rim-a, 0deg) - 180deg), transparent 0deg 95deg, var(--rim) 180deg, transparent 265deg 360deg)";
@@ -358,7 +344,7 @@ export default function Hero({ ready }: { ready: boolean }) {
                   ref={pressRef}
                   type="button"
                   onClick={changeWeather}
-                  aria-label={`${t.weatherAction}: ${t.weather[sky]}`}
+                  aria-label={`${t.weatherAction}: ${t.weather[sky === 1 ? 3 : 0]}`}
                   className="hero-rim group/sky pointer-events-auto relative block h-full w-full cursor-pointer rounded-[22%] focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-[#C6FF00]"
                   style={{ "--rim": SKIES[sky].rim } as React.CSSProperties}
                 >

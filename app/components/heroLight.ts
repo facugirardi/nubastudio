@@ -14,9 +14,7 @@ type RGB = [number, number, number];
 type Palette = { core: RGB; mid: RGB; outer: RGB; rim: RGB };
 
 const PALETTES: Palette[] = [
-  { core: [1, 1, 1], mid: [0.9, 0.91, 0.94], outer: [0.86, 0.9, 0.82], rim: [1, 1, 1] },
-  { core: [1, 0.86, 0.7], mid: [1, 0.55, 0.5], outer: [0.62, 0.52, 1], rim: [1, 0.8, 0.68] },
-  { core: [0.86, 0.9, 1], mid: [0.5, 0.58, 1], outer: [0.32, 0.38, 0.95], rim: [0.7, 0.77, 1] },
+  { core: [1, 1, 1], mid: [0.92, 0.92, 0.92], outer: [0.9, 0.9, 0.9], rim: [1, 1, 1] },
   { core: [0.95, 1, 0.78], mid: [0.8, 1, 0.1], outer: [0.78, 1, 0], rim: [0.86, 1, 0.35] },
 ];
 
@@ -89,7 +87,7 @@ void main() {
   float distL = length(toL);
   float facing = max(dot(n, toL / max(distL, 1.0)), 0.0);
   float atten = 1.0 / (1.0 + (distL * distL) / (uHalf * uHalf * 12.0));
-  float lit = pow(facing, 1.8) * atten * uIntensity * 1.8;
+  float lit = pow(facing, 1.8) * atten * uIntensity * 0.85;
 
   float t = uTime * 0.06;
   vec3 col = vec3(0.0);
@@ -110,10 +108,10 @@ void main() {
     float wide = exp(-d / (uHalf * 1.1));
     col += uRim * (edge * 0.9 + bleed * 0.55) * lit;
     col += uRim * wide * 0.12 * lit;
-    col += uRim * (edge * 0.7 + bleed * 0.35) * uHover * 0.6;
+    col += uRim * (edge * 0.7 + bleed * 0.35) * uHover * 0.3;
 
     float atmos = fbm(q / uHalf * 0.9 + vec2(t, t * 0.6));
-    float amb = exp(-d / (uHalf * 0.6)) * 0.13 + exp(-length(q) / (uHalf * 2.2)) * 0.035;
+    float amb = exp(-d / (uHalf * 0.6)) * 0.065 + exp(-length(q) / (uHalf * 2.2)) * 0.018;
     col += mix(uOuter, uMid, 0.85) * amb * (0.7 + 0.6 * atmos);
   }
 
