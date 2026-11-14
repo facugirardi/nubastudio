@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { LANG_COOKIE, isLang } from "./app/lib/lang";
 
 /**
  * El inglés es el idioma raíz y el español vive bajo /es. Las páginas están en
@@ -17,6 +18,22 @@ function withLang(request: NextRequest, lang: "en" | "es") {
   return { headers };
 }
 
+/** Países donde se habla español: ahí la primera visita sin idioma elegido va a /es. */
+const SPANISH_COUNTRIES = new Set([
+  "AR", "UY", "CL", "PY", "BO", "PE", "EC", "CO", "VE", "MX", "ES",
+  "GT", "HN", "SV", "NI", "CR", "PA", "CU", "DO", "PR", "GQ",
+]);
+const BOT = /bot|crawl|spider|slurp|facebookexternalhit|embedly|preview|whatsapp|telegram|linkedin|twitter|discord|lighthouse/i;
+
+/** Español si el país (IP) o el idioma principal del navegador lo es; los bots siempre ven el inglés. */
+function prefersSpanish(request: NextRequest) {
+  if (BOT.test(request.headers.get("user-agent") ?? "")) return false;
+  const country = request.headers.get("x-vercel-ip-country")?.toUpperCase();
+  if (country && SPANISH_COUNTRIES.has(country)) return true;
+  const primary = request.headers.get("accept-language")?.split(",")[0]?.trim().toLowerCase();
+  return Boolean(primary?.startsWith("es"));
+}
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const first = pathname.split("/")[1];
@@ -31,6 +48,22 @@ export function proxy(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = pathname.slice("/en".length) || "/";
     return NextResponse.redirect(url, 308);
+  }
+
+  // Sin prefijo = inglés. En la primera visita, si no eligió idioma y todo indica español, lo mandamos a /es
+  // (307, temporal: la URL en inglés sigue siendo la canónica). Elegir idioma en el selector guarda la cookie.
+  const saved = request.cookies.get(LANG_COOKIE)?.value;
+  if (
+    request.method === "GET" &&
+    !isLang(saved) &&
+    !pathname.includes("/opengraph-image") &&
+    prefersSpanish(request)
+  ) {
+    const redirect = request.nextUrl.clone();
+    redirect.pathname = pathname === "/" ? "/es" : `/es${pathname}`;
+    const res = NextResponse.redirect(redirect, 307);
+    res.headers.set("Cache-Control", "private, no-store");
+    return res;
   }
 
   const url = request.nextUrl.clone();

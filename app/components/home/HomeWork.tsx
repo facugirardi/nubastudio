@@ -49,15 +49,15 @@ export default function HomeWork() {
           <div data-reveal className="border-t border-white/[0.07]">
             <a
               href={path("/works")}
-              className="group/more relative flex w-full items-center justify-center gap-3 overflow-hidden py-8 text-[15px] font-medium text-white/60 transition-colors duration-200 hover:text-[#EDEDED] focus-visible:text-[#EDEDED] focus-visible:outline-none lg:py-10"
+              className="group/more relative flex w-full items-center justify-center gap-3 overflow-hidden bg-white/[0.03] py-9 text-[16px] font-medium text-[#EDEDED] transition-colors duration-200 hover:text-[#EDEDED] focus-visible:text-[#EDEDED] focus-visible:outline-none lg:bg-transparent lg:py-10 lg:text-[15px] lg:text-white/60"
             >
               <span
                 aria-hidden
                 className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_120%_at_50%_100%,rgba(255,255,255,0.06),transparent_70%)] opacity-0 transition-opacity duration-300 group-hover/more:opacity-100"
               />
               <span className="relative">{t.seeMore}</span>
-              <span className="relative font-mono text-[11px] text-white/35">({String(works.length).padStart(2, "0")})</span>
-              <span className="relative flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.12] transition-[transform,background-color,color,border-color] duration-300 ease-out group-hover/more:translate-x-0.5 group-hover/more:border-[#EDEDED] group-hover/more:bg-[#EDEDED] group-hover/more:text-black">
+              <span className="relative font-mono text-[11px] text-white/50 lg:text-white/35">({String(works.length).padStart(2, "0")})</span>
+              <span className="relative flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-white/[0.08] lg:border-white/[0.12] lg:bg-transparent transition-[transform,background-color,color,border-color] duration-300 ease-out group-hover/more:translate-x-0.5 group-hover/more:border-[#EDEDED] group-hover/more:bg-[#EDEDED] group-hover/more:text-black">
                 <ArrowRight size={12} />
               </span>
             </a>

@@ -8,6 +8,9 @@ export type Lang = "en" | "es";
 export const LANGS: Lang[] = ["en", "es"];
 export const DEFAULT_LANG: Lang = "en";
 
+/** Cookie con el idioma que la persona eligió a mano en el selector: gana sobre la detección automática. */
+export const LANG_COOKIE = "nuba_lang";
+
 export function isLang(value: unknown): value is Lang {
   return value === "en" || value === "es";
 }

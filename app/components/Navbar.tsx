@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { useLenis } from "./SmoothScroll";
 import { useLanguage } from "../lib/i18n";
-import { LANGS, localePath, stripLocale, type Lang } from "../lib/lang";
+import { LANGS, LANG_COOKIE, localePath, stripLocale, type Lang } from "../lib/lang";
 import { getUiText } from "../lib/uiText";
 import NubaMark from "./NubaMark";
 import { ArrowUpRight, ChevronDown } from "./icons";
@@ -79,7 +79,11 @@ function LangMenu({
             aria-checked={lang === code}
             href={hrefFor(code)}
             hrefLang={code}
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              // Elegir un idioma a mano gana sobre la detección automática (ver proxy.ts).
+              document.cookie = `${LANG_COOKIE}=${code}; path=/; max-age=31536000; samesite=lax`;
+              setOpen(false);
+            }}
             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-[14px] transition-colors duration-150 hover:bg-white/[0.06] ${
               lang === code ? "text-[#EDEDED]" : "text-white/55 hover:text-[#EDEDED]"
             }`}

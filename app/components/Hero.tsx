@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
-import { useLenis } from "./SmoothScroll";
 import { visibleWorks } from "../data/works";
 import { localizeWork } from "../lib/localizeWork";
 import { useLanguage } from "../lib/i18n";
@@ -70,7 +69,6 @@ const STARS = (() => {
 export default function Hero({ ready }: { ready: boolean }) {
   const { lang, path } = useLanguage();
   const t = getUiText(lang).hero;
-  const lenis = useLenis();
   const works = visibleWorks.map((w) => localizeWork(w, lang));
 
   const rootRef = useRef<HTMLElement>(null);
@@ -287,14 +285,6 @@ export default function Hero({ ready }: { ready: boolean }) {
     };
   }, []);
 
-  const scrollToWork = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const target = document.getElementById("work");
-    if (!target) return;
-    e.preventDefault();
-    if (lenis) lenis.scrollTo(target, { duration: 1.4 });
-    else target.scrollIntoView({ behavior: "smooth" });
-  };
-
   const marqueeItems = [...works, ...works];
 
   return (
@@ -431,13 +421,12 @@ export default function Hero({ ready }: { ready: boolean }) {
                   {t.primaryCta}
                   <ArrowRight className="transition-transform duration-200 ease-out group-hover/cta:translate-x-0.5" />
                 </Link>
-                <a
-                  href="#work"
-                  onClick={scrollToWork}
+                <Link
+                  href={path("/works")}
                   className="inline-flex h-11 items-center rounded-full border border-white/[0.14] bg-white/[0.02] px-4 text-[14px] sm:px-5 sm:text-[15px] font-medium text-[#EDEDED] transition-colors duration-150 hover:border-white/25 hover:bg-white/[0.07] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C6FF00]"
                 >
                   {t.secondaryCta}
-                </a>
+                </Link>
               </div>
             </div>
 
