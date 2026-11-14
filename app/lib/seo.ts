@@ -64,7 +64,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     role: "Design",
     jobTitle: "Product Designer",
     photo: "/images/alejo.webp",
-    profiles: [],
+    profiles: ["https://www.linkedin.com/in/alejovaquero/"],
     knowsAbout: ["Product design", "UI/UX design", "Design systems", "Web design"],
   },
   {
@@ -73,7 +73,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     role: "Development",
     jobTitle: "Software Developer",
     photo: "/images/facu.webp",
-    profiles: [],
+    profiles: ["https://www.linkedin.com/in/facugirardi/"],
     knowsAbout: ["Software development", "Next.js", "React Native", "TypeScript", "Web performance"],
   },
   {
@@ -82,7 +82,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     role: "Strategy",
     jobTitle: "Product Strategist",
     photo: "/images/angelito.webp",
-    profiles: [],
+    profiles: ["https://www.linkedin.com/in/angel-vaquero-7592a8194/"],
     knowsAbout: ["Product strategy", "MVP development", "Marketplaces", "Software project estimation"],
   },
 ];

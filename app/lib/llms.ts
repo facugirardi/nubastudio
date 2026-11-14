@@ -227,7 +227,7 @@ export function buildLlmsFull(lang: Lang): Response {
   const text = seoText[lang];
   const url = (path: string) => absoluteUrl(localePath(lang, path));
 
-  const team = TEAM_MEMBERS.map((m) => `- **${m.name}** - ${m.jobTitle}`).join("\n");
+  const team = TEAM_MEMBERS.map((m) => `- **${m.name}** - ${m.jobTitle}${m.profiles.length ? ` (${m.profiles.join(", ")})` : ""}`).join("\n");
 
   const services = text.serviceItems.map((s) => `### ${s.name}\n\n${s.description}`).join("\n\n");
 
