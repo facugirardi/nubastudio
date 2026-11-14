@@ -108,7 +108,7 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
           justifyContent: "center",
         }}
       >
-        <div ref={cloudRef} style={{ position: "relative", width: "clamp(96px, 12vw, 150px)", opacity: 0 }}>
+        <div ref={cloudRef} style={{ position: "relative", width: "clamp(140px, 17vw, 220px)", opacity: 0 }}>
           <NubaMark className="block h-auto w-full text-white/[0.14]" />
           <div style={{ position: "absolute", inset: 0, filter: "drop-shadow(0 0 14px rgba(198,255,0,0.45))" }}>
             <div ref={progressRef} style={{ color: "#C6FF00", clipPath: "inset(100% 0 0 0)" }}>
