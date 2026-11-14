@@ -15,10 +15,11 @@ export type SeoText = {
   keywords: string[];
   home: { title: string; description: string; ogTitle: string };
   about: { title: string; description: string; ogTitle: string };
+  works: { title: string; description: string; ogTitle: string };
   services: { title: string; description: string; ogTitle: string };
   contact: { title: string; description: string; ogTitle: string };
   /** Migas de pan del JSON-LD. */
-  crumbs: { home: string; about: string; services: string; contact: string };
+  crumbs: { home: string; about: string; services: string; contact: string; works: string };
   /** Servicios del JSON-LD de /services. */
   serviceItems: { name: string; description: string }[];
   worksCollection: { name: string; description: string };
@@ -28,6 +29,7 @@ export type SeoText = {
   og: {
     home: { title: string; accent: string; footer: string };
     about: { title: string; accent: string; subtitle: string; footer: string };
+    works: { title: string; accent: string; subtitle: string; footer: string };
     services: { title: string; accent: string; subtitle: string; footer: string };
     contact: { title: string; accent: string; subtitle: string; footer: string };
     caseLabel: string;
@@ -76,6 +78,12 @@ export const seoText: Record<Lang, SeoText> = {
         "Meet Nuba Studio: a small, senior team from Córdoba, Argentina that turns ideas into digital products. Our philosophy, our process and the people behind the work.",
       ogTitle: "About Nuba Studio",
     },
+    works: {
+      title: "Work - case studies in web, apps and marketplaces",
+      description:
+        "Case studies from Nuba Studio: websites, mobile apps, marketplaces and digital platforms designed and built end to end for clients in Argentina and worldwide.",
+      ogTitle: "Work - Nuba Studio",
+    },
     services: {
       title: "Services - web, apps, marketplaces & product design",
       description:
@@ -88,7 +96,7 @@ export const seoText: Record<Lang, SeoText> = {
         "Tell us about your project. Nuba Studio builds websites, apps and marketplaces from Córdoba, Argentina - reach us on WhatsApp or LinkedIn and we'll get back to you.",
       ogTitle: "Contact Nuba Studio",
     },
-    crumbs: { home: "Home", about: "About", services: "Services", contact: "Contact" },
+    crumbs: { home: "Home", about: "About", services: "Services", contact: "Contact", works: "Work" },
     serviceItems: [
       {
         name: "Web Development",
@@ -125,6 +133,12 @@ export const seoText: Record<Lang, SeoText> = {
     contactPageName: "Contact Nuba Studio",
     og: {
       home: { title: "We turn ideas into", accent: "digital products", footer: "Web · Apps · Marketplaces" },
+      works: {
+        title: "Products we designed,",
+        accent: "built and shipped",
+        subtitle: "Websites, mobile apps, marketplaces and platforms, built end to end.",
+        footer: "Work",
+      },
       about: {
         title: "We turn ideas into",
         accent: "digital products",
@@ -196,6 +210,12 @@ export const seoText: Record<Lang, SeoText> = {
         "Conocé Nuba Studio: un equipo chico y senior de Córdoba, Argentina que convierte ideas en productos digitales. Nuestra filosofía, nuestro proceso y las personas detrás del trabajo.",
       ogTitle: "Sobre Nuba Studio",
     },
+    works: {
+      title: "Trabajos - casos de estudio de web, apps y marketplaces",
+      description:
+        "Casos de estudio de Nuba Studio: sitios web, apps móviles, marketplaces y plataformas digitales diseñados y desarrollados de punta a punta para clientes de Argentina y del mundo.",
+      ogTitle: "Trabajos - Nuba Studio",
+    },
     services: {
       title: "Servicios - web, apps, marketplaces y diseño de producto",
       description:
@@ -208,7 +228,7 @@ export const seoText: Record<Lang, SeoText> = {
         "Contanos sobre tu proyecto. Nuba Studio desarrolla sitios web, apps y marketplaces desde Córdoba, Argentina - escribinos por WhatsApp o LinkedIn y te respondemos.",
       ogTitle: "Contactá a Nuba Studio",
     },
-    crumbs: { home: "Inicio", about: "Nosotros", services: "Servicios", contact: "Contacto" },
+    crumbs: { home: "Inicio", about: "Nosotros", services: "Servicios", contact: "Contacto", works: "Trabajos" },
     serviceItems: [
       {
         name: "Desarrollo web",
@@ -245,6 +265,12 @@ export const seoText: Record<Lang, SeoText> = {
     contactPageName: "Contactá a Nuba Studio",
     og: {
       home: { title: "Convertimos ideas en", accent: "productos digitales", footer: "Web · Apps · Marketplaces" },
+      works: {
+        title: "Productos que diseñamos,",
+        accent: "construimos y lanzamos",
+        subtitle: "Sitios web, apps móviles, marketplaces y plataformas, de punta a punta.",
+        footer: "Trabajos",
+      },
       about: {
         title: "Convertimos ideas en",
         accent: "productos digitales",

@@ -14,6 +14,8 @@ export const CONTACT = {
   phone: "+5493513471844",
   whatsapp: "https://wa.me/5493513471844",
   linkedin: "https://linkedin.com/company/nubastudio",
+  instagram: "https://instagram.com/nubastudio.ar",
+  instagramHandle: "@nubastudio.ar",
   city: "Córdoba",
   region: "Córdoba",
   country: "AR",
@@ -31,11 +33,12 @@ export const CONTACT = {
  *  desambigua la entidad "Nuba Studio" para Google y para los LLMs. */
 export const PROFILES: string[] = [
   "https://linkedin.com/company/nubastudio",
+  "https://instagram.com/nubastudio.ar",
   // Agregar los que existan: Instagram, perfil de Behance del estudio,
   // Clutch, Google Business Profile, GitHub, Dribbble.
 ];
 
-export const FOUNDED = "2024";
+export const FOUNDED = "2025";
 
 export const TEAM_MEMBERS = [
   { name: "Alejo Vaquero", role: "Design" },

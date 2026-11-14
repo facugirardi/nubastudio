@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
-import { Outfit } from "next/font/google";
+import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import "../globals.css";
 import CaseTransitionProvider from "../components/caseTransition";
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "../lib/jsonLd";
@@ -13,6 +13,18 @@ const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
+  display: "swap",
+});
+
+const geist = Geist({
+  variable: "--font-geist",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -99,7 +111,7 @@ export default async function RootLayout({
       <head>
         <JsonLd data={[organizationJsonLd(lang), webSiteJsonLd(lang)]} />
       </head>
-      <body className={`${outfit.variable} antialiased`}>
+      <body className={`${outfit.variable} ${geist.variable} ${geistMono.variable} antialiased`}>
         <LanguageProvider lang={lang}>
           {children}
           <CaseTransitionProvider />

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import About from "../../components/About";
+import AboutIndex from "../../components/about/AboutIndex";
+import HomeCta from "../../components/home/HomeCta";
+import Footer from "../../components/home/Footer";
 import Navbar from "../../components/Navbar";
 import SmoothScroll from "../../components/SmoothScroll";
 import { JsonLd, breadcrumbJsonLd } from "../../lib/jsonLd";
@@ -36,10 +38,12 @@ export default async function AboutPage({ params }: Props) {
         ])}
       />
       <SmoothScroll>
-        <Navbar visible={true} view="spiral" showToggle={false} />
+        <Navbar />
         <main>
-          <About />
+          <AboutIndex />
+          <HomeCta />
         </main>
+        <Footer />
       </SmoothScroll>
     </>
   );

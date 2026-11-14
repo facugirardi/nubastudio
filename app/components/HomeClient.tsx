@@ -2,11 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Navbar from "./Navbar";
-import Works from "./Works";
+import Hero from "./Hero";
 import Loader from "./Loader";
 import SmoothScroll from "./SmoothScroll";
-
-const noop = () => {};
+import HomeWork from "./home/HomeWork";
+import HomeServices from "./home/HomeServices";
+import HomeProcess from "./home/HomeProcess";
+import HomeCta from "./home/HomeCta";
+import Footer from "./home/Footer";
 
 export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactNode }) {
   // Arranca visible (también en el HTML del SSR) para que el contenido nunca
@@ -28,11 +31,16 @@ export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactN
     <>
       {!loaderDone && <Loader onComplete={handleLoaderComplete} />}
       <SmoothScroll infinite={false}>
-        <Navbar visible={true} view="list" setView={noop} showToggle={false} webglAvailable={false} />
+        <Navbar />
         <main>
           {seoFallback}
-          <Works view="list" setView={noop} webglAvailable={false} onWebGLFailed={noop} />
+          <Hero ready={loaderDone} />
+          <HomeWork />
+          <HomeServices />
+          <HomeProcess />
+          <HomeCta />
         </main>
+        <Footer />
       </SmoothScroll>
     </>
   );

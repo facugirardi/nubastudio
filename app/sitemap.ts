@@ -33,6 +33,7 @@ function entriesFor({ path, image, ...rest }: Entry): MetadataRoute.Sitemap {
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: Entry[] = [
     { path: "/", changeFrequency: "monthly", priority: 1 },
+    { path: "/works", changeFrequency: "monthly", priority: 0.9 },
     { path: "/about", changeFrequency: "monthly", priority: 0.8 },
     { path: "/services", changeFrequency: "monthly", priority: 0.9 },
     { path: "/contact", changeFrequency: "yearly", priority: 0.7 },

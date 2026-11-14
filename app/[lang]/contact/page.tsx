@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Contact from "../../components/Contact";
+import ContactIndex from "../../components/contact/ContactIndex";
+import Footer from "../../components/home/Footer";
 import Navbar from "../../components/Navbar";
 import SmoothScroll from "../../components/SmoothScroll";
 import { JsonLd, breadcrumbJsonLd } from "../../lib/jsonLd";
@@ -44,7 +45,7 @@ export default async function ContactPage({ params }: Props) {
               name: SITE_NAME,
               telephone: CONTACT.phone,
               url: absoluteUrl(localePath(lang, "/")),
-              sameAs: [CONTACT.linkedin, CONTACT.whatsapp],
+              sameAs: [CONTACT.linkedin, CONTACT.instagram, CONTACT.whatsapp],
             },
           },
           breadcrumbJsonLd([
@@ -54,10 +55,11 @@ export default async function ContactPage({ params }: Props) {
         ]}
       />
       <SmoothScroll>
-        <Navbar visible={true} view="spiral" showToggle={false} />
+        <Navbar />
         <main>
-          <Contact />
+          <ContactIndex />
         </main>
+        <Footer />
       </SmoothScroll>
     </>
   );

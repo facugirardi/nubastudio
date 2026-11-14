@@ -26,7 +26,6 @@ import { getUiText, type UiText } from "../lib/uiText";
 gsap.registerPlugin(ScrollTrigger);
 
 const ACCENT = "#C6FF00";
-const noop = () => {};
 
 function ExternalLinkIcon() {
   return (
@@ -218,7 +217,7 @@ export default function CaseStudy({ work: rawWork, next: rawNext }: { work: Work
           backgroundSize: "55px 55px",
         }}
       />
-      <Navbar visible view="list" setView={noop} showToggle={false} />
+      <Navbar />
 
       {/* ───────── Hero fullscreen (match con el final del morph) ───────── */}
       <section className="cs-hero" style={{ position: "relative", height: "100vh", overflow: "hidden" }}>

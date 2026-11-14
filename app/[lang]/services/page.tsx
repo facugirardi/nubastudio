@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Services from "../../components/Services";
 import Navbar from "../../components/Navbar";
 import SmoothScroll from "../../components/SmoothScroll";
+import ServicesIndex from "../../components/services/ServicesIndex";
+import HomeProcess from "../../components/home/HomeProcess";
+import HomeCta from "../../components/home/HomeCta";
+import Footer from "../../components/home/Footer";
 import { JsonLd, breadcrumbJsonLd, faqJsonLd, servicesJsonLd } from "../../lib/jsonLd";
 import { isLang, localePath } from "../../lib/lang";
 import { pageAlternates, pageOpenGraph } from "../../lib/pageMeta";
@@ -45,10 +48,12 @@ export default async function ServicesPage({ params }: Props) {
         ]}
       />
       <SmoothScroll>
-        <Navbar visible={true} view="spiral" showToggle={false} />
+        <Navbar />
         <main>
-          <Services />
+          <ServicesIndex process={<HomeProcess index="03" />} />
+          <HomeCta />
         </main>
+        <Footer />
       </SmoothScroll>
     </>
   );

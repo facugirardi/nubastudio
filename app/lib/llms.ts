@@ -21,11 +21,12 @@ companies in Argentina, across Latin America and internationally.`,
     pages: "Pages",
     pageLines: {
       home: "studio overview and selected work.",
+      works: "every case study, filterable by web, mobile and design.",
       about: "how the studio works, its process and the team.",
       services: "what we build and how we run a project.",
       contact: "start a project with us.",
     },
-    labels: { home: "Home", about: "About", services: "Services", contact: "Contact" },
+    labels: { home: "Home", works: "Work", about: "About", services: "Services", contact: "Contact" },
     cases: "Case studies",
     contact: "Contact",
     location: "Location",
@@ -49,11 +50,12 @@ emprendedores y empresas de Argentina, de Latinoamérica y del resto del mundo.`
     pages: "Páginas",
     pageLines: {
       home: "resumen del estudio y trabajos seleccionados.",
+      works: "todos los casos de estudio, filtrables por web, mobile y diseño.",
       about: "cómo trabaja el estudio, su proceso y el equipo.",
       services: "qué construimos y cómo llevamos un proyecto.",
       contact: "empezá un proyecto con nosotros.",
     },
-    labels: { home: "Inicio", about: "Nosotros", services: "Servicios", contact: "Contacto" },
+    labels: { home: "Inicio", works: "Trabajos", about: "Nosotros", services: "Servicios", contact: "Contacto" },
     cases: "Casos de estudio",
     contact: "Contacto",
     location: "Ubicación",
@@ -91,6 +93,7 @@ ${c.serviceLines.join("\n")}
 ## ${c.pages}
 
 - [${c.labels.home}](${url("/")}): ${c.pageLines.home}
+- [${c.labels.works}](${url("/works")}): ${c.pageLines.works}
 - [${c.labels.about}](${url("/about")}): ${c.pageLines.about}
 - [${c.labels.services}](${url("/services")}): ${c.pageLines.services}
 - [${c.labels.contact}](${url("/contact")}): ${c.pageLines.contact}
@@ -103,6 +106,7 @@ ${cases}
 
 - WhatsApp / ${lang === "en" ? "phone" : "teléfono"}: ${CONTACT.phone}
 - LinkedIn: ${CONTACT.linkedin}
+- Instagram: ${CONTACT.instagram}
 - ${c.location}: ${CONTACT.city}, ${CONTACT.region}, Argentina
 
 ## ${c.notes}

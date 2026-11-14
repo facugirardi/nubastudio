@@ -117,11 +117,12 @@ export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
   };
 }
 
-export function worksCollectionJsonLd(works: WorkItem[], lang: Lang) {
+export function worksCollectionJsonLd(works: WorkItem[], lang: Lang, path = "/") {
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "@id": `${langUrl(lang, "/")}#work`,
+    "@id": path === "/" ? `${langUrl(lang, "/")}#work` : langUrl(lang, path),
+    ...(path === "/" ? {} : { url: langUrl(lang, path) }),
     name: seoText[lang].worksCollection.name,
     description: seoText[lang].worksCollection.description,
     inLanguage: lang,
