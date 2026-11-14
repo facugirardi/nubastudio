@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import ContactClient from "../../components/contact/ContactClient";
+import ContactIndex from "../../components/contact/ContactIndex";
+import Footer from "../../components/home/Footer";
+import Navbar from "../../components/Navbar";
+import SmoothScroll from "../../components/SmoothScroll";
 import { JsonLd, breadcrumbJsonLd, webPageJsonLd } from "../../lib/jsonLd";
 import { isLang, localePath } from "../../lib/lang";
 import { pageMetadata } from "../../lib/pageMeta";
@@ -30,7 +33,13 @@ export default async function Page({ params }: Props) {
           ]),
         ]}
       />
-      <ContactClient />
+      <SmoothScroll>
+        <Navbar />
+        <main>
+          <ContactIndex />
+        </main>
+        <Footer />
+      </SmoothScroll>
     </>
   );
 }

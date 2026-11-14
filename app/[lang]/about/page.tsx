@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import AboutClient from "../../components/about/AboutClient";
+import AboutIndex from "../../components/about/AboutIndex";
+import HomeCta from "../../components/home/HomeCta";
+import Footer from "../../components/home/Footer";
+import Navbar from "../../components/Navbar";
+import SmoothScroll from "../../components/SmoothScroll";
 import { JsonLd, breadcrumbJsonLd, webPageJsonLd } from "../../lib/jsonLd";
 import { isLang, localePath } from "../../lib/lang";
 import { pageMetadata } from "../../lib/pageMeta";
@@ -30,7 +34,14 @@ export default async function Page({ params }: Props) {
           ]),
         ]}
       />
-      <AboutClient />
+      <SmoothScroll>
+        <Navbar />
+        <main>
+          <AboutIndex />
+          <HomeCta />
+        </main>
+        <Footer />
+      </SmoothScroll>
     </>
   );
 }

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import HomeClient from "../../components/HomeClient";
-import HomeSeoContent from "../../components/HomeSeoContent";
+import Navbar from "../../components/Navbar";
+import SmoothScroll from "../../components/SmoothScroll";
+import WorksIndex from "../../components/works/WorksIndex";
+import HomeCta from "../../components/home/HomeCta";
+import Footer from "../../components/home/Footer";
 import { visibleWorks } from "../../data/works";
 import { JsonLd, breadcrumbJsonLd, worksCollectionJsonLd } from "../../lib/jsonLd";
 import { isLang, localePath } from "../../lib/lang";
@@ -26,14 +29,21 @@ export default async function WorksPage({ params }: Props) {
     <>
       <JsonLd
         data={[
-          worksCollectionJsonLd(visibleWorks.map((w) => localizeWork(w, lang)), lang),
           breadcrumbJsonLd([
             { name: crumbs.home, path: localePath(lang, "/") },
             { name: crumbs.works, path: localePath(lang, "/works") },
           ]),
+          worksCollectionJsonLd(visibleWorks.map((w) => localizeWork(w, lang)), lang, "/works"),
         ]}
       />
-      <HomeClient seoFallback={<HomeSeoContent lang={lang} />} />
+      <SmoothScroll>
+        <Navbar />
+        <main>
+          <WorksIndex />
+          <HomeCta />
+        </main>
+        <Footer />
+      </SmoothScroll>
     </>
   );
 }

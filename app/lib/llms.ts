@@ -19,8 +19,8 @@ companies in Argentina, across Latin America and internationally.`,
     ],
     pages: "Pages",
     pageLines: {
-      home: "studio overview, services and featured work.",
-      works: "portfolio of case studies.",
+      home: "studio overview and selected work.",
+      works: "every case study, filterable by web, mobile and design.",
       about: "how the studio works, its process and the team.",
       services: "what we build and how we run a project.",
       contact: "start a project with us.",
@@ -47,8 +47,8 @@ emprendedores y empresas de Argentina, de Latinoamérica y del resto del mundo.`
     ],
     pages: "Páginas",
     pageLines: {
-      home: "resumen del estudio, servicios y trabajos destacados.",
-      works: "portfolio de casos de estudio.",
+      home: "resumen del estudio y trabajos seleccionados.",
+      works: "todos los casos de estudio, filtrables por web, mobile y diseño.",
       about: "cómo trabaja el estudio, su proceso y el equipo.",
       services: "qué construimos y cómo llevamos un proyecto.",
       contact: "empezá un proyecto con nosotros.",
@@ -104,6 +104,7 @@ ${cases}
 
 - WhatsApp / ${lang === "en" ? "phone" : "teléfono"}: ${CONTACT.phone}
 - LinkedIn: ${CONTACT.linkedin}
+- Instagram: ${CONTACT.instagram}
 - ${c.location}: ${CONTACT.city}, ${CONTACT.region}, Argentina
 
 ## ${c.notes}

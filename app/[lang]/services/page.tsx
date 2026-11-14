@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import ServicesClient from "../../components/services/ServicesClient";
+import Navbar from "../../components/Navbar";
+import SmoothScroll from "../../components/SmoothScroll";
+import ServicesIndex from "../../components/services/ServicesIndex";
+import HomeProcess from "../../components/home/HomeProcess";
+import HomeCta from "../../components/home/HomeCta";
+import Footer from "../../components/home/Footer";
 import { JsonLd, breadcrumbJsonLd, webPageJsonLd, faqJsonLd, servicesJsonLd } from "../../lib/jsonLd";
 import { isLang, localePath } from "../../lib/lang";
 import { pageMetadata } from "../../lib/pageMeta";
@@ -27,14 +32,21 @@ export default async function Page({ params }: Props) {
           webPageJsonLd(lang, "/services", { name: text.services.title, description: text.services.description, type: "WebPage" }),
           servicesJsonLd(text.serviceItems, lang),
           // Las preguntas del JSON-LD son las mismas que se ven en la página.
-          faqJsonLd(getUiText(lang).servicesPage.faq.items),
+          faqJsonLd(getUiText(lang).faq),
           breadcrumbJsonLd([
             { name: text.crumbs.home, path: localePath(lang, "/") },
             { name: text.crumbs.services, path: localePath(lang, "/services") },
           ]),
         ]}
       />
-      <ServicesClient />
+      <SmoothScroll>
+        <Navbar />
+        <main>
+          <ServicesIndex process={<HomeProcess index="03" />} />
+          <HomeCta />
+        </main>
+        <Footer />
+      </SmoothScroll>
     </>
   );
 }

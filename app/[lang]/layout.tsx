@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
-import { Instrument_Serif, Outfit } from "next/font/google";
+import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import "../globals.css";
 import CaseTransitionProvider from "../components/caseTransition";
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "../lib/jsonLd";
@@ -12,14 +12,19 @@ import { SITE_NAME, SITE_URL } from "../lib/seo";
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
-  // Variable completa: el rediseño anima el peso entre 300 y 700.
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-serif",
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
-  weight: "400",
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -82,7 +87,7 @@ export async function generateMetadata({
 }
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#000000",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -103,7 +108,7 @@ export default async function RootLayout({
       <head>
         <JsonLd data={[organizationJsonLd(lang), webSiteJsonLd(lang)]} />
       </head>
-      <body className={`${outfit.variable} ${instrumentSerif.variable} antialiased`}>
+      <body className={`${outfit.variable} ${geist.variable} ${geistMono.variable} antialiased`}>
         <LanguageProvider lang={lang}>
           {children}
           <CaseTransitionProvider />
