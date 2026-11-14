@@ -49,7 +49,7 @@ export default function BlogIndex({ lang }: { lang: Lang }) {
                   {t.categories[cat]}
                 </h2>
                 <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">
-                  {list.length} {t.articles}
+                  {list.length} {list.length === 1 ? t.article : t.articles}
                 </p>
               </div>
               <div className="grid gap-px border-t border-white/[0.07] bg-white/[0.07] sm:grid-cols-2 lg:grid-cols-3">

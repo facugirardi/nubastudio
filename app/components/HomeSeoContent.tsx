@@ -13,7 +13,8 @@ export default function HomeSeoContent({ lang }: { lang: Lang }) {
 
   return (
     <section className="sr-only" aria-label={text.ariaLabel}>
-      <h1>{text.h1}</h1>
+      {/* El H1 de la home es el título visible del hero; acá va como h2 para no duplicarlo. */}
+      <h2>{text.h1}</h2>
       {text.intro.map((paragraph) => (
         <p key={paragraph}>{paragraph}</p>
       ))}
