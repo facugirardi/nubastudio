@@ -660,7 +660,7 @@ export default function Works({
               <sup className="works-list-count">({String(visibleWorks.length).padStart(2, "0")})</sup>
             </h2>
             <nav className="works-mode" aria-label="View mode">
-              {(["grid", "list", "feed"] as const).map((m) => (
+              {(mobile ? (["grid", "list", "feed"] as const) : (["list", "grid", "feed"] as const)).map((m) => (
                 <button
                   key={m}
                   type="button"
