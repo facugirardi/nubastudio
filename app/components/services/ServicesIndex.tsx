@@ -20,9 +20,9 @@ import { TECH_LOGOS } from "./techLogos";
 gsap.registerPlugin(ScrollTrigger);
 
 const SERVICE_META = [
-  { id: "web", tags: { en: ["Next.js", "React", "CMS", "Motion"], es: ["Next.js", "React", "CMS", "Animación"] }, cases: ["nubapay", "bausing", "tivvu"] },
+  { id: "web", tags: { en: ["Next.js", "React", "CMS", "Motion"], es: ["Next.js", "React", "CMS", "Animación"] }, cases: ["nubapay", "bausing", "kennedys"] },
   { id: "mobile", tags: { en: ["React Native", "Expo", "iOS", "Android"], es: ["React Native", "Expo", "iOS", "Android"] }, cases: ["nuddo", "ushuaia360"] },
-  { id: "platforms", tags: { en: ["Payments", "Dashboards", "Auth", "APIs"], es: ["Pagos", "Dashboards", "Autenticación", "APIs"] }, cases: ["nuddo"] },
+  { id: "platforms", tags: { en: ["Payments", "Dashboards", "Auth", "APIs"], es: ["Pagos", "Dashboards", "Autenticación", "APIs"] }, cases: ["nuddo", "nubapay"] },
   { id: "branding", tags: { en: ["Identity", "Art direction", "Systems"], es: ["Identidad", "Dirección de arte", "Sistemas"] }, cases: ["nubapay", "mes", "nuddo"] },
   { id: "strategy", tags: { en: ["Discovery", "Prototyping", "Roadmap"], es: ["Descubrimiento", "Prototipado", "Hoja de ruta"] }, cases: ["nubapay", "tivvu", "nuddo"] },
 ];
