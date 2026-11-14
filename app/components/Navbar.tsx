@@ -106,7 +106,7 @@ function LangMenu({
 const PHONE = { label: "+54 9 351 347 1844", href: "tel:+5493513471844" };
 
 const SOCIALS = [
-  { label: "LinkedIn", href: "https://linkedin.com/company/nubastudio" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/nubastudio" },
   { label: "Instagram", href: "https://instagram.com/nubastudio.ar" },
   { label: "WhatsApp", href: "https://wa.me/5493513471844" },
 ];
