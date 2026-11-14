@@ -405,13 +405,13 @@ export default function Hero({ ready }: { ready: boolean }) {
           </div>
 
             <div data-scroll-out className="relative z-10 lg:col-start-1 lg:row-start-1">
-              <h2 className="text-[clamp(2.6rem,4.3vw,4.5rem)] font-[450] leading-[1] tracking-[-0.055em]">
+              <h1 className="text-[clamp(2.6rem,4.3vw,4.5rem)] font-[450] leading-[1] tracking-[-0.055em]">
                 {t.titleLines.map((line) => (
                   <span key={line} data-line className="block will-change-transform lg:whitespace-nowrap">
                     {line}
                   </span>
                 ))}
-              </h2>
+              </h1>
 
               <div data-reveal className="mt-8 flex flex-wrap items-center gap-2.5 sm:gap-3">
                 <Link

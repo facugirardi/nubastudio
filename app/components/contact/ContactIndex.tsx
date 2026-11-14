@@ -195,9 +195,12 @@ export default function ContactIndex() {
               </ul>
               <div className="mt-6 flex items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">
                 <span>{t.place}</span>
-                <span className="tabular-nums">
-                  {p.localTime} <span className="text-[#EDEDED]">{time ?? "--:--"}</span>
-                </span>
+                {/* La hora depende del cliente: hasta hidratar no se muestra un placeholder. */}
+                {time ? (
+                  <span className="tabular-nums">
+                    {p.localTime} <span className="text-[#EDEDED]">{time}</span>
+                  </span>
+                ) : null}
               </div>
             </div>
           </div>
