@@ -98,7 +98,9 @@ export const works: WorkItem[] = [
       "/images/cases/kennedys/kennedys-v2-3.webp",
       "/images/cases/kennedys/kennedys-v2-4.webp",
     ],
-    links: {},
+    links: {
+      web: "https://kennedysgroup.com",
+    },
   },
   {
     title: "Bausing",
@@ -132,7 +134,9 @@ export const works: WorkItem[] = [
       "/images/cases/bausing/foto5.webp",
       "/images/cases/bausing/foto6.webp",
     ],
-    links: {},
+    links: {
+      web: "https://www.bausing.com.ar",
+    },
   },
   {
     title: "Nuddo",
@@ -238,6 +242,8 @@ export const works: WorkItem[] = [
     ],
     links: {
       web: "https://ushuaia360.com/links",
+      ios: "https://apps.apple.com/ar/app/ushuaia360/id6778891288",
+      android: "https://play.google.com/store/apps/details?id=com.ushuaia360",
     },
   },
   {
@@ -338,7 +344,9 @@ export const works: WorkItem[] = [
       "/images/cases/mes/mes-v2-3.webp",
       "/images/cases/mes/mes-v2-4.webp",
     ],
-    links: {},
+    links: {
+      web: "https://mes-capital.com",
+    },
   },
 ];
 

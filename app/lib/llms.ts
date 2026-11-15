@@ -220,7 +220,9 @@ export function buildLlmsFull(lang: Lang): Response {
   const text = seoText[lang];
   const url = (path: string) => absoluteUrl(localePath(lang, path));
 
-  const team = TEAM_MEMBERS.map((m) => `- **${m.name}** - ${m.jobTitle}${m.profiles.length ? ` (${m.profiles.join(", ")})` : ""}`).join("\n");
+  const team = TEAM_MEMBERS.map(
+    (m) => `- **${m.name}** - ${m.jobTitle}${m.profiles.length ? ` (${m.profiles.join(", ")})` : ""}. ${m.bio[lang]}`
+  ).join("\n");
 
   const serviceSections = [
     ...services.map((sv) => {

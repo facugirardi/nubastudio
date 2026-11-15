@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import AboutIndex from "../../components/about/AboutIndex";
+import AboutIndex, { type AuthorArticles } from "../../components/about/AboutIndex";
+import { postAuthor, postPath, publishedPosts } from "../../data/blog";
 import HomeCta from "../../components/home/HomeCta";
 import Footer from "../../components/home/Footer";
 import Navbar from "../../components/Navbar";
@@ -12,6 +13,9 @@ import { seoText } from "../../lib/seoText";
 
 type Props = { params: Promise<{ lang: string }> };
 
+/** Los artículos de cada persona suman el día que se publican. */
+export const revalidate = 3600;
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
   if (!isLang(lang)) return {};
@@ -22,6 +26,10 @@ export default async function Page({ params }: Props) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   const text = seoText[lang];
+  const articles: AuthorArticles = {};
+  for (const post of publishedPosts()) {
+    (articles[postAuthor(post).id] ??= []).push({ title: post.content[lang].title, href: localePath(lang, postPath(post, lang)) });
+  }
 
   return (
     <>
@@ -37,8 +45,8 @@ export default async function Page({ params }: Props) {
       />
       <SmoothScroll>
         <Navbar />
-        <main>
-          <AboutIndex />
+        <main id="main" tabIndex={-1} className="outline-none">
+          <AboutIndex articles={articles} />
           <HomeCta />
         </main>
         <Footer />

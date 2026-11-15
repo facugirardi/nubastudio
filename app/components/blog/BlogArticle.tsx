@@ -23,18 +23,18 @@ export default function BlogArticle({ post, lang }: { post: Post; lang: Lang }) 
   return (
     <div className="font-display text-[#EDEDED]">
       <header className="mx-auto max-w-[1400px] px-5 pb-14 pt-32 sm:px-8 lg:px-10 lg:pb-20 lg:pt-40">
-        <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
+        <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
           <a href={localePath(lang, "/blog")} className="transition-colors hover:text-[#EDEDED]">
             {t.label}
           </a>
-          <span className="text-white/25"> / </span>
+          <span aria-hidden className="text-white/25"> / </span>
           <a href={`${localePath(lang, "/blog")}#${post.category}`} className="transition-colors hover:text-[#EDEDED]">
             {t.categories[post.category]}
           </a>
         </p>
         <h1 className="mt-6 max-w-[22ch] text-[clamp(2.4rem,5.2vw,4.5rem)] font-[450] leading-[1.02] tracking-[-0.055em]">{c.title}</h1>
         <p className="mt-7 max-w-[60ch] text-[17px] leading-[1.6] text-white/55 lg:text-[19px]">{c.excerpt}</p>
-        <p className="mt-9 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">
+        <p className="mt-9 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
           <span>
             {t.published} <time dateTime={post.date}>{formatDate(post.date, lang)}</time>
           </span>
@@ -48,7 +48,7 @@ export default function BlogArticle({ post, lang }: { post: Post; lang: Lang }) 
           </span>
           <span>
             {t.by}{" "}
-            <a href={localePath(lang, "/about")} rel="author" className="text-white/60 transition-colors hover:text-[#EDEDED]">
+            <a href={`${localePath(lang, "/about")}#${author.id}`} rel="author" className="text-white/60 transition-colors hover:text-[#EDEDED]">
               {author.name}
             </a>
             , Nuba Studio
@@ -74,18 +74,18 @@ export default function BlogArticle({ post, lang }: { post: Post; lang: Lang }) 
           {toc.length > 2 && (
             <aside className="hidden lg:block">
               <nav aria-label={t.onThisPage} className="sticky top-28">
-                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{t.onThisPage}</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{t.onThisPage}</p>
                 <ol className="mt-4 space-y-2.5 border-l border-white/[0.08] pl-4 text-[13.5px] leading-[1.45]">
                   {toc.map((item) => (
                     <li key={item.id}>
-                      <a href={`#${item.id}`} className="text-white/45 transition-colors hover:text-[#EDEDED]">
+                      <a href={`#${item.id}`} className="text-white/55 transition-colors hover:text-[#EDEDED]">
                         {item.text}
                       </a>
                     </li>
                   ))}
                   {c.faq && c.faq.length > 0 && (
                     <li>
-                      <a href="#faq" className="text-white/45 transition-colors hover:text-[#EDEDED]">
+                      <a href="#faq" className="text-white/55 transition-colors hover:text-[#EDEDED]">
                         {t.faq}
                       </a>
                     </li>
@@ -100,7 +100,7 @@ export default function BlogArticle({ post, lang }: { post: Post; lang: Lang }) 
       {cases.length > 0 && (
         <section aria-labelledby="related-cases" className="border-t border-white/[0.07]">
           <div className="mx-auto max-w-[1400px] px-5 py-14 sm:px-8 lg:px-10 lg:py-20">
-            <h2 id="related-cases" className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
+            <h2 id="related-cases" className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
               {t.relatedCases}
             </h2>
             <div className="mt-6 grid gap-5 md:grid-cols-2">
@@ -121,11 +121,11 @@ export default function BlogArticle({ post, lang }: { post: Post; lang: Lang }) 
                   </div>
                   <div className="flex items-end justify-between gap-6 p-6">
                     <div>
-                      <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">{t.relatedCase}</p>
+                      <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{t.relatedCase}</p>
                       <p className="mt-2 text-[22px] font-[450] tracking-[-0.035em]">{work.title}</p>
                       <p className="mt-1 text-[14px] text-white/50">{work.seoTitle ?? work.subtitle}</p>
                     </div>
-                    <ArrowUpRight size={14} className="mb-1 shrink-0 text-white/40 transition-colors group-hover/case:text-[#C6FF00]" />
+                    <ArrowUpRight size={14} className="mb-1 shrink-0 text-white/55 transition-colors group-hover/case:text-[#C6FF00]" />
                   </div>
                 </a>
               ))}
