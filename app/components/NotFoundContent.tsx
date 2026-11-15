@@ -183,11 +183,11 @@ function HumanView({ requested, stamp }: { requested: string; stamp: string }) {
           <p data-reveal className="max-w-[44ch] text-white/55">{t.body}</p>
           <p
             data-reveal
-            className="min-h-[2.4em] break-all font-mono text-[11px] leading-relaxed tracking-wide text-white/35"
+            className="min-h-[2.4em] break-all font-mono text-[11px] leading-relaxed tracking-wide text-white/55"
           >
             {requested && (
               <>
-                <span className="text-white/25">{t.requested}</span> {requested}
+                <span className="text-white/55">{t.requested}</span> {requested}
                 <br />
                 {stamp}
               </>
@@ -213,9 +213,9 @@ function HumanView({ requested, stamp }: { requested: string; stamp: string }) {
             >
               <span className="flex items-center justify-between text-sm font-medium">
                 {c.label}
-                <span className="text-white/40 transition-all group-hover:translate-x-1 group-hover:text-accent">→</span>
+                <span className="text-white/55 transition-all group-hover:translate-x-1 group-hover:text-accent">→</span>
               </span>
-              <span className="mt-1 block text-xs text-white/40">{c.hint}</span>
+              <span className="mt-1 block text-xs text-white/55">{c.hint}</span>
             </Link>
           ))}
         </nav>
@@ -324,7 +324,7 @@ export default function NotFoundContent() {
   );
 
   return (
-    <main className="relative flex min-h-dvh flex-col overflow-hidden">
+    <main id="main" tabIndex={-1} className="relative flex outline-none min-h-dvh flex-col overflow-hidden">
       <header className="relative z-10 flex items-center justify-between px-6 py-5 sm:px-10">
         <Link
           href={path("/")}
@@ -333,7 +333,7 @@ export default function NotFoundContent() {
         >
           <NubaMark className="h-7 w-7" />
         </Link>
-        <span className={`font-mono text-[11px] tracking-[0.2em] ${mode === "machine" ? "text-accent/60" : "text-white/40"}`}>
+        <span className={`font-mono text-[11px] tracking-[0.2em] ${mode === "machine" ? "text-accent/60" : "text-white/55"}`}>
           {t.errorLabel}
         </span>
       </header>

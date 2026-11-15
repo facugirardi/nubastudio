@@ -72,7 +72,7 @@ export default async function CasePage({ params }: Props) {
         ]}
       />
       <SmoothScroll>
-        <main>
+        <main id="main" tabIndex={-1} className="outline-none">
           <CaseStudy work={found} next={getNextWork(slug)} articles={articles} />
         </main>
         <Footer />

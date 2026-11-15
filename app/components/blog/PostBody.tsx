@@ -175,7 +175,7 @@ export default function PostBody({ body, lang }: { body: string; lang: Lang }) {
                   <thead>
                     <tr className="bg-white/[0.04]">
                       {block.head.map((h, j) => (
-                        <th key={j} className="px-4 py-3 font-mono text-[11px] font-normal uppercase tracking-[0.08em] text-white/45">
+                        <th key={j} className="px-4 py-3 font-mono text-[11px] font-normal uppercase tracking-[0.08em] text-white/55">
                           {h}
                         </th>
                       ))}

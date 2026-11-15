@@ -19,7 +19,7 @@ export default function PostCard({ post, lang, headingLevel = 3 }: { post: Post;
 
   return (
     <article className="group/card relative flex h-full flex-col bg-black p-6 transition-colors duration-200 hover:bg-white/[0.025] sm:p-7">
-      <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">
+      <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
         {t.categories[post.category]}
         <span className="text-white/20"> · </span>
         {readingMinutes(post, lang)} {t.minRead}
@@ -30,7 +30,7 @@ export default function PostCard({ post, lang, headingLevel = 3 }: { post: Post;
         </a>
       </Heading>
       <p className="mt-3 line-clamp-3 text-[15px] leading-[1.6] text-white/50">{c.excerpt}</p>
-      <div className="mt-auto flex items-center justify-between pt-8 text-[13px] text-white/35">
+      <div className="mt-auto flex items-center justify-between pt-8 text-[13px] text-white/55">
         <time dateTime={post.date}>{formatDate(post.date, lang)}</time>
         <span className="inline-flex items-center gap-1 text-white/55 transition-colors group-hover/card:text-[#C6FF00]">
           {t.read}

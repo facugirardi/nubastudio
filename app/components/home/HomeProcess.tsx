@@ -109,7 +109,7 @@ export default function HomeProcess({ index = "03" }: { index?: string }) {
                   aria-hidden
                   className="absolute left-[23px] top-[46px] h-[9px] w-[9px] rounded-full border border-white/25 bg-black transition-[background-color,border-color,box-shadow] duration-300 data-[on=true]:border-[#C6FF00] data-[on=true]:bg-[#C6FF00] data-[on=true]:shadow-[0_0_14px_rgba(198,255,0,0.6)] sm:left-[31px] lg:left-10 lg:top-[48px]"
                 />
-                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">0{i + 1}</p>
+                <p aria-hidden className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">0{i + 1}</p>
                 <h3 className="mt-3 text-[22px] font-medium tracking-[-0.03em] text-[#EDEDED]">{step.title}</h3>
                 <p className="mt-2 max-w-[32ch] text-[15px] leading-[1.55] text-white/50">{step.desc}</p>
               </li>
@@ -120,7 +120,7 @@ export default function HomeProcess({ index = "03" }: { index?: string }) {
         <dl className="grid grid-cols-1 gap-px border-t border-white/[0.07] bg-white/[0.07] sm:grid-cols-3">
           {stats.map((stat) => (
             <div key={stat.label} data-reveal className="flex flex-col gap-3 bg-black px-5 py-10 sm:px-8 lg:px-10 lg:py-14">
-              <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">{stat.label}</dt>
+              <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{stat.label}</dt>
               <dd className="text-[clamp(2.5rem,4.5vw,4rem)] font-[450] leading-none tracking-[-0.05em] text-[#EDEDED] tabular-nums">
                 {stat.counter ? <span ref={countRef}>{stat.value}</span> : stat.value}
               </dd>

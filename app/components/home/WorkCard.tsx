@@ -68,9 +68,9 @@ export default function WorkCard({
 
       <div className={`relative flex items-start justify-between gap-6 ${featured ? "lg:flex-col lg:justify-between lg:py-2" : ""}`}>
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">
+          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
             {String(index + 1).padStart(2, "0")}
-            {work.year ? <span className="text-white/25"> · {work.year}</span> : null}
+            {work.year ? <span className="text-white/55"> · {work.year}</span> : null}
           </p>
           <h3
             className={`mt-3 font-[450] tracking-[-0.045em] text-[#EDEDED] ${

@@ -109,6 +109,12 @@ export default async function RootLayout({
         <JsonLd data={[organizationJsonLd(lang), webSiteJsonLd(lang)]} />
       </head>
       <body className={`${outfit.variable} ${geist.variable} ${geistMono.variable} antialiased`}>
+        <a
+          href="#main"
+          className="fixed left-4 top-4 z-[200] -translate-y-24 rounded-full bg-[#C6FF00] px-4 py-2 font-display text-[14px] font-medium text-black transition-transform focus:translate-y-0 focus:outline-none"
+        >
+          {lang === "es" ? "Saltar al contenido" : "Skip to content"}
+        </a>
         <LanguageProvider lang={lang}>
           {children}
           <CaseTransitionProvider />

@@ -86,7 +86,7 @@ export default async function BlogPostPage({ params }: Props) {
       />
       <SmoothScroll>
         <Navbar />
-        <main>
+        <main id="main" tabIndex={-1} className="outline-none">
           <BlogArticle post={post} lang={lang} />
         </main>
         <Footer />

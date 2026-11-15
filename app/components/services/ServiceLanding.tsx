@@ -178,14 +178,14 @@ export default function ServiceLanding({
           className={`${frame} grid gap-12 ${pad} pb-16 pt-32 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-end lg:pb-20 lg:pt-40`}
         >
           <div>
-            <p data-reveal className={`${label} text-white/45`}>
+            <p data-reveal className={`${label} text-white/55`}>
               <a
                 href={localePath(lang, "/services")}
                 className="transition-colors hover:text-[#EDEDED]"
               >
                 {t.label}
               </a>
-              <span className="text-white/25"> / </span>
+              <span aria-hidden className="text-white/25"> / </span>
               {c.name}
             </p>
             <h1
@@ -271,8 +271,8 @@ export default function ServiceLanding({
       <Reveal className="border-t border-white/[0.07]">
         <div className={frame}>
           <div className={`${pad} pb-12 pt-20 lg:pb-16 lg:pt-28`}>
-            <p data-reveal className={`${label} text-white/45`}>
-              <span className="text-white/25">[{next()}]</span>{" "}
+            <p data-reveal className={`${label} text-white/55`}>
+              <span aria-hidden className="text-white/25">[{next()}]</span>{" "}
               {t.includesLabel}
             </p>
             <h2
@@ -289,7 +289,7 @@ export default function ServiceLanding({
                 data-reveal
                 className="group/inc relative bg-black p-6 transition-colors duration-300 hover:bg-white/[0.02] sm:p-8 lg:p-10"
               >
-                <p className="font-mono text-[11px] text-white/30 transition-colors group-hover/inc:text-[#C6FF00]">
+                <p aria-hidden className="font-mono text-[11px] text-white/30 transition-colors group-hover/inc:text-[#C6FF00]">
                   FIG 0.{i + 1}
                 </p>
                 <h3 className="mt-10 text-[20px] font-medium tracking-[-0.025em]">
@@ -319,7 +319,7 @@ export default function ServiceLanding({
                     aria-hidden
                     className="pointer-events-none absolute right-8 top-10 h-24 w-24 rounded-full bg-[radial-gradient(circle,rgba(198,255,0,0.1),transparent_70%)] opacity-0 transition-opacity duration-500 group-hover/card:opacity-100"
                   />
-                  <p data-reveal className={`${label} text-white/25`}>
+                  <p aria-hidden data-reveal className={`${label} text-white/25`}>
                     [{next()}]
                   </p>
                   <h2
@@ -347,8 +347,8 @@ export default function ServiceLanding({
               >
                 <div>
                   <div>
-                    <p data-reveal className={`${label} text-white/45`}>
-                      <span className="text-white/25">[{next()}]</span>
+                    <p data-reveal className={`${label} text-white/55`}>
+                      <span aria-hidden className="text-white/25">[{next()}]</span>
                     </p>
                     <h2
                       id={section.id}
@@ -372,8 +372,8 @@ export default function ServiceLanding({
         <Reveal className="border-t border-white/[0.07]">
           <div className={frame}>
             <div className={`${pad} pb-12 pt-20 lg:pb-16 lg:pt-28`}>
-              <p data-reveal className={`${label} text-white/45`}>
-                <span className="text-white/25">[{next()}]</span>{" "}
+              <p data-reveal className={`${label} text-white/55`}>
+                <span aria-hidden className="text-white/25">[{next()}]</span>{" "}
                 {ui.services.relatedWork}
               </p>
               <h2
@@ -425,8 +425,8 @@ export default function ServiceLanding({
           className={`${frame} grid gap-10 ${pad} py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)] lg:gap-20 lg:py-28`}
         >
           <div>
-            <p data-reveal className={`${label} text-white/45`}>
-              <span className="text-white/25">[{next()}]</span>{" "}
+            <p data-reveal className={`${label} text-white/55`}>
+              <span aria-hidden className="text-white/25">[{next()}]</span>{" "}
               {ui.servicesPage.faqLabel}
             </p>
             <h2
@@ -446,7 +446,7 @@ export default function ServiceLanding({
                 open={i === 0}
               >
                 <summary className="grid cursor-pointer list-none grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-4 py-6 [&::-webkit-details-marker]:hidden">
-                  <span className="font-mono text-[11px] text-white/30">
+                  <span aria-hidden className="font-mono text-[11px] text-white/30">
                     {num(i + 1)}
                   </span>
                   <span className="text-[clamp(1.1rem,1.6vw,1.35rem)] font-[450] tracking-[-0.03em] text-white/70 transition-colors group-open/faq:text-[#EDEDED] group-hover/faq:text-[#EDEDED]">
@@ -488,7 +488,7 @@ export default function ServiceLanding({
               <h2
                 id="other-services"
                 data-reveal
-                className={`${label} text-white/45`}
+                className={`${label} text-white/55`}
               >
                 {t.otherServices}
               </h2>
@@ -514,13 +514,13 @@ export default function ServiceLanding({
                       <span className="block text-[clamp(1.3rem,2.2vw,1.75rem)] font-[450] tracking-[-0.04em] text-white/75 transition-[color,transform] duration-300 group-hover/other:translate-x-1 group-hover/other:text-[#EDEDED]">
                         {ui.nav.servicesMenu.items[s.id].title}
                       </span>
-                      <span className="mt-1 block text-[14px] text-white/40">
+                      <span className="mt-1 block text-[14px] text-white/55">
                         {ui.nav.servicesMenu.items[s.id].desc}
                       </span>
                     </span>
                     <ArrowUpRight
                       size={14}
-                      className="shrink-0 text-white/40 transition-colors group-hover/other:text-[#C6FF00]"
+                      className="shrink-0 text-white/55 transition-colors group-hover/other:text-[#C6FF00]"
                     />
                   </a>
                 </li>
@@ -537,7 +537,7 @@ export default function ServiceLanding({
                 <h2
                   id="related-reading"
                   data-reveal
-                  className={`${label} text-white/45`}
+                  className={`${label} text-white/55`}
                 >
                   {t.relatedReading}
                 </h2>

@@ -45,7 +45,7 @@ export default async function Page({ params }: Props) {
       />
       <SmoothScroll>
         <Navbar />
-        <main>
+        <main id="main" tabIndex={-1} className="outline-none">
           <ServicesIndex process={<HomeProcess index="03" />} />
           <HomeCta />
         </main>

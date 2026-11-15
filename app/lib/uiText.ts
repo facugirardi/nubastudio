@@ -108,6 +108,7 @@ const dict = {
       studioHeading: "A small team that builds the whole thing.",
       peopleHeading: "Three disciplines at the same table.",
       peopleSub: "Design, development and strategy work together from the first call to the last deploy.",
+      writesAbout: "Writes about",
     },
     servicesPage: {
       label: "Services",
@@ -446,6 +447,7 @@ const dict = {
       studioHeading: "Un equipo chico que construye todo.",
       peopleHeading: "Tres disciplinas en la misma mesa.",
       peopleSub: "Diseño, desarrollo y estrategia trabajan juntos desde la primera llamada hasta el último deploy.",
+      writesAbout: "Escribe sobre",
     },
     servicesPage: {
       label: "Servicios",

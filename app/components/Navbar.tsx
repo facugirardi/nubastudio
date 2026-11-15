@@ -49,12 +49,12 @@ function ServicesMenu({
                   aria-current={active ? "page" : undefined}
                   className="group/svc flex h-full gap-3 rounded-xl p-3 transition-colors duration-150 hover:bg-white/[0.06] focus-visible:bg-white/[0.06] focus-visible:outline-none"
                 >
-                  <span className="mt-[3px] font-mono text-[10px] text-white/30">0{i + 1}</span>
+                  <span aria-hidden className="mt-[3px] font-mono text-[10px] text-white/30">0{i + 1}</span>
                   <span className="min-w-0">
                     <span className={`block text-[14px] font-medium tracking-[-0.01em] ${active ? "text-[#C6FF00]" : "text-[#EDEDED]"}`}>
                       {t.items[id].title}
                     </span>
-                    <span className="mt-0.5 block text-[13px] leading-[1.4] text-white/45 transition-colors group-hover/svc:text-white/60">
+                    <span className="mt-0.5 block text-[13px] leading-[1.4] text-white/55 transition-colors group-hover/svc:text-white/60">
                       {t.items[id].desc}
                     </span>
                   </span>
@@ -70,9 +70,9 @@ function ServicesMenu({
         >
           <span>
             <span className="block text-[14px] font-medium text-[#EDEDED]">{t.all}</span>
-            <span className="block text-[13px] text-white/45">{t.allDesc}</span>
+            <span className="block text-[13px] text-white/55">{t.allDesc}</span>
           </span>
-          <ArrowUpRight className="text-white/40 transition-[transform,color] duration-200 group-hover/all:-translate-y-px group-hover/all:translate-x-px group-hover/all:text-[#C6FF00]" />
+          <ArrowUpRight className="text-white/55 transition-[transform,color] duration-200 group-hover/all:-translate-y-px group-hover/all:translate-x-px group-hover/all:text-[#C6FF00]" />
         </a>
       </div>
     </div>
@@ -152,7 +152,7 @@ function LangMenu({
               lang === code ? "text-[#EDEDED]" : "text-white/55 hover:text-[#EDEDED]"
             }`}
           >
-            <span className="w-5 font-mono text-[10px] uppercase text-white/35">{code}</span>
+            <span aria-hidden className="w-5 font-mono text-[10px] uppercase text-white/35">{code}</span>
             <span className="flex-1">{LANG_NAMES[code]}</span>
             {lang === code && (
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden className="text-[#C6FF00]">
@@ -337,7 +337,7 @@ export default function Navbar() {
                     >
                       {t.nav[id]}
                       {services && (
-                        <ChevronDown className={`text-white/40 transition-transform duration-200 ${servicesOpen ? "rotate-180" : ""}`} />
+                        <ChevronDown className={`text-white/55 transition-transform duration-200 ${servicesOpen ? "rotate-180" : ""}`} />
                       )}
                     </a>
                     {services && <ServicesMenu open={servicesOpen} onClose={() => setServicesOpen(false)} current={current} />}
@@ -404,7 +404,7 @@ export default function Navbar() {
                   className="group/m flex items-baseline justify-between py-4 text-[40px] font-[450] leading-none tracking-[-0.05em]"
                 >
                   <span className="transition-transform duration-300 ease-out group-active/m:translate-x-1">{t.nav[id]}</span>
-                  <span className="font-mono text-[11px] tracking-normal text-white/35">0{i + 1}</span>
+                  <span aria-hidden className="font-mono text-[11px] tracking-normal text-white/35">0{i + 1}</span>
                 </a>
                 {id === "services" && (
                   <ul aria-label={t.nav.servicesMenu.label} className="-mt-1 grid grid-cols-2 gap-x-4 gap-y-2 pb-4">

@@ -38,7 +38,7 @@ export default async function WorksPage({ params }: Props) {
       />
       <SmoothScroll>
         <Navbar />
-        <main>
+        <main id="main" tabIndex={-1} className="outline-none">
           <WorksIndex />
           <HomeCta />
         </main>

@@ -59,7 +59,7 @@ export default async function ServicePage({ params }: Props) {
       />
       <SmoothScroll>
         <Navbar />
-        <main>
+        <main id="main" tabIndex={-1} className="outline-none">
           <ServiceLanding service={service} lang={lang} />
         </main>
         <Footer />

@@ -60,8 +60,8 @@ function Header() {
   return (
     <div ref={ref} className="grid gap-12 px-5 pb-16 pt-32 sm:px-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-end lg:px-10 lg:pb-20 lg:pt-40">
       <div>
-        <p data-intro className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
-          <span className="text-white/25">[{String(ui.services.list.length).padStart(2, "0")}]</span> {t.label}
+        <p data-intro className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
+          <span aria-hidden className="text-white/25">[{String(ui.services.list.length).padStart(2, "0")}]</span> {t.label}
         </p>
         <h1 data-intro className="mt-5 max-w-[14ch] text-[clamp(2.75rem,6vw,5.25rem)] font-[450] leading-[0.98] tracking-[-0.055em]">
           {t.heading}
@@ -72,7 +72,7 @@ function Header() {
       </div>
 
       <nav data-intro aria-label={t.onThisPage} className="lg:justify-self-end">
-        <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{t.onThisPage}</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{t.onThisPage}</p>
         <ol className="mt-4 border-t border-white/[0.08]">
           {ui.services.list.map((service, i) => (
             <li key={service.title} className="border-b border-white/[0.08]">
@@ -81,7 +81,7 @@ function Header() {
                 onClick={jump(SERVICE_META[i].id)}
                 className="group/nav flex items-center gap-4 py-3 text-[15px] text-white/60 transition-colors duration-200 hover:text-[#EDEDED] lg:min-w-[340px]"
               >
-                <span className="font-mono text-[11px] text-white/30">0{i + 1}</span>
+                <span aria-hidden className="font-mono text-[11px] text-white/30">0{i + 1}</span>
                 <span className="flex-1 transition-transform duration-300 ease-out group-hover/nav:translate-x-1">{service.title}</span>
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden className="text-white/30 transition-[transform,color] duration-300 group-hover/nav:translate-y-0.5 group-hover/nav:text-[#EDEDED]">
                   <path d="M6 2.5v7M2.5 6 6 9.5 9.5 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
@@ -137,7 +137,7 @@ function ServiceRows() {
           >
             <div className="px-5 py-12 sm:px-8 lg:border-r lg:border-white/[0.07] lg:px-10 lg:py-20">
               <div>
-                <p data-reveal className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/30">
+                <p aria-hidden data-reveal className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/30">
                   FIG 0.{i + 1}
                 </p>
                 <h2 data-reveal className="mt-5 text-[clamp(2rem,3.4vw,3rem)] font-[450] leading-[1.02] tracking-[-0.05em] text-[#EDEDED]">
@@ -173,7 +173,7 @@ function ServiceRows() {
 
                 {cases.length ? (
                   <div data-reveal className="mt-10">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{ui.services.relatedWork}</p>
+                    <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{ui.services.relatedWork}</p>
                     <ul className="mt-3 border-t border-white/[0.08]">
                       {cases.map((work) => (
                         <li key={work.slug} className="border-b border-white/[0.08]">
@@ -188,7 +188,7 @@ function ServiceRows() {
                             </span>
                             <span className="min-w-0 flex-1">
                               <span className="block truncate text-[15px] text-[#EDEDED]">{work.title}</span>
-                              <span className="block truncate text-[13px] text-white/40">{work.subtitle}</span>
+                              <span className="block truncate text-[13px] text-white/55">{work.subtitle}</span>
                             </span>
                             <span className="text-white/35 transition-[transform,color] duration-300 group-hover/case:-translate-y-0.5 group-hover/case:translate-x-0.5 group-hover/case:text-[#EDEDED]">
                               <ArrowUpRight />
@@ -215,10 +215,10 @@ function ServiceRows() {
                   aria-hidden
                   className="absolute left-1/2 top-1/2 -z-10 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(198,255,0,0.1),transparent_65%)] opacity-0 transition-opacity duration-700 group-data-[active=true]/cell:opacity-100 group-hover/cell:opacity-100"
                 />
-                <div className="h-[58%] w-[72%] text-white/40 transition-colors duration-700 group-data-[active=true]/cell:text-white/85 group-hover/cell:text-white/85">
+                <div className="h-[58%] w-[72%] text-white/55 transition-colors duration-700 group-data-[active=true]/cell:text-white/85 group-hover/cell:text-white/85">
                   <Fig />
                 </div>
-                <span className="absolute left-5 top-4 font-mono text-[10.5px] uppercase tracking-[0.08em] text-white/25">
+                <span aria-hidden className="absolute left-5 top-4 font-mono text-[10.5px] uppercase tracking-[0.08em] text-white/25">
                   0{i + 1} / 0{ui.services.list.length}
                 </span>
               </div>
@@ -243,7 +243,7 @@ function Stack() {
           <li
             key={tech.name}
             data-reveal
-            className="group/tech relative flex h-32 flex-col items-center justify-center gap-4 overflow-hidden bg-black text-white/45 transition-colors duration-300 hover:text-[#EDEDED] lg:h-40"
+            className="group/tech relative flex h-32 flex-col items-center justify-center gap-4 overflow-hidden bg-black text-white/55 transition-colors duration-300 hover:text-[#EDEDED] lg:h-40"
             style={{ "--brand": tech.color } as React.CSSProperties}
           >
             <span
@@ -290,7 +290,7 @@ function Faq() {
                   onClick={() => setOpen(isOpen ? null : i)}
                   className="group/q grid w-full grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-4 px-5 py-6 text-left outline-none focus-visible:bg-white/[0.03] sm:px-8 lg:grid-cols-[3.5rem_minmax(0,1fr)_auto] lg:px-10 lg:py-8"
                 >
-                  <span className="font-mono text-[11px] text-white/30">0{i + 1}</span>
+                  <span aria-hidden className="font-mono text-[11px] text-white/30">0{i + 1}</span>
                   <span
                     className={`text-[clamp(1.15rem,1.8vw,1.5rem)] font-[450] tracking-[-0.03em] transition-colors duration-200 ${
                       isOpen ? "text-[#EDEDED]" : "text-white/65 group-hover/q:text-[#EDEDED]"

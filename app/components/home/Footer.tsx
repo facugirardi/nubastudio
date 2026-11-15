@@ -144,7 +144,7 @@ export default function Footer() {
               <NubaMark className="h-7 w-7" />
               <span className="text-[18px] font-semibold tracking-[-0.04em]">Nuba Studio</span>
             </a>
-            <p className="mt-5 max-w-[30ch] text-[14px] leading-[1.6] text-white/45">{t.footerTagline}</p>
+            <p className="mt-5 max-w-[30ch] text-[14px] leading-[1.6] text-white/55">{t.footerTagline}</p>
           </div>
 
           {columns.map((col) => (
@@ -163,7 +163,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.07] px-5 py-5 font-mono text-[11px] uppercase tracking-[0.08em] text-white/40 sm:px-8 lg:px-10">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.07] px-5 py-5 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55 sm:px-8 lg:px-10">
           <p>
             © {new Date().getFullYear()} Nuba Studio · {CONTACT.city}, {CONTACT.country} · {t.footerRights}
           </p>

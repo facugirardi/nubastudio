@@ -52,7 +52,7 @@ const STARS = (() => {
   }).join(",");
 })();
 
-export default function Hero({ ready }: { ready: boolean }) {
+export default function Hero() {
   const { lang, path } = useLanguage();
   const t = getUiText(lang).hero;
   const works = visibleWorks.map((w) => localizeWork(w, lang));
@@ -76,7 +76,7 @@ export default function Hero({ ready }: { ready: boolean }) {
     const root = rootRef.current;
     const canvas = canvasRef.current;
     const mark = markRef.current;
-    if (!ready || !root || !canvas || !mark) return;
+    if (!root || !canvas || !mark) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let cancelled = false;
@@ -111,7 +111,7 @@ export default function Hero({ ready }: { ready: boolean }) {
       delete root.dataset.gl;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready]);
+  }, []);
 
   const changeWeather = () => {
     setSky((s) => (s + 1) % SKIES.length);
@@ -125,7 +125,7 @@ export default function Hero({ ready }: { ready: boolean }) {
 
   useEffect(() => {
     const root = rootRef.current;
-    if (!root || !ready) return;
+    if (!root) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const reveal = root.querySelectorAll<HTMLElement>("[data-reveal]");
@@ -161,7 +161,7 @@ export default function Hero({ ready }: { ready: boolean }) {
     }, root);
 
     return () => ctx.revert();
-  }, [ready]);
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -420,12 +420,12 @@ export default function Hero({ ready }: { ready: boolean }) {
               <ul className="flex flex-col gap-2.5">
                 {t.pillars.map((pillar, i) => (
                   <li key={pillar} data-reveal className="flex items-baseline gap-3 text-[15px] text-[#EDEDED] lg:text-base">
-                    <span className="font-mono text-[11px] text-white/35">0{i + 1}</span>
+                    <span aria-hidden className="font-mono text-[11px] text-white/35">0{i + 1}</span>
                     {pillar}
                   </li>
                 ))}
               </ul>
-              <p data-reveal className="mt-6 font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">
+              <p data-reveal className="mt-6 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
                 {t.location}
               </p>
             </div>
@@ -445,7 +445,7 @@ export default function Hero({ ready }: { ready: boolean }) {
                     href={path(`/cases/${work.slug}`)}
                     aria-hidden={dup || undefined}
                     tabIndex={dup ? -1 : undefined}
-                    className="px-8 text-[19px] font-medium tracking-[-0.03em] text-white/45 transition-colors duration-200 hover:text-white lg:px-12 lg:text-[22px]"
+                    className="px-8 text-[19px] font-medium tracking-[-0.03em] text-white/55 transition-colors duration-200 hover:text-white lg:px-12 lg:text-[22px]"
                   >
                     {work.title}
                   </Link>
