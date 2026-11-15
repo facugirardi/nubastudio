@@ -14,17 +14,18 @@ const OY = 42;
 
 /**
  * Corre antes del primer pintado: si ya se vio en la sesión o la persona pidió
- * menos movimiento, el loader no llega a aparecer (sin parpadeo).
+ * menos movimiento, el loader no llega a aparecer (sin parpadeo). Si se muestra,
+ * marca <html data-loader="on">: el título del hero sale visible debajo del loader
+ * y Chrome cuenta el LCP en el primer pintado, no cuando se abre la nube.
  */
-const SKIP_SCRIPT = `(function(){try{var d=document.getElementById("${LOADER_ID}");if(!d)return;if(sessionStorage.getItem("${LOADER_KEY}")==="1"||matchMedia("(prefers-reduced-motion: reduce)").matches){d.style.display="none";d.dataset.state="skip"}else{document.documentElement.style.overflow="hidden"}}catch(e){}})()`;
+const SKIP_SCRIPT = `(function(){try{var d=document.getElementById("${LOADER_ID}");if(!d)return;if(sessionStorage.getItem("${LOADER_KEY}")==="1"||matchMedia("(prefers-reduced-motion: reduce)").matches){d.style.display="none";d.dataset.state="skip"}else{document.documentElement.style.overflow="hidden";document.documentElement.dataset.loader="on"}}catch(e){}})()`;
 
 /**
  * Loader de la home (una vez por sesión). El trazo del logo es la barra de progreso:
- * avanza con lo que de verdad carga en la primera pantalla (fuentes, imágenes y la
- * luz WebGL del hero).
+ * avanza con lo que de verdad carga en la primera pantalla (fuentes e imágenes).
  * Al completarse se llena de lima y la cámara entra por la nube, que funciona de
  * ventana al sitio. El hero arranca cuando la nube se abre (loaderGate).
- * Mínimo 0,9 s para que se vea el dibujo; a los 4 s se abre pase lo que pase.
+ * Mínimo 0,9 s para que se vea el dibujo; a los 3 s se abre pase lo que pase.
  */
 export default function Loader() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -45,6 +46,7 @@ export default function Loader() {
       } catch {}
       root.dataset.state = "done";
       root.style.display = "none";
+      delete document.documentElement.dataset.loader;
       document.documentElement.style.overflow = "";
       getLenis()?.start();
       markRevealed();
@@ -77,21 +79,16 @@ export default function Loader() {
     };
     applyZoom();
 
-    // ── Progreso real: lo que se ve en la primera pantalla (fuentes, imágenes y la luz WebGL del hero) ──
-    const done = { fonts: false, images: false, gl: false };
-    const WEIGHT = { fonts: 0.3, images: 0.4, gl: 0.3 };
+    // ── Progreso real: lo que se ve en la primera pantalla (fuentes e imágenes) ──
+    // La luz WebGL del hero no se espera: en celulares lentos tarda segundos y llega sola después.
+    const done = { fonts: false, images: false };
+    const WEIGHT = { fonts: 0.4, images: 0.6 };
     const target = () => 0.08 + 0.92 * (Object.keys(done) as (keyof typeof done)[]).reduce((a, k) => a + (done[k] ? WEIGHT[k] : 0), 0);
     const timers: number[] = [];
     const after = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
 
     document.fonts?.ready.then(() => (done.fonts = true)).catch(() => (done.fonts = true));
     if (!document.fonts) done.fonts = true;
-
-    const hero = document.querySelector<HTMLElement>(".hero");
-    const glOn = () => hero?.dataset.gl === "on";
-    const observer = new MutationObserver(() => glOn() && (done.gl = true));
-    if (hero) observer.observe(hero, { attributes: true, attributeFilter: ["data-gl"] });
-    if (!hero || glOn()) done.gl = true;
 
     // Solo las imágenes de la primera pantalla: lo de más abajo (o de terceros) no frena la entrada.
     const firstScreen = [...document.images].filter((img) => {
@@ -108,14 +105,10 @@ export default function Loader() {
               img.addEventListener("error", resolve, { once: true });
             })
       )
-    ).then(() => {
-      done.images = true;
-      // Si la luz WebGL no llega (dispositivo sin soporte, pestaña en segundo plano), no se la espera más.
-      after(1200, () => (done.gl = true));
-    });
+    ).then(() => (done.images = true));
 
-    // Red de seguridad: pase lo que pase, a los 4 s se abre.
-    after(4000, () => Object.assign(done, { fonts: true, images: true, gl: true }));
+    // Red de seguridad: pase lo que pase, a los 3 s se abre.
+    after(3000, () => Object.assign(done, { fonts: true, images: true }));
 
     const started = performance.now();
     const MIN_MS = 900;
@@ -133,7 +126,6 @@ export default function Loader() {
 
       if (!finale && progress.p >= 0.999 && performance.now() - started >= MIN_MS) {
         gsap.ticker.remove(tick);
-        observer.disconnect();
         finale = gsap
           .timeline({ onComplete: finish })
           .to(fillRef.current, { opacity: 1, duration: 0.25, ease: "power1.out" }, 0)
@@ -150,7 +142,6 @@ export default function Loader() {
     return () => {
       gsap.ticker.remove(tick);
       finale?.kill();
-      observer.disconnect();
       timers.forEach(clearTimeout);
       document.documentElement.style.overflow = "";
     };
@@ -165,6 +156,11 @@ export default function Loader() {
       className="fixed inset-0 z-[9999] overflow-hidden"
     >
       <script dangerouslySetInnerHTML={{ __html: SKIP_SCRIPT }} />
+      {/* Sin JS (o si falla) el loader no puede quedar tapando la página. */}
+      <noscript>
+        <style>{`#${LOADER_ID}{display:none!important}`}</style>
+      </noscript>
+      <style>{`#${LOADER_ID}{animation:nuba-loader-failsafe 0s linear 5s forwards}@keyframes nuba-loader-failsafe{to{visibility:hidden;pointer-events:none}}`}</style>
       <svg className="absolute inset-0 h-full w-full" aria-hidden>
         <defs>
           <mask id="nuba-loader-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">

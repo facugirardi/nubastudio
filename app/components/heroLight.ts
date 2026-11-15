@@ -150,6 +150,15 @@ export function createHeroLight({
   const gl = canvas.getContext("webgl", { premultipliedAlpha: true, alpha: true, antialias: false, powerPreference: "low-power" });
   if (!gl) return null;
 
+  // Sin placa de video (SwiftShader, llvmpipe…) el shader corre en la CPU y frena todo:
+  // ahí queda la luz CSS de respaldo.
+  const debug = gl.getExtension("WEBGL_debug_renderer_info");
+  const renderer = debug ? String(gl.getParameter(debug.UNMASKED_RENDERER_WEBGL)) : "";
+  if (/swiftshader|llvmpipe|softpipe|software|basic render|mesa offscreen/i.test(renderer)) {
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    return null;
+  }
+
   let program: WebGLProgram;
   try {
     program = gl.createProgram() as WebGLProgram;
@@ -203,9 +212,28 @@ export function createHeroLight({
     canvas.height = Math.round(h * dpr);
     gl.viewport(0, 0, canvas.width, canvas.height);
   };
+  // Posición del logo dentro del canvas: se mide solo cuando puede haber cambiado
+  // (scroll, resize, entrada animada), no en cada frame (evita reflows forzados).
+  const geo = { cx: 0, cy: 0, half: 0 };
+  let geoDirty = true;
+  const markDirty = () => (geoDirty = true);
+  const measure = () => {
+    const c = canvas.getBoundingClientRect();
+    const m = mark.getBoundingClientRect();
+    geo.cx = m.left + m.width / 2 - c.left;
+    geo.cy = m.top + m.height / 2 - c.top;
+    geo.half = m.width / 2;
+    geoDirty = false;
+  };
+
   resize();
-  const ro = new ResizeObserver(resize);
+  const ro = new ResizeObserver(() => {
+    resize();
+    markDirty();
+  });
   ro.observe(canvas);
+  ro.observe(mark);
+  window.addEventListener("scroll", markDirty, { passive: true });
 
   let visible = true;
   const io = new IntersectionObserver(([entry]) => {
@@ -218,6 +246,9 @@ export function createHeroLight({
   let last = performance.now();
   const start = last;
   let running = false;
+  let lastDraw = 0;
+  /** Los primeros segundos el logo entra animado (se mueve sin scroll): se mide siempre. */
+  const INTRO_MS = 3000;
 
   const frame = (now: number) => {
     const dt = Math.min((now - last) / 1000, 0.05);
@@ -240,14 +271,26 @@ export function createHeroLight({
       for (let i = 0; i < 3; i++) colors[key][i] += (goal[key][i] - colors[key][i]) * kc;
     });
 
-    const c = canvas.getBoundingClientRect();
-    const m = mark.getBoundingClientRect();
+    if (geoDirty || now - start < INTRO_MS) measure();
+
+    // En reposo (la luz llegó a su lugar) alcanza con 30 fps para el grano y la deriva.
+    const settled =
+      Math.abs(target.x - cur.x) < 0.5 &&
+      Math.abs(target.y - cur.y) < 0.5 &&
+      Math.abs(target.hover - cur.hover) < 0.01 &&
+      Math.abs(target.intensity - cur.intensity) < 0.005;
+    if (settled && now - lastDraw < 33) {
+      if (visible && !document.hidden) raf = requestAnimationFrame(frame);
+      else running = false;
+      return;
+    }
+    lastDraw = now;
 
     gl.uniform2f(U.res, w, h);
     gl.uniform1f(U.dpr, dpr);
     gl.uniform1f(U.time, (now - start) / 1000);
-    gl.uniform2f(U.center, m.left + m.width / 2 - c.left, m.top + m.height / 2 - c.top);
-    gl.uniform1f(U.half, m.width / 2);
+    gl.uniform2f(U.center, geo.cx, geo.cy);
+    gl.uniform1f(U.half, geo.half);
     gl.uniform2f(U.light, cur.x, cur.y);
     gl.uniform1f(U.intensity, cur.intensity);
     gl.uniform1f(U.hover, cur.hover);
@@ -286,6 +329,7 @@ export function createHeroLight({
     running = false;
     ro.disconnect();
     io.disconnect();
+    window.removeEventListener("scroll", markDirty);
     document.removeEventListener("visibilitychange", onVisibility);
     canvas.removeEventListener("webglcontextlost", onContextLost);
   }

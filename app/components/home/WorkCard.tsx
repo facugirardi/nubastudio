@@ -107,7 +107,7 @@ export default function WorkCard({
           src={work.image}
           alt={`${work.title} - ${work.subtitle}`}
           fill
-          sizes={featured ? "(max-width: 1023px) 100vw, 800px" : "(max-width: 767px) 100vw, 680px"}
+          sizes={featured ? "(max-width: 1023px) 100vw, 800px" : "(max-width: 767px) 100vw, 620px"}
           priority={priority}
           className="object-cover transition-transform duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/card:scale-[1.035]"
         />

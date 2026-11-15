@@ -184,12 +184,21 @@ export default function Hero() {
 
     const light = { a: 0, i: REST_INTENSITY };
     const target = glTarget.current;
+    // offsetWidth fuerza layout: se guarda y se actualiza solo cuando cambia el tamaño.
+    let markWidth = mark.offsetWidth;
+    let rootHeight = root.offsetHeight;
+    const sizeObserver = new ResizeObserver(() => {
+      markWidth = mark.offsetWidth;
+      rootHeight = root.offsetHeight;
+    });
+    sizeObserver.observe(mark);
+    sizeObserver.observe(root);
     const paint = () => {
       mark.style.setProperty("--rim-a", `${light.a}deg`);
       mark.style.setProperty("--rim-i", light.i.toFixed(3));
       if (!fine) {
         const rad = (light.a * Math.PI) / 180;
-        const reach = mark.offsetWidth * 2.2;
+        const reach = markWidth * 2.2;
         target.x = Math.sin(rad) * reach;
         target.y = -Math.cos(rad) * reach;
         target.intensity = 0.75;
@@ -238,7 +247,7 @@ export default function Hero() {
       aim(0);
       toIntensity(REST_INTENSITY);
       target.x = 0;
-      target.y = -mark.offsetWidth * 3;
+      target.y = -markWidth * 3;
       target.hover = 0;
       target.intensity = REST_INTENSITY + 0.15;
     };
@@ -253,7 +262,7 @@ export default function Hero() {
     const onScroll = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        const h = root.offsetHeight || 1;
+        const h = rootHeight || 1;
         const p = Math.min(Math.max(window.scrollY / h, 0), 1);
         gsap.set(parallax, { y: p * h * 0.35, opacity: 1 - p * 1.1 });
         gsap.set(content, { y: p * h * -0.08, opacity: 1 - p * 1.4 });
@@ -274,6 +283,7 @@ export default function Hero() {
       cancelAnimationFrame(frame);
       cancelAnimationFrame(pointerFrame);
       orbit?.kill();
+      sizeObserver.disconnect();
     };
   }, []);
 
@@ -288,7 +298,7 @@ export default function Hero() {
     >
       <style>{`
         .hero[data-state="pending"] [data-reveal],
-        .hero[data-state="pending"] [data-line],
+        html:not([data-loader="on"]) .hero[data-state="pending"] [data-line],
         .hero[data-state="pending"] .hero-glow,
         .hero[data-state="pending"] .hero-mark { opacity: 0; }
       `}</style>
