@@ -7,6 +7,7 @@ const service: Service = {
   posts: [
     "how-much-does-it-cost-to-build-an-app",
     "native-vs-react-native-vs-pwa",
+    "software-development-companies-argentina",
     "offline-first-mobile-apps",
     "how-to-validate-an-app-idea",
     "sports-field-booking-app",
@@ -15,7 +16,7 @@ const service: Service = {
     en: {
       name: "Mobile App Development",
       h1: "Mobile app development for iOS and Android.",
-      seoTitle: "Mobile App Development | iOS & Android",
+      seoTitle: "iOS & Android App Development Company in Argentina",
       description:
         "We design and build iOS and Android apps with React Native and Expo: one codebase, native feel, plus the backend and admin panel behind them. From idea to the stores.",
       lead:
@@ -31,7 +32,7 @@ const service: Service = {
       body: `
 A mobile app lives on the most personal screen your users have, next to the apps they open every day. That sets the bar: it has to be fast, clear and reliable from the first tap, or it gets deleted. Our mobile app development work covers everything it takes to clear that bar, from the first sketch to the version that goes live on the App Store and Google Play.
 
-We are a design and development studio based in Córdoba, Argentina, and we build apps for founders and companies in Argentina, Latin America and around the world. The same team designs the interface, writes the app and builds the backend, so nothing gets lost between handoffs.
+We are an app development company based in Córdoba, Argentina, a small design and development studio that builds apps for founders and companies in Argentina, Latin America and around the world. The same team designs the interface, writes the app and builds the backend, so nothing gets lost between handoffs.
 
 ## One app, both stores
 
@@ -104,15 +105,16 @@ There is no price list for an app: the budget depends on the number of user role
         "React Native development",
         "Expo app development",
         "app development company",
+        "app development company Argentina",
         "offline mobile app",
       ],
     },
     es: {
       name: "Desarrollo de apps",
-      h1: "Desarrollo de aplicaciones móviles para iOS y Android.",
-      seoTitle: "Desarrollo de Aplicaciones Móviles iOS y Android",
+      h1: "Desarrollo de aplicaciones móviles para iOS y Android, desde Córdoba para todo el país.",
+      seoTitle: "Desarrollo de Apps iOS y Android en Argentina",
       description:
-        "Diseñamos y desarrollamos apps para iOS y Android con React Native y Expo: un solo código, sensación nativa, y el backend y panel de administración detrás. De la idea a las tiendas.",
+        "Empresa de desarrollo de apps de Córdoba para toda Argentina. Hacemos apps iOS y Android con React Native, con el backend y el panel de administración detrás.",
       lead:
         "Apps que la gente quiere abrir, diseñadas y desarrolladas de punta a punta: la app en las dos tiendas, el backend que la hace funcionar y el panel con el que tu equipo la administra.",
       includes: [
@@ -126,7 +128,7 @@ There is no price list for an app: the budget depends on the number of user role
       body: `
 Una app vive en la pantalla más personal que tienen tus usuarios, al lado de las apps que abren todos los días. Eso pone la vara alta: tiene que ser rápida, clara y confiable desde el primer toque, o la borran. Nuestro trabajo de desarrollo de aplicaciones móviles cubre todo lo necesario para pasar esa vara, desde el primer boceto hasta la versión publicada en App Store y Google Play.
 
-Somos un estudio de diseño y desarrollo de Córdoba, Argentina, y hacemos apps para emprendedores y empresas de Argentina, Latinoamérica y el resto del mundo. El mismo equipo diseña la interfaz, programa la app y arma el backend, así que nada se pierde en el camino.
+Somos una empresa de desarrollo de apps de Córdoba, Argentina: un estudio chico de diseño y desarrollo que hace apps para emprendedores y empresas de Córdoba, el resto de Argentina, Latinoamérica y otros países. El mismo equipo diseña la interfaz, programa la app y arma el backend, así que nada se pierde en el camino.
 
 ## Una app, las dos tiendas
 
@@ -198,6 +200,9 @@ No hay lista de precios para una app: el presupuesto depende de la cantidad de r
         "desarrollo de apps iOS y Android",
         "desarrollo React Native",
         "empresa de desarrollo de apps",
+        "empresa de desarrollo de apps Argentina",
+        "empresa de desarrollo de apps Córdoba",
+        "desarrollo de aplicaciones móviles Córdoba",
         "desarrollo de apps Argentina",
         "app que funciona sin internet",
       ],

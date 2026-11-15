@@ -4,7 +4,7 @@ import type { Lang } from "../../lib/lang";
  * Las landings de servicio y su slug en cada idioma. Vive aparte del contenido
  * para que el Navbar y el proxy puedan armar y traducir URLs sin cargarlo.
  */
-export const SERVICE_IDS = ["web", "mobile", "marketplaces", "mvp"] as const;
+export const SERVICE_IDS = ["custom", "web", "mobile", "marketplaces", "mvp"] as const;
 export type ServiceId = (typeof SERVICE_IDS)[number];
 
 /** Si el servicio tiene landing propia (Branding, por ejemplo, vive solo en /services). */
@@ -13,6 +13,7 @@ export function isServiceId(id: string): id is ServiceId {
 }
 
 const SLUGS: Record<ServiceId, Record<Lang, string>> = {
+  custom: { en: "custom-software-development", es: "desarrollo-de-software-a-medida" },
   web: { en: "web-development", es: "desarrollo-web" },
   mobile: { en: "mobile-app-development", es: "desarrollo-de-apps" },
   marketplaces: { en: "marketplace-development", es: "desarrollo-de-marketplaces" },

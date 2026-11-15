@@ -7,6 +7,7 @@ import marketplaceCost from "./posts/how-much-does-it-cost-to-build-a-marketplac
 import nativeVsCross from "./posts/native-vs-react-native-vs-pwa";
 import customVsSaas from "./posts/custom-software-vs-saas";
 import chooseAgency from "./posts/how-to-choose-a-software-development-agency";
+import argentinaCompanies from "./posts/software-development-companies-argentina";
 import freelancerVsAgency from "./posts/freelancer-vs-in-house-vs-agency";
 import whatIsMvp from "./posts/what-is-an-mvp";
 import ourProcess from "./posts/from-idea-to-launch-our-process";
@@ -33,6 +34,7 @@ export const posts: Post[] = [
   marketplaceCost,
   whatIsMvp,
   chooseAgency,
+  argentinaCompanies,
   nativeVsCross,
   customVsSaas,
   freelancerVsAgency,

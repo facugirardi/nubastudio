@@ -119,10 +119,13 @@ export default function Footer() {
     },
     {
       title: t.footerServices,
-      links: ui.services.list.map((s) => ({
-        label: s.title,
-        href: path(isServiceId(s.id) ? servicePath(s.id, lang) : "/services"),
-      })),
+      links: [
+        { label: ui.nav.servicesMenu.items.custom.title, href: path(servicePath("custom", lang)) },
+        ...ui.services.list.map((s) => ({
+          label: s.title,
+          href: path(isServiceId(s.id) ? servicePath(s.id, lang) : "/services"),
+        })),
+      ],
     },
     {
       title: t.footerContact,

@@ -42,7 +42,7 @@ function ServicesMenu({
             const href = servicePath(id, lang);
             const active = current === href;
             return (
-              <li key={id}>
+              <li key={id} className={i === 0 ? "col-span-2" : undefined}>
                 <a
                   href={path(href)}
                   onClick={onClose}
@@ -408,8 +408,8 @@ export default function Navbar() {
                 </a>
                 {id === "services" && (
                   <ul aria-label={t.nav.servicesMenu.label} className="-mt-1 grid grid-cols-2 gap-x-4 gap-y-2 pb-4">
-                    {SERVICE_IDS.map((sid) => (
-                      <li key={sid}>
+                    {SERVICE_IDS.map((sid, j) => (
+                      <li key={sid} className={j === 0 ? "col-span-2" : undefined}>
                         <a
                           href={path(servicePath(sid, lang))}
                           onClick={onNavClick}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "app/api/schedules/publish-posts/route.ts": {
+      "experimentalTriggers": [{ "type": "schedule/v1beta" }]
+    }
+  },
+  "schedules": {
+    "publish-posts": {
+      "schedule": "0 0 * * *",
+      "timezone": "America/Argentina/Buenos_Aires",
+      "function": "api/schedules/publish-posts",
+      "jitter": 1
+    }
+  }
+}

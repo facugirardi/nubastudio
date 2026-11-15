@@ -24,6 +24,7 @@ const dict = {
         all: "All services",
         allDesc: "Overview, stack, process and FAQ",
         items: {
+          custom: { title: "Custom Software", desc: "Systems, platforms and backoffices built for your business" },
           web: { title: "Web Development", desc: "Sites, e-commerce and web platforms" },
           mobile: { title: "Mobile Apps", desc: "iOS and Android with React Native" },
           marketplaces: { title: "Marketplaces & Platforms", desc: "Two-sided products, SaaS and bookings" },
@@ -363,6 +364,7 @@ const dict = {
         all: "Todos los servicios",
         allDesc: "Resumen, tecnologías, proceso y preguntas",
         items: {
+          custom: { title: "Software a medida", desc: "Sistemas, plataformas y backoffices hechos para tu negocio" },
           web: { title: "Desarrollo web", desc: "Sitios, e-commerce y plataformas web" },
           mobile: { title: "Desarrollo de apps", desc: "iOS y Android con React Native" },
           marketplaces: { title: "Marketplaces y plataformas", desc: "Productos de dos lados, SaaS y reservas" },

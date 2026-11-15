@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { getPost, isPublished, postPath } from "../../data/blog";
+import { translateServicePath } from "../../data/services/slugs";
 import { localePath, type Lang } from "../../lib/lang";
 
 type Block =
@@ -56,13 +57,13 @@ export function tableOfContents(body: string) {
 }
 
 /**
- * Los links del cuerpo se escriben sin idioma y con el slug en inglés: acá se
- * pasan al idioma de la página. Un link a un artículo todavía programado sale
- * como texto (null) hasta el día en que se publica.
+ * Los links del cuerpo se escriben sin idioma y con el slug en inglés (blog y
+ * servicios): acá se pasan al idioma de la página. Un link a un artículo
+ * todavía programado sale como texto (null) hasta el día en que se publica.
  */
 function internalHref(href: string, lang: Lang): string | null {
   const match = href.match(/^\/blog\/([^/?#]+)(.*)$/);
-  if (!match) return localePath(lang, href);
+  if (!match) return localePath(lang, translateServicePath(href, "en", lang));
   const post = getPost(match[1]);
   if (!post) return localePath(lang, href);
   return isPublished(post) ? localePath(lang, `${postPath(post, lang)}${match[2]}`) : null;
