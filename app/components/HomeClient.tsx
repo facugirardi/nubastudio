@@ -2,6 +2,7 @@
 
 import Navbar from "./Navbar";
 import Hero from "./Hero";
+import Loader from "./Loader";
 import SmoothScroll from "./SmoothScroll";
 import HomeWork from "./home/HomeWork";
 import HomeServices from "./home/HomeServices";
@@ -12,6 +13,7 @@ import Footer from "./home/Footer";
 export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactNode }) {
   return (
     <>
+      <Loader />
       <SmoothScroll infinite={false}>
         <Navbar />
         <main id="main" tabIndex={-1} className="outline-none">

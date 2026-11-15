@@ -7,7 +7,7 @@ Sitio institucional de **Nuba Studio**, una agencia digital que hace páginas we
 - **Next.js** (App Router, TypeScript)
 - **Tailwind CSS v4**
 - **GSAP + ScrollTrigger** — para animaciones de scroll y micro-interacciones
-- **DM Sans** — fuente principal (ya configurada en `layout.tsx`)
+- **Fuentes** (en `app/[lang]/layout.tsx`): Outfit (`font-sans`, texto), Geist (`font-display`, títulos y wordmark) y Geist Mono (`font-mono`, etiquetas)
 - Framer Motion estaba en la versión anterior (branch `main`) — en el nuevo diseño preferir GSAP
 
 ## Colores
@@ -45,7 +45,6 @@ Puede ser one-pager o multi-página — está por definir.
 ## Animaciones y micro-interacciones acordadas
 - GSAP ScrollTrigger para reveals de secciones
 - Cursor personalizado (círculo que sigue el mouse)
-- Loader inicial antes de mostrar la página
 - Parallax sutil en el hero
 - Hover reveal de imagen al pasar sobre nombre de proyecto
 - Fade-in escalonado de texto en viewport
@@ -53,7 +52,7 @@ Puede ser one-pager o multi-página — está por definir.
 - Transiciones de página suaves
 
 ## Referencias de diseño
-- **Son Daven** (sondaven.com) — oscuro lujoso, SVG transitions, loader con %, parallax
+- **Son Daven** (sondaven.com) — oscuro lujoso, SVG transitions, parallax
 - **REF Digital** (ref.digital) — agencia limpia, hover video en proyectos
 - **Pacôme Pertant** (pacomepertant.com) — inmersivo, marquee, GSAP
 - **Tresmares Capital** — estructura corporativa clara
@@ -69,6 +68,7 @@ Puede ser one-pager o multi-página — está por definir.
 - GSAP: `SmoothScroll` no registra ScrollTrigger; cada componente o hook que lo use hace `gsap.registerPlugin(ScrollTrigger)`.
 - **Blog:** artículos en `app/data/blog/posts/` (un archivo por post, en/es). El slug en español sale de `app/data/blog/slugs.ts` (agregar ahí cada post nuevo); en el cuerpo los links a otros posts van con el slug en inglés y sin idioma, `PostBody` los traduce. Un post con `date` futura queda programado: da 404 y no aparece en listados, sitemap ni llms.txt hasta ese día (medianoche de Argentina, ISR cada 1 h). El autor sale de `postAuthor` (por categoría, o `author` en el post).
 - **Landings de servicio** (`/services/[slug]`): contenido en `app/data/services/pages/` (un archivo por servicio, en/es, con H1, body, FAQ, casos y posts relacionados) y slugs por idioma en `app/data/services/slugs.ts`. Salen solas en el dropdown del Navbar, sitemap, llms.txt y JSON-LD. `translatePath` (`app/lib/translatePath.ts`) traduce slugs de blog y servicios al cambiar de idioma y en el redirect del proxy.
+- Loader de la home (`Loader.tsx`, una vez por sesión, salta con reduced-motion): el trazo del logo es el progreso real de la primera pantalla (fuentes, imágenes visibles y luz WebGL del hero), mínimo 0,9 s y corte a los 4 s. No esperar el `load` completo ni recursos de más abajo. El hero arranca cuando la nube se abre (`app/lib/loaderGate.ts`).
 - Una página nueva: crearla en `app/[lang]/…`, usar `pageMetadata`, agregarla a `app/sitemap.ts` y sumar sus textos a `seoText.ts`. `llms.txt` sale de `app/lib/llms.ts` (`/llms.txt` en inglés, `/es/llms.txt` en español).
 
 ## Convenciones

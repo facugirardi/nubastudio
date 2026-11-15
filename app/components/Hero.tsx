@@ -8,6 +8,7 @@ import { localizeWork } from "../lib/localizeWork";
 import { useLanguage } from "../lib/i18n";
 import { getUiText } from "../lib/uiText";
 import { NUBA_MARK_PATH } from "./NubaMark";
+import { onLoaderReveal } from "../lib/loaderGate";
 import { ArrowRight } from "./icons";
 import type { HeroLight, LightTarget } from "./heroLight";
 
@@ -136,8 +137,10 @@ export default function Hero() {
       return;
     }
 
+    let stopWaiting = () => {};
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+      const tl = gsap.timeline({ defaults: { ease: "expo.out" }, paused: true });
+      stopWaiting = onLoaderReveal(() => tl.play());
       tl.fromTo(glowRef.current, { opacity: 0, scale: 0.55 }, { opacity: 1, scale: 1, duration: 2.2 }, 0)
         .fromTo(
           markRef.current,
@@ -160,7 +163,10 @@ export default function Hero() {
       root.dataset.state = "done";
     }, root);
 
-    return () => ctx.revert();
+    return () => {
+      stopWaiting();
+      ctx.revert();
+    };
   }, []);
 
   useEffect(() => {
