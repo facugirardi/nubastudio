@@ -37,7 +37,7 @@ function personFor(role: (typeof VERB_ROLES)[number]): Person {
 
 function Word({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <span className="inline-block overflow-hidden pb-[0.12em] align-top -mb-[0.12em]">
+    <span className="-mx-[0.1em] -mb-[0.2em] -mt-[0.1em] inline-block overflow-hidden px-[0.1em] pb-[0.2em] pt-[0.1em] align-top">
       <span data-word className={`inline-block ${className}`}>
         {children}
       </span>

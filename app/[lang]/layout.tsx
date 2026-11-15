@@ -1,32 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
-import { Geist, Geist_Mono, Outfit } from "next/font/google";
 import "../globals.css";
 import CaseTransitionProvider from "../components/caseTransition";
+import { fontVariables } from "../lib/fonts";
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "../lib/jsonLd";
 import { LanguageProvider } from "../lib/i18n";
 import { LANGS, isLang } from "../lib/lang";
 import { seoText } from "../lib/seoText";
 import { SITE_NAME, SITE_URL } from "../lib/seo";
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-});
-
-const geist = Geist({
-  variable: "--font-geist",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export function generateStaticParams() {
   return LANGS.map((lang) => ({ lang }));
@@ -108,7 +89,7 @@ export default async function RootLayout({
       <head>
         <JsonLd data={[organizationJsonLd(lang), webSiteJsonLd(lang)]} />
       </head>
-      <body className={`${outfit.variable} ${geist.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${fontVariables} antialiased`}>
         <a
           href="#main"
           className="fixed left-4 top-4 z-[200] -translate-y-24 rounded-full bg-[#C6FF00] px-4 py-2 font-display text-[14px] font-medium text-black transition-transform focus:translate-y-0 focus:outline-none"

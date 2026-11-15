@@ -95,13 +95,6 @@ export function organizationJsonLd(lang: Lang) {
         }
       : {}),
     founder: TEAM_MEMBERS.map((m) => ({ "@type": "Person", "@id": personId(m), name: m.name })),
-    employee: TEAM_MEMBERS.map((m) => ({
-      "@type": "Person",
-      "@id": personId(m),
-      name: m.name,
-      jobTitle: m.jobTitle,
-    })),
-    numberOfEmployees: { "@type": "QuantitativeValue", value: TEAM_MEMBERS.length },
     areaServed: AREA_SERVED,
     knowsAbout: [
       "Web design",

@@ -7,7 +7,7 @@ Sitio institucional de **Nuba Studio**, una agencia digital que hace páginas we
 - **Next.js** (App Router, TypeScript)
 - **Tailwind CSS v4**
 - **GSAP + ScrollTrigger** — para animaciones de scroll y micro-interacciones
-- **Fuentes** (en `app/[lang]/layout.tsx`): Outfit (`font-sans`, texto), Geist (`font-display`, títulos y wordmark) y Geist Mono (`font-mono`, etiquetas)
+- **Fuentes** (en `app/lib/fonts.ts`, las usan `app/[lang]/layout.tsx` y `global-not-found.tsx`): DM Sans (`font-sans`, texto), Satoshi (`font-display`, títulos y wordmark; variable 300–900, local en `app/fonts/`, licencia gratis de Fontshare) y Geist Mono (`font-mono`, etiquetas)
 - Framer Motion estaba en la versión anterior (branch `main`) — en el nuevo diseño preferir GSAP
 
 ## Colores

@@ -160,7 +160,7 @@ export default function ContactIndex() {
             </p>
             <h1 className="mt-6 max-w-[11ch] text-[clamp(2.75rem,6vw,5.5rem)] font-[450] leading-[1] tracking-[-0.055em]">
               {t.headline.split(" ").map((word, i, arr) => (
-                <span key={i} className="inline-block overflow-hidden pb-[0.1em] align-top -mb-[0.1em]">
+                <span key={i} className="-mx-[0.1em] -mb-[0.2em] -mt-[0.1em] inline-block overflow-hidden px-[0.1em] pb-[0.2em] pt-[0.1em] align-top">
                   <span data-word className="inline-block">
                     {word}
                     {i < arr.length - 1 ? " " : ""}
