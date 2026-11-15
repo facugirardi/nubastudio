@@ -17,7 +17,7 @@ const service: Service = {
       h1: "Custom software development for companies and startups.",
       seoTitle: "Custom Software Development Company in Argentina",
       description:
-        "Custom software development company from Córdoba, Argentina. We design and build business systems, web platforms, backoffices and apps around how your company works.",
+        "Custom software development company in Argentina, based in Córdoba. We design and build business systems, web platforms, backoffices and apps around how your company works.",
       lead:
         "Systems built around how your business actually works: the platform your clients use, the backoffice your team runs it from and the integrations that tie it to everything else.",
       includes: [
@@ -31,7 +31,7 @@ const service: Service = {
       body: `
 Custom software makes sense when the way your business works is the advantage, and no off-the-shelf tool fits it without bending the process. It is a system designed and built for one company: its users, its rules, its data and the other tools it already runs on.
 
-Nuba Studio is a custom software development company based in Córdoba, Argentina. We are a small, senior team where product design, development and strategy sit at the same table, and we build for companies and founders in Argentina, Latin America, the United States and Europe.
+Nuba Studio is a custom software development company in Argentina, based in Córdoba. We are a senior team where product design, development and strategy sit at the same table, and we build for companies and founders across Argentina, with clients in Buenos Aires, Córdoba, Ushuaia and Greece.
 
 ## What we build
 
@@ -85,7 +85,7 @@ To know what your system would cost, [tell us how your business works](/contact)
         {
           question: "Do you work with companies outside Argentina?",
           answer:
-            "Yes. We work in English and Spanish with clients in Latin America, the United States and Europe. Argentina's time zone overlaps with most of the Americas and with the European afternoon.",
+            "Yes. We work in English and Spanish with clients in Argentina, the United States and Europe. Argentina's time zone overlaps with most of the Americas and with the European afternoon.",
         },
         {
           question: "Who owns the code?",
@@ -110,9 +110,9 @@ To know what your system would cost, [tell us how your business works](/contact)
     es: {
       name: "Desarrollo de software a medida",
       h1: "Desarrollo de software a medida para empresas y startups.",
-      seoTitle: "Empresa de Desarrollo de Software a Medida en Córdoba",
+      seoTitle: "Empresa de Desarrollo de Software a Medida en Argentina",
       description:
-        "Empresa de desarrollo de software a medida en Córdoba, Argentina. Diseñamos y desarrollamos sistemas, plataformas web, backoffices y apps a la medida de tu negocio.",
+        "Empresa argentina de desarrollo de software a medida, con base en Córdoba. Diseñamos y desarrollamos sistemas, plataformas web, backoffices y apps a la medida de tu negocio.",
       lead:
         "Sistemas hechos alrededor de cómo trabaja tu negocio: la plataforma que usan tus clientes, el backoffice desde el que tu equipo la opera y las integraciones que la conectan con todo lo demás.",
       includes: [
@@ -126,7 +126,7 @@ To know what your system would cost, [tell us how your business works](/contact)
       body: `
 El software a medida tiene sentido cuando la forma en que trabaja tu negocio es la ventaja, y ninguna herramienta enlatada la acompaña sin torcer el proceso. Es un sistema diseñado y desarrollado para una empresa: sus usuarios, sus reglas, sus datos y las herramientas que ya usa.
 
-Nuba Studio es una empresa de desarrollo de software a medida de Córdoba, Argentina. Somos un equipo chico y senior donde diseño de producto, desarrollo y estrategia trabajan en la misma mesa, y desarrollamos para empresas y emprendedores de Córdoba, el resto de Argentina, Latinoamérica, Estados Unidos y Europa.
+Nuba Studio es una empresa argentina de desarrollo de software a medida, con base en Córdoba. Somos un equipo senior donde diseño de producto, desarrollo y estrategia trabajan en la misma mesa, y desarrollamos para empresas y emprendedores de toda Argentina, con clientes en Buenos Aires, Córdoba, Ushuaia y Grecia.
 
 ## Qué desarrollamos
 
@@ -180,7 +180,7 @@ Para saber cuánto costaría tu sistema, [contanos cómo funciona tu negocio](/c
         {
           question: "¿Trabajan con empresas de todo el país?",
           answer:
-            "Sí. Estamos en Córdoba y trabajamos de forma remota con empresas de toda Argentina, Latinoamérica, Estados Unidos y Europa, con reuniones por videollamada cada semana y entregas que podés probar a medida que avanzan.",
+            "Sí. Estamos en Córdoba y trabajamos de forma remota con empresas de toda Argentina, Estados Unidos y Europa, con reuniones por videollamada cada semana y entregas que podés probar a medida que avanzan.",
         },
         {
           question: "¿De quién es el código?",
@@ -196,6 +196,8 @@ Para saber cuánto costaría tu sistema, [contanos cómo funciona tu negocio](/c
       keywords: [
         "desarrollo de software a medida",
         "empresa de desarrollo de software",
+        "empresa de desarrollo de software Argentina",
+        "software factory Argentina",
         "empresa de software Córdoba",
         "software factory Córdoba",
         "desarrollo de sistemas a medida",

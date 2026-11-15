@@ -10,10 +10,11 @@ import { getUiText } from "./uiText";
 
 const COPY = {
   en: {
-    about: `${SITE_NAME} is a digital product studio based in ${CONTACT.city}, Argentina. We design
-and build websites, mobile apps, marketplaces and digital products end to end, from
-product strategy and design through development and launch. We work with founders and
-companies in Argentina, across Latin America and internationally.`,
+    about: `${SITE_NAME} is a custom software and app development company in Argentina, based in
+${CONTACT.city}. Our senior team designs and builds business systems, websites, mobile apps and
+marketplaces end to end, from product strategy and design through development, launch and
+ongoing support. We work with companies and founders across Argentina, with clients in Buenos Aires, Córdoba and
+Ushuaia, and abroad in Greece.`,
     services: "Services",
     pages: "Pages",
     pageLines: {
@@ -40,9 +41,9 @@ companies in Argentina, across Latin America and internationally.`,
       facts: "Key facts",
       factLines: (url: string) => [
         `- Name: ${SITE_NAME}`,
-        `- Type: digital product studio (design and software development)`,
+        `- Type: custom software and app development company (design and development)`,
         `- Founded: ${FOUNDED}`,
-        `- Location: ${CONTACT.city}, Argentina. Works remotely with clients worldwide.`,
+        `- Location: ${CONTACT.city}, Argentina. Clients in Buenos Aires, Córdoba and Ushuaia (Argentina) and in Greece.`,
         `- Languages: English and Spanish`,
         `- Website: ${url}`,
       ],
@@ -53,6 +54,7 @@ companies in Argentina, across Latin America and internationally.`,
       caseSolution: "The solution",
       caseProcess: "Process",
       caseResult: "Result",
+      caseMetrics: "Key numbers",
       caseFeatures: "Features",
       caseTech: "Technologies",
       caseLinks: "Links",
@@ -63,10 +65,11 @@ companies in Argentina, across Latin America and internationally.`,
     },
   },
   es: {
-    about: `${SITE_NAME} es un estudio de producto digital con base en ${CONTACT.city}, Argentina. Diseñamos
-y desarrollamos sitios web, apps móviles, marketplaces y productos digitales de punta a punta,
-desde la estrategia y el diseño de producto hasta el desarrollo y el lanzamiento. Trabajamos con
-emprendedores y empresas de Argentina, de Latinoamérica y del resto del mundo.`,
+    about: `${SITE_NAME} es una empresa argentina de desarrollo de software a medida y apps, con base en
+${CONTACT.city}. Nuestro equipo senior diseña y desarrolla sistemas, sitios web, apps móviles y
+marketplaces de punta a punta, desde la estrategia y el diseño de producto hasta el desarrollo,
+el lanzamiento y el soporte. Trabajamos con empresas y emprendedores de toda Argentina, con
+clientes en Buenos Aires, Córdoba y Ushuaia, y en el exterior en Grecia.`,
     services: "Servicios",
     pages: "Páginas",
     pageLines: {
@@ -93,9 +96,9 @@ emprendedores y empresas de Argentina, de Latinoamérica y del resto del mundo.`
       facts: "Datos clave",
       factLines: (url: string) => [
         `- Nombre: ${SITE_NAME}`,
-        `- Tipo: estudio de producto digital (diseño y desarrollo de software)`,
+        `- Tipo: empresa de desarrollo de software a medida y apps (diseño y desarrollo)`,
         `- Fundado: ${FOUNDED}`,
-        `- Ubicación: ${CONTACT.city}, Argentina. Trabaja de forma remota con clientes de todo el mundo.`,
+        `- Ubicación: ${CONTACT.city}, Argentina. Clientes en Buenos Aires, Córdoba y Ushuaia (Argentina) y en Grecia.`,
         `- Idiomas: español e inglés`,
         `- Sitio: ${url}`,
       ],
@@ -106,6 +109,7 @@ emprendedores y empresas de Argentina, de Latinoamérica y del resto del mundo.`
       caseSolution: "La solución",
       caseProcess: "Proceso",
       caseResult: "Resultado",
+      caseMetrics: "Cifras",
       caseFeatures: "Funcionalidades",
       caseTech: "Tecnologías",
       caseLinks: "Links",
@@ -244,6 +248,9 @@ export function buildLlmsFull(lang: Lang): Response {
         w.solutions ? `### ${f.caseSolution}\n\n${w.solutions}` : "",
         w.process ? `### ${f.caseProcess}\n\n${w.process}` : "",
         w.result ? `### ${f.caseResult}\n\n${w.result}` : "",
+        w.metrics?.length
+          ? `### ${f.caseMetrics}${w.metricsAsOf ? ` (${w.metricsAsOf})` : ""}\n\n${w.metrics.map((m) => `- ${m.value}: ${m.label}`).join("\n")}`
+          : "",
         w.features?.length ? `### ${f.caseFeatures}\n\n${w.features.map((x) => `- ${x}`).join("\n")}` : "",
         w.technologies?.length ? `### ${f.caseTech}\n\n${w.technologies.join(", ")}` : "",
       ];

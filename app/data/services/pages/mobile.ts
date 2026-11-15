@@ -32,7 +32,7 @@ const service: Service = {
       body: `
 A mobile app lives on the most personal screen your users have, next to the apps they open every day. That sets the bar: it has to be fast, clear and reliable from the first tap, or it gets deleted. Our mobile app development work covers everything it takes to clear that bar, from the first sketch to the version that goes live on the App Store and Google Play.
 
-We are an app development company based in Córdoba, Argentina, a small design and development studio that builds apps for founders and companies in Argentina, Latin America and around the world. The same team designs the interface, writes the app and builds the backend, so nothing gets lost between handoffs.
+We are an app development company in Argentina, based in Córdoba, with a senior design and development team that builds apps for companies and founders across Argentina and abroad. The same team designs the interface, writes the app and builds the backend, so nothing gets lost between handoffs.
 
 ## One app, both stores
 
@@ -111,10 +111,10 @@ There is no price list for an app: the budget depends on the number of user role
     },
     es: {
       name: "Desarrollo de apps",
-      h1: "Desarrollo de aplicaciones móviles para iOS y Android, desde Córdoba para todo el país.",
+      h1: "Desarrollo de aplicaciones móviles para iOS y Android en Argentina.",
       seoTitle: "Desarrollo de Apps iOS y Android en Argentina",
       description:
-        "Empresa de desarrollo de apps de Córdoba para toda Argentina. Hacemos apps iOS y Android con React Native, con el backend y el panel de administración detrás.",
+        "Empresa argentina de desarrollo de apps, con base en Córdoba. Hacemos apps iOS y Android con React Native, con el backend y el panel de administración detrás.",
       lead:
         "Apps que la gente quiere abrir, diseñadas y desarrolladas de punta a punta: la app en las dos tiendas, el backend que la hace funcionar y el panel con el que tu equipo la administra.",
       includes: [
@@ -128,7 +128,7 @@ There is no price list for an app: the budget depends on the number of user role
       body: `
 Una app vive en la pantalla más personal que tienen tus usuarios, al lado de las apps que abren todos los días. Eso pone la vara alta: tiene que ser rápida, clara y confiable desde el primer toque, o la borran. Nuestro trabajo de desarrollo de aplicaciones móviles cubre todo lo necesario para pasar esa vara, desde el primer boceto hasta la versión publicada en App Store y Google Play.
 
-Somos una empresa de desarrollo de apps de Córdoba, Argentina: un estudio chico de diseño y desarrollo que hace apps para emprendedores y empresas de Córdoba, el resto de Argentina, Latinoamérica y otros países. El mismo equipo diseña la interfaz, programa la app y arma el backend, así que nada se pierde en el camino.
+Somos una empresa argentina de desarrollo de apps, con base en Córdoba: un equipo senior de diseño y desarrollo que hace apps para empresas y emprendedores de toda Argentina y del exterior. El mismo equipo diseña la interfaz, programa la app y arma el backend, así que nada se pierde en el camino.
 
 ## Una app, las dos tiendas
 

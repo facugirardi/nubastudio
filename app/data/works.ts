@@ -1,3 +1,5 @@
+export type WorkMetric = { value: string; label: string };
+
 export type WorkItem = {
   title: string;
   subtitle: string;
@@ -14,6 +16,9 @@ export type WorkItem = {
   seoDescription?: string;
   process?: string;
   result?: string;
+  /** Cifras reales del proyecto, a la fecha de `metricsAsOf` (YYYY-MM). */
+  metrics?: WorkMetric[];
+  metricsAsOf?: string;
   features?: string[];
   technologies?: string[];
   /** Keeps the case page reachable by direct URL but out of all public listings. */
@@ -38,13 +43,17 @@ export const works: WorkItem[] = [
     slug: "nubapay",
     coverInGallery: true,
     year: "2026",
-    task: "Massive events in Latin America still run on cash boxes: long lines, slow bars, lost sales, and no real-time control. Organizers needed a simple, scalable way for attendees to order, pay, and pick up from their phone, without downloading an app, without extra hardware, and without the chaos of traditional checkout.",
+    task: "Massive events in Argentina still run on cash boxes: long lines, slow bars, lost sales, and no real-time control. Organizers needed a simple, scalable way for attendees to order, pay, and pick up from their phone, without downloading an app, without extra hardware, and without the chaos of traditional checkout.",
     solutions: "We built Nubapay as the operating system for massive events. Attendees scan a QR, browse the digital menu, pay from their phone, and pick up with a unique one-time QR. Organizers get a live dashboard for sales, orders, and performance. Staff validates pickup from any device. We also designed Atendium, an AI that attends, recommends, and upsells 24/7, plus unickeys on Solana so every pickup QR is unique, single-use, and impossible to fake. An event can go live in under 20 minutes.",
     description: "Nubapay is an ordering and payment platform for massive events. Attendees scan a QR, pay from their phone, and pick up without waiting in line, while organizers watch every sale move in real time. No app to download. No cash box.",
     seoTitle: "Event Payment & Ordering Platform",
     seoDescription: "Nubapay is a QR ordering and payment platform for massive events: attendees pay from their phone, organizers track sales live. Built by Nuba Studio.",
     process: "We designed and developed the full product end to end: a public storefront for attendees, an organizer workspace for catalogs, orders, staff, and pickup points, and a Flask API that holds the operation together. The experience is web-first so anyone can enter from a QR or a link. Payments run through Mercado Pago. Pickup QRs are single-use with antifraud validation, and tickets are hashed and recorded on Solana Mainnet. The same system serves festivals, clubs, stadiums, private parties, fairs, and food trucks.",
-    result: "Nubapay is live at nubapay.app. Attendees order and pay from their phone and pick up without waiting in line. Organizers see sales and orders in real time. Staff scans unique QRs from any device. Setup takes minutes, there are no fixed costs, and the platform scales from a food truck to a stadium without extra hardware.",
+    result: "Nubapay is live at nubapay.app. Attendees order and pay from their phone and pick up without waiting in line. Organizers see sales and orders in real time. Staff scans unique QRs from any device. Setup takes minutes, there are no fixed costs, and the platform scales from a food truck to a stadium without extra hardware. It has already run at events like Landia, Buh Halloween and Cassette, with more events scheduled.",
+    metrics: [
+      { value: "3+", label: "Events run on Nubapay: Landia, Buh Halloween and Cassette" },
+    ],
+    metricsAsOf: "2026-11",
     features: [
       "Digital menu from a QR, no app to download",
       "Mobile payments with Mercado Pago",
@@ -80,7 +89,12 @@ export const works: WorkItem[] = [
     seoTitle: "Luxury Villa Rental Platform",
     seoDescription: "Full-stack platform for an ultra-luxury villa rental and concierge business: property search, bookings and the Loggia admin backoffice. By Nuba Studio.",
     process: "As the ongoing full-stack partner, we work across the whole stack: the Express/PostgreSQL API, the public-facing Next.js site, and the Loggia admin panel, which meant every feature had to stay consistent across guest-facing pages and internal tools built on shared components. We shipped continuously in small, tested increments, fixing real data issues (wrong filters, missing geocoding, incorrect covers) alongside new features, always keeping the villa and property views in the public site and the admin panel in sync.",
-    result: "Kennedy's Group now runs on a reliable full-stack platform: guests get accurate, fast property search with working filters and rich detail pages, owners receive polished PDF performance reports, and the internal team manages villas, events, bookings, and concierge products for 14 product categories from a single backoffice, with the API layer keeping data consistent across all of it.",
+    result: "Kennedy's Group now runs on a reliable full-stack platform: guests get accurate, fast property search with working filters and rich detail pages, owners receive polished PDF performance reports, and the internal team manages villas, events, bookings, and concierge products for 14 product categories from a single backoffice, with the API layer keeping data consistent across all of it. Across 300+ properties, the site improved 70% in speed, SEO, AI search visibility and data loading.",
+    metrics: [
+      { value: "300+", label: "Properties managed on the platform" },
+      { value: "70%", label: "Improvement in site speed, SEO, AI search visibility and data loading" },
+    ],
+    metricsAsOf: "2026-11",
     features: [
       "Advanced real estate search & filters",
       "Sticky search & map on listings",
@@ -148,9 +162,16 @@ export const works: WorkItem[] = [
     solutions: "We built the marketplace so that each of those three points stops being a decision. Listing an item takes a few steps, so publishing is a small act rather than a project. Payments run through Mercado Pago with protection on both sides, so neither party is trusting a stranger on their own. Door-to-door shipping is part of the transaction instead of something buyers and sellers negotiate afterwards, with standard or economical options depending on what the garment is worth. A reputation system makes a seller's history visible before the purchase rather than after it. Local brands get their own space to show new collections alongside second-hand listings.",
     description: "Nuddo is a circular fashion marketplace for buying and selling second-hand clothing, on web, iOS, and Android. Door-to-door shipping, protected payments, and seller reputation make every trade feel safe. Not just a marketplace: a community where each garment still has a story to tell.",
     seoTitle: "Second-Hand Fashion Marketplace",
-    seoDescription: "Nuddo is a circular fashion marketplace for buying and selling second-hand clothing on web, iOS and Android. Marketplace app built by Nuba Studio.",
+    seoDescription: "Nuddo is a circular fashion marketplace on web, iOS and Android with 2,500+ users and 3,500+ listings. Marketplace app built by Nuba Studio.",
     process: "We built web, iOS, and Android against a single Flask API, so a listing, a payment, and a shipping label behave identically wherever they are created. React Native covered both mobile platforms from one codebase, and the web app was built in Next.js. The sequence mattered: we designed and tested the selling flow first, because a marketplace with no inventory has nothing to sell, and every other screen was built around keeping that flow short.",
-    result: "Nuddo is live on web, the App Store, and Google Play. Sellers list in a few steps, buyers pay with protection on both sides, and shipping is booked as part of the deal instead of after it. Reputation carries trust between people who have never met, and local brands sell new collections next to second-hand listings in the same catalog.",
+    result: "Nuddo is live on web, the App Store, and Google Play. Sellers list in a few steps, buyers pay with protection on both sides, and shipping is booked as part of the deal instead of after it. Reputation carries trust between people who have never met, and local brands sell new collections next to second-hand listings in the same catalog. Nuddo has 2,502 registered users, 2,947 app downloads, 3,577 listings and more than 100 completed sales.",
+    metrics: [
+      { value: "2,502", label: "Registered users" },
+      { value: "2,947", label: "App downloads" },
+      { value: "3,577", label: "Listings published" },
+      { value: "100+", label: "Completed sales" },
+    ],
+    metricsAsOf: "2026-11",
     features: [
       "Easy item publishing and selling",
       "Door-to-door shipping integration",
@@ -257,9 +278,13 @@ export const works: WorkItem[] = [
     solutions: "We built a platform that carries an inspection from intake to issued certificate without leaving the workflow. Inspectors record each review against a structured checklist, and the report generates itself from what was entered instead of being written a second time. Certificates are issued digitally from that same record, so the document and the inspection can never disagree. Two dashboards sit on top: one for inspectors working through their queue, one for vehicle owners following a vehicle's status and history. Compliance tracking runs through every step, so the audit trail is a by-product of the work.",
     description: "CheckRTO is a vehicle technical inspection platform that runs the whole lifecycle in one place. Inspectors record reviews, generate reports, and issue digital certificates without ever leaving the workflow. The paperwork of an inspection, finally digital.",
     seoTitle: "Vehicle Inspection Platform",
-    seoDescription: "CheckRTO digitizes vehicle technical inspections: reviews, reports, digital certificates and compliance workflows in one web platform. By Nuba Studio.",
+    seoDescription: "CheckRTO digitizes vehicle technical inspections: 10,000+ inspections, reports and digital certificates in one web platform. Built by Nuba Studio.",
     process: "We started from the inspection itself, mapping the sequence an inspector actually follows so the software could mirror it instead of imposing a new order. The two dashboards were designed separately from there, since an inspector working a queue and an owner checking one vehicle need opposite things from the same data. The Flask backend and the Next.js front end were then built around that single shared record, so report generation and certificate issuance read from the inspection rather than duplicating it.",
-    result: "CheckRTO is live at checkrto.com. An inspection is recorded once and travels through review, report, and certificate as a single record. Inspectors work from a queue instead of a stack of forms, owners can check a vehicle's status without calling anyone, and every step leaves an auditable trail.",
+    result: "CheckRTO is live at checkrto.com. An inspection is recorded once and travels through review, report, and certificate as a single record. Inspectors work from a queue instead of a stack of forms, owners can check a vehicle's status without calling anyone, and every step leaves an auditable trail. More than 10,000 inspections have been processed on the platform.",
+    metrics: [
+      { value: "10,000+", label: "Vehicle inspections processed" },
+    ],
+    metricsAsOf: "2026-11",
     features: [
       "Inspection review management",
       "Automated report generation",

@@ -25,7 +25,10 @@ const personId = (m: TeamMember) => `${SITE_URL}/about#${m.id}`;
 
 const AREA_SERVED = [
   { "@type": "Country", name: "Argentina" },
-  { "@type": "Place", name: "Latin America" },
+  { "@type": "City", name: "Buenos Aires" },
+  { "@type": "City", name: "Córdoba" },
+  { "@type": "City", name: "Ushuaia" },
+  { "@type": "Country", name: "Greece" },
   { "@type": "Place", name: "Worldwide" },
 ];
 

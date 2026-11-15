@@ -31,7 +31,7 @@ const service: Service = {
       body: `
 Most new products do not fail because they were built badly. They fail because they were built for months before anyone checked whether people wanted them. An MVP, a minimum viable product, is the antidote: the smallest version of your product that real users can use, built to learn as fast and as cheaply as possible what to do next.
 
-We are a design and development studio based in Córdoba, Argentina, and we work with founders, startups and companies launching new products in Argentina, Latin America and around the world. We take part in the strategy, not only the code.
+We are a software development company in Argentina, based in Córdoba, and we work with founders, startups and companies launching new products across Argentina and abroad. We take part in the strategy, not only the code.
 
 ## What an MVP is, and what it is not
 
@@ -129,7 +129,7 @@ Founders with an idea and no technical team, companies testing a new line of bus
       body: `
 La mayoría de los productos nuevos no fracasan porque estén mal hechos. Fracasan porque se desarrollaron durante meses antes de que alguien comprobara si la gente los quería. Un MVP, un producto mínimo viable, es el antídoto: la versión más chica de tu producto que usuarios reales pueden usar, hecha para aprender lo más rápido y barato posible qué hacer después.
 
-Somos un estudio de diseño y desarrollo de Córdoba, Argentina, y trabajamos con emprendedores, startups y empresas que lanzan productos nuevos en Argentina, Latinoamérica y el resto del mundo. Participamos de la estrategia, no solo del código.
+Somos una empresa argentina de desarrollo de software, con base en Córdoba, y trabajamos con emprendedores, startups y empresas que lanzan productos nuevos en toda Argentina y en el exterior. Participamos de la estrategia, no solo del código.
 
 ## Qué es un MVP y qué no
 

@@ -31,7 +31,7 @@ const service: Service = {
       body: `
 A website is often the first conversation a client has with your company, and most of the time it happens without you in the room. If the page is slow, confusing or hard to find, that conversation ends before it starts. Our web development work is about making that first conversation go well: a site that loads fast, explains what you do in seconds and makes the next step obvious.
 
-We are a design and development studio based in Córdoba, Argentina, and we build websites and web platforms for companies in Argentina, Latin America and the rest of the world. Design and code happen at the same table, so what you approve in the design is what goes live.
+We are a web development company in Argentina, based in Córdoba, and we build websites and web platforms for companies across Argentina and abroad. Design and code happen at the same table, so what you approve in the design is what goes live.
 
 ## What we build
 
@@ -128,7 +128,7 @@ Companies that need a site that sells, not just one that exists: firms whose cli
       body: `
 Muchas veces el sitio web es la primera conversación que un cliente tiene con tu empresa, y casi siempre pasa sin que estés presente. Si la página es lenta, confusa o difícil de encontrar, esa conversación termina antes de empezar. Nuestro trabajo de desarrollo web apunta a que esa primera conversación salga bien: un sitio que carga rápido, explica lo que hacés en segundos y deja claro cuál es el siguiente paso.
 
-Somos un estudio de diseño y desarrollo de Córdoba, Argentina, y hacemos sitios y plataformas web para empresas de Argentina, Latinoamérica y el resto del mundo. Diseño y código se trabajan en la misma mesa, así que lo que aprobás en el diseño es lo que sale publicado.
+Somos una empresa argentina de desarrollo web, con base en Córdoba, y hacemos sitios y plataformas web para empresas de toda Argentina y del exterior. Diseño y código se trabajan en la misma mesa, así que lo que aprobás en el diseño es lo que sale publicado.
 
 ## Qué desarrollamos
 

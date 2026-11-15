@@ -62,6 +62,8 @@ function MetaRow({ label, children }: { label: string; children: React.ReactNode
 
 export type CaseArticle = { title: string; excerpt: string; href: string };
 
+const METRIC_GRID = ["max-w-sm", "max-w-2xl sm:grid-cols-2", "sm:grid-cols-3", "sm:grid-cols-2 lg:grid-cols-4"];
+
 export default function CaseStudy({
   work: rawWork,
   next: rawNext,
@@ -457,6 +459,30 @@ export default function CaseStudy({
               >
                 {work.result}
               </p>
+              {work.metrics?.length ? (
+                <div data-reveal className="mt-12">
+                  <dl className={`grid grid-cols-1 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.08] ${METRIC_GRID[Math.min(work.metrics.length, 4) - 1]}`}>
+                    {work.metrics.map((m) => (
+                      <div key={m.value + m.label} className="flex flex-col gap-2 bg-black px-5 py-6 sm:px-6">
+                        <dt className="order-2 text-[14px] leading-snug text-white/55">{m.label}</dt>
+                        <dd className="order-1 m-0 text-[clamp(2rem,3.4vw,2.8rem)] font-[450] leading-none tracking-[-0.045em] text-[#C6FF00]">
+                          {m.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                  {work.metricsAsOf ? (
+                    <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.08em] text-white/30">
+                      {cs.dataAsOf}{" "}
+                      {new Date(`${work.metricsAsOf}-15T12:00:00Z`).toLocaleDateString(lang === "es" ? "es-AR" : "en-US", {
+                        month: "long",
+                        year: "numeric",
+                        timeZone: "UTC",
+                      })}
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
               {links.length ? (
                 <div data-reveal className="mt-10 flex flex-wrap gap-2.5 sm:gap-3">
                   {links.map((l, i) => (

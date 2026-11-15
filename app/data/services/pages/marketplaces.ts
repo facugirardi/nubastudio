@@ -31,7 +31,7 @@ const service: Service = {
       body: `
 A marketplace is two products that have to work at the same time: one for the people who sell or offer something and one for the people who buy or book it. In between sits the hardest part, the trust that lets two strangers exchange money. Our marketplace development work is about getting those three pieces right from the first version, so the platform can grow without being rebuilt.
 
-We are a design and development studio based in Córdoba, Argentina, and we build marketplaces and platforms for founders and companies across Argentina, Latin America and the rest of the world.
+We are a software development company in Argentina, based in Córdoba, and we build marketplaces and platforms for companies and founders across Argentina and abroad.
 
 ## What makes a marketplace different
 
@@ -39,7 +39,7 @@ An online store has one seller. A marketplace has many, and every one of them ne
 
 ## Payments and trust
 
-Money between strangers is the core of any marketplace. Depending on the model we design flows where the payment is held until the item arrives, split between parties, refunded when something goes wrong and paid out to sellers on a schedule. In Latin America that usually means Mercado Pago; for subscriptions and global billing we have used Paddle.
+Money between strangers is the core of any marketplace. Depending on the model we design flows where the payment is held until the item arrives, split between parties, refunded when something goes wrong and paid out to sellers on a schedule. In Argentina that usually means Mercado Pago; for subscriptions and global billing we have used Paddle.
 
 Trust is built in the product, not only in the payment. Reputation, reviews, verified profiles and clear rules for disputes are what make the second purchase happen.
 
@@ -132,7 +132,7 @@ If you have a marketplace or platform in mind, [tell us how it works](/contact) 
       body: `
 Un marketplace son dos productos que tienen que funcionar al mismo tiempo: uno para quienes venden u ofrecen algo y otro para quienes compran o reservan. En el medio está lo más difícil, la confianza que permite que dos desconocidos intercambien plata. Nuestro trabajo de desarrollo de marketplaces apunta a resolver bien esas tres piezas desde la primera versión, para que la plataforma pueda crecer sin rehacerse.
 
-Somos un estudio de diseño y desarrollo de Córdoba, Argentina, y desarrollamos marketplaces y plataformas para emprendedores y empresas de Argentina, Latinoamérica y el resto del mundo.
+Somos una empresa argentina de desarrollo de software, con base en Córdoba, y desarrollamos marketplaces y plataformas para empresas y emprendedores de toda Argentina y del exterior.
 
 ## Qué hace distinto a un marketplace
 
@@ -140,7 +140,7 @@ Una tienda online tiene un vendedor. Un marketplace tiene muchos, y cada uno nec
 
 ## Pagos y confianza
 
-La plata entre desconocidos es el centro de cualquier marketplace. Según el modelo, diseñamos flujos donde el pago se retiene hasta que llega el producto, se divide entre las partes, se devuelve cuando algo sale mal y se liquida a los vendedores en fechas definidas. En Latinoamérica eso suele ser Mercado Pago; para suscripciones y cobros globales usamos Paddle.
+La plata entre desconocidos es el centro de cualquier marketplace. Según el modelo, diseñamos flujos donde el pago se retiene hasta que llega el producto, se divide entre las partes, se devuelve cuando algo sale mal y se liquida a los vendedores en fechas definidas. En Argentina eso suele ser Mercado Pago; para suscripciones y cobros globales usamos Paddle.
 
 La confianza se construye en el producto, no solo en el pago. Reputación, reseñas, perfiles verificados y reglas claras para los reclamos son lo que hace que exista la segunda compra.
 

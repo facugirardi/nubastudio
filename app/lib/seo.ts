@@ -15,7 +15,7 @@ export const SITE_NAME = "Nuba Studio";
 export const SITE_TAGLINE = "Digital product studio";
 
 export const SITE_DESCRIPTION =
-  "Nuba Studio is a digital product studio from Córdoba, Argentina. We design and build websites, mobile apps, marketplaces and digital products end to end.";
+  "Nuba Studio is a custom software and app development company in Argentina, based in Córdoba. We design and build business systems, websites, mobile apps and marketplaces end to end.";
 
 export const CONTACT = {
   phone: "+5493513471844",

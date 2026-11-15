@@ -106,7 +106,7 @@ const dict = {
     },
     aboutPage: {
       label: "About",
-      studioHeading: "A small team that builds the whole thing.",
+      studioHeading: "One team that builds the whole thing.",
       peopleHeading: "Three disciplines at the same table.",
       peopleSub: "Design, development and strategy work together from the first call to the last deploy.",
       writesAbout: "Writes about",
@@ -216,6 +216,11 @@ const dict = {
           "Both, and that is the point. Design, interaction and code happen at the same table, so nothing gets handed off between teams and lost along the way. You do not need to bring your own designer or your own developers.",
       },
       {
+        question: "Do you only work with companies in Córdoba?",
+        answer:
+          "No. The studio is based in Córdoba, but we work with companies from any province in Argentina (today we have clients in Buenos Aires, Córdoba and Ushuaia), with weekly video calls and deliveries you can test as the project moves forward.",
+      },
+      {
         question: "Do you work with clients outside Argentina?",
         answer:
           "Yes. We work with clients from all over the world. The studio is based in Córdoba and works fully remotely, in English or Spanish, whichever suits your team.",
@@ -301,6 +306,7 @@ const dict = {
       process: "The Process",
       keyFeatures: "Key features",
       theResult: "The Result",
+      dataAsOf: "Data as of",
       nextProject: "Next project",
       caseByline: "case study by Nuba Studio",
       screenWord: "screen",
@@ -406,7 +412,7 @@ const dict = {
       secondaryCta: "Ver trabajos",
       pillars: ["Sitios y plataformas", "Apps iOS y Android", "Marketplaces y MVPs"],
       status: "Disponibles para nuevos proyectos",
-      location: "Córdoba, AR · Trabajamos con todo el mundo",
+      location: "Córdoba, AR · Trabajamos con todo el país",
       weatherAction: "Cambiar el clima",
       weather: ["Despejado", "Atardecer", "Noche", "Lima Nuba"],
     },
@@ -446,7 +452,7 @@ const dict = {
     },
     aboutPage: {
       label: "Nosotros",
-      studioHeading: "Un equipo chico que construye todo.",
+      studioHeading: "Un solo equipo que construye todo.",
       peopleHeading: "Tres disciplinas en la misma mesa.",
       peopleSub: "Diseño, desarrollo y estrategia trabajan juntos desde la primera llamada hasta el último deploy.",
       writesAbout: "Escribe sobre",
@@ -556,6 +562,11 @@ const dict = {
           "Los dos, y ese es el punto. Diseño, interacción y código pasan por la misma mesa, así nada se pierde al pasar de un equipo a otro. No necesitás traer tu propio diseñador ni tus propios desarrolladores.",
       },
       {
+        question: "¿Trabajan solo con empresas de Córdoba?",
+        answer:
+          "No. El estudio está en Córdoba, pero trabajamos con empresas de cualquier provincia de Argentina (hoy tenemos clientes en Buenos Aires, Córdoba y Ushuaia), con videollamadas cada semana y entregas que podés probar a medida que avanza el proyecto.",
+      },
+      {
         question: "¿Trabajan con clientes fuera de Argentina?",
         answer:
           "Sí. Trabajamos con clientes de todas partes del mundo. El estudio está en Córdoba y trabaja 100% en remoto, en inglés o en español, según lo que le quede mejor a tu equipo.",
@@ -641,6 +652,7 @@ const dict = {
       process: "El Proceso",
       keyFeatures: "Funcionalidades clave",
       theResult: "El Resultado",
+      dataAsOf: "Datos a",
       nextProject: "Próximo proyecto",
       caseByline: "caso de estudio de Nuba Studio",
       screenWord: "pantalla",
