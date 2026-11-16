@@ -50,7 +50,7 @@ AI companies use their own crawlers (GPTBot, ClaudeBot, PerplexityBot and others
 
 ## 6. Content in the HTML, fast
 
-Many AI crawlers do not execute JavaScript as well as Google does. If your content only appears after scripts run, they may not see it. Server-rendered or static HTML, as with [Next.js or Astro](/blog/why-we-build-with-nextjs), solves this.
+Many AI crawlers do not execute JavaScript as well as Google does. If your content only appears after scripts run, they may not see it. Server-rendered or static HTML, as with Next.js or Astro, solves this.
 
 ## 7. Be mentioned elsewhere
 
@@ -139,7 +139,7 @@ Las empresas de IA usan sus propios rastreadores (GPTBot, ClaudeBot, PerplexityB
 
 ## 6. El contenido en el HTML, y rápido
 
-Muchos rastreadores de IA no ejecutan JavaScript tan bien como Google. Si tu contenido solo aparece después de que corren los scripts, puede que no lo vean. Un HTML generado en el servidor o estático, como con [Next.js o Astro](/blog/why-we-build-with-nextjs), lo resuelve.
+Muchos rastreadores de IA no ejecutan JavaScript tan bien como Google. Si tu contenido solo aparece después de que corren los scripts, puede que no lo vean. Un HTML generado en el servidor o estático, como con Next.js o Astro, lo resuelve.
 
 ## 7. Que te mencionen en otros lados
 

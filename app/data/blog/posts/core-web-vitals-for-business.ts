@@ -55,7 +55,7 @@ Images without defined dimensions, banners that appear on top and fonts that cha
 
 ### Pages built in the browser
 
-Some sites send an almost empty page and build everything with JavaScript on the visitor's phone. On a mid-range phone with a weak connection, that takes a long time. Fix: render the content on the server or ahead of time, as frameworks like [Next.js](/blog/why-we-build-with-nextjs) or Astro do.
+Some sites send an almost empty page and build everything with JavaScript on the visitor's phone. On a mid-range phone with a weak connection, that takes a long time. Fix: render the content on the server or ahead of time, as frameworks like Next.js or Astro do.
 
 ### Slow hosting
 
@@ -144,7 +144,7 @@ Imágenes sin dimensiones definidas, banners que aparecen arriba y tipografías 
 
 ### Páginas armadas en el navegador
 
-Algunos sitios mandan una página casi vacía y arman todo con JavaScript en el celular del visitante. En un celular de gama media con una conexión débil, eso tarda mucho. Solución: generar el contenido en el servidor o por adelantado, como hacen frameworks como [Next.js](/blog/why-we-build-with-nextjs) o Astro.
+Algunos sitios mandan una página casi vacía y arman todo con JavaScript en el celular del visitante. En un celular de gama media con una conexión débil, eso tarda mucho. Solución: generar el contenido en el servidor o por adelantado, como hacen frameworks como Next.js o Astro.
 
 ### Hosting lento
 
