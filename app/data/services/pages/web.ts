@@ -5,7 +5,6 @@ const service: Service = {
   stack: ["Next.js", "React", "TypeScript", "Astro", "Headless CMS", "Vercel"],
   cases: ["mes", "provia-consulting", "bausing", "kennedys"],
   posts: [
-    "why-we-build-with-nextjs",
     "core-web-vitals-for-business",
     "nextjs-seo-checklist",
     "optimize-website-for-ai-search",
@@ -46,7 +45,7 @@ Templates and page builders are a good fit when the site is a business card and 
 
 ## Built with Next.js
 
-Most of our sites run on Next.js and React with TypeScript, deployed on Vercel. It gives us server rendering for SEO, very fast page loads and a clear path from a marketing site to a full platform without starting over. We explain the reasoning in [why we build with Next.js](/blog/why-we-build-with-nextjs). When a site is mostly static, like Provia Consulting, we sometimes choose Astro instead: the right tool depends on the project, not on habit.
+Most of our sites run on Next.js and React with TypeScript, deployed on Vercel. It gives us server rendering for SEO, very fast page loads and a clear path from a marketing site to a full platform without starting over. When a site is mostly static, like Provia Consulting, we sometimes choose Astro instead: the right tool depends on the project, not on habit.
 
 Content lives in a headless CMS when your team needs to edit pages, publish news or manage products without calling a developer.
 
@@ -143,7 +142,7 @@ Las plantillas y los constructores de páginas sirven cuando el sitio es una tar
 
 ## Hecho con Next.js
 
-La mayoría de nuestros sitios usan Next.js y React con TypeScript, publicados en Vercel. Nos da renderizado del lado del servidor para SEO, páginas que cargan muy rápido y un camino claro para pasar de un sitio institucional a una plataforma completa sin empezar de cero. Lo explicamos en [por qué desarrollamos con Next.js](/blog/why-we-build-with-nextjs). Cuando un sitio es casi todo estático, como el de Provia Consulting, a veces elegimos Astro: la herramienta depende del proyecto, no de la costumbre.
+La mayoría de nuestros sitios usan Next.js y React con TypeScript, publicados en Vercel. Nos da renderizado del lado del servidor para SEO, páginas que cargan muy rápido y un camino claro para pasar de un sitio institucional a una plataforma completa sin empezar de cero. Cuando un sitio es casi todo estático, como el de Provia Consulting, a veces elegimos Astro: la herramienta depende del proyecto, no de la costumbre.
 
 El contenido vive en un CMS headless cuando tu equipo necesita editar páginas, publicar novedades o cargar productos sin llamar a un desarrollador.
 
