@@ -145,13 +145,13 @@ export default function Hero() {
         .fromTo(
           markRef.current,
           { opacity: 0, y: 28, scale: 0.92, filter: "blur(10px)" },
-          { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 1.4 },
+          { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 1.4, clearProps: "filter,transform" },
           0.1
         )
         .fromTo(
           lines,
           { opacity: 0, yPercent: 40, filter: "blur(8px)" },
-          { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 1.2, stagger: 0.09 },
+          { opacity: 1, yPercent: 0, filter: "blur(0px)", duration: 1.2, stagger: 0.09, clearProps: "filter,transform" },
           0.25
         )
         .fromTo(

@@ -92,27 +92,34 @@ void main() {
   float t = uTime * 0.06;
   vec3 col = vec3(0.0);
 
-  if (d < 0.0) {
+  float aa = 1.0 / uDpr;
+  float skyMask = 1.0 - smoothstep(-2.5, -1.0, d);
+  float glowMask = smoothstep(-aa, aa, d);
+
+  if (skyMask > 0.0) {
     vec2 sp = q / uHalf;
     float f = fbm(sp * 1.6 + vec2(t * 1.3, -t));
     float g = fbm(sp * 2.4 - vec2(t * 0.8, t * 1.1) + f);
     vec3 sky = mix(uMid, uCore, smoothstep(0.25, 0.8, f));
     sky = mix(sky, uOuter, smoothstep(0.55, 0.95, g) * 0.35);
     vec2 lightDir = uLight / max(length(uLight), 1.0);
-    float side = clamp(dot(q / uHalf, lightDir) * 0.5 + 0.5, 0.0, 1.0);
+    float side = clamp(dot(sp, lightDir) * 0.5 + 0.5, 0.0, 1.0);
     sky *= 0.68 + 0.34 * side * uIntensity + 0.1 * uHover;
-    col = sky;
-  } else {
-    float edge = exp(-d / 2.2);
-    float bleed = exp(-d / (uHalf * 0.32));
-    float wide = exp(-d / (uHalf * 1.1));
-    col += uRim * (edge * 0.9 + bleed * 0.55) * lit;
-    col += uRim * wide * 0.12 * lit;
-    col += uRim * (edge * 0.7 + bleed * 0.35) * uHover * 0.3;
+    col += sky * skyMask;
+  }
 
+  if (glowMask > 0.0) {
+    float od = max(d, 0.0);
+    float edge = exp(-od / 2.2);
+    float bleed = exp(-od / (uHalf * 0.32));
+    float wide = exp(-od / (uHalf * 1.1));
+    vec3 glow = uRim * (edge * 0.9 + bleed * 0.55) * lit;
+    glow += uRim * wide * 0.12 * lit;
+    glow += uRim * (edge * 0.7 + bleed * 0.35) * uHover * 0.3;
     float atmos = fbm(q / uHalf * 0.9 + vec2(t, t * 0.6));
-    float amb = exp(-d / (uHalf * 0.6)) * 0.065 + exp(-length(q) / (uHalf * 2.2)) * 0.018;
-    col += mix(uOuter, uMid, 0.85) * amb * (0.7 + 0.6 * atmos);
+    float amb = exp(-od / (uHalf * 0.6)) * 0.065 + exp(-length(q) / (uHalf * 2.2)) * 0.018;
+    glow += mix(uOuter, uMid, 0.85) * amb * (0.7 + 0.6 * atmos);
+    col += glow * glowMask;
   }
 
   vec2 border = min(p, uRes - p) / (uRes * 0.5);

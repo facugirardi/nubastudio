@@ -9,6 +9,7 @@ import HomeServices from "./home/HomeServices";
 import HomeProcess from "./home/HomeProcess";
 import HomeCta from "./home/HomeCta";
 import Footer from "./home/Footer";
+import GridBeams from "./home/GridBeams";
 
 export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactNode }) {
   return (
@@ -16,6 +17,7 @@ export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactN
       <Loader />
       <SmoothScroll infinite={false}>
         <Navbar />
+        <GridBeams />
         <main id="main" tabIndex={-1} className="outline-none">
           {seoFallback}
           <Hero />
