@@ -29,6 +29,8 @@ const ES_SLUGS: Record<string, string> = {
   "core-web-vitals-for-business": "core-web-vitals-para-negocios",
   "nextjs-seo-checklist": "checklist-seo-nextjs",
   "optimize-website-for-ai-search": "seo-para-buscadores-con-ia",
+  "want-to-build-an-app-where-to-start": "quiero-desarrollar-una-app-por-donde-empiezo",
+  "how-to-build-custom-software-for-your-business": "como-desarrollar-un-software-para-tu-empresa",
 };
 
 const EN_SLUGS: Record<string, string> = Object.fromEntries(Object.entries(ES_SLUGS).map(([en, es]) => [es, en]));

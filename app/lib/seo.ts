@@ -12,7 +12,7 @@ export const SITE_HOST = SITE_URL.replace(/^https?:\/\//, "");
 
 export const SITE_NAME = "Nuba Studio";
 
-export const SITE_TAGLINE = "Digital product studio";
+export const SITE_TAGLINE = "Custom software & app development";
 
 export const SITE_DESCRIPTION =
   "Nuba Studio is a custom software and app development company in Argentina, based in Córdoba. We design and build business systems, websites, mobile apps and marketplaces end to end.";

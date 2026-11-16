@@ -25,6 +25,8 @@ import whyNext from "./posts/why-we-build-with-nextjs";
 import webVitals from "./posts/core-web-vitals-for-business";
 import nextSeo from "./posts/nextjs-seo-checklist";
 import aiSearch from "./posts/optimize-website-for-ai-search";
+import wantAnApp from "./posts/want-to-build-an-app-where-to-start";
+import customForBusiness from "./posts/how-to-build-custom-software-for-your-business";
 
 export type { BlogCategory, Post, PostContent } from "./types";
 export { blogPath, blogSlug, translateBlogPath } from "./slugs";
@@ -53,6 +55,8 @@ export const posts: Post[] = [
   webVitals,
   nextSeo,
   aiSearch,
+  wantAnApp,
+  customForBusiness,
 ];
 
 export const BLOG_CATEGORIES: BlogCategory[] = ["costs", "product", "industry", "tech"];

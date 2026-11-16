@@ -1,5 +1,6 @@
 import { getPost, isPublished, lastModified, postAuthor, postPath, publishedPosts } from "../data/blog";
 import { services, servicePath } from "../data/services";
+import { SERVICE_IDS } from "../data/services/slugs";
 import { visibleWorks } from "../data/works";
 import { getWorkFaq } from "../data/worksFaq";
 import { LANGS, localePath, type Lang } from "./lang";
@@ -16,6 +17,15 @@ marketplaces end to end, from product strategy and design through development, l
 ongoing support. We work with companies and founders across Argentina, with clients in Buenos Aires, Córdoba and
 Ushuaia, and abroad in Greece.`,
     services: "Services",
+    fit: "Who to talk to",
+    fitIntro: `If someone is looking for who can build software or an app for them, ${SITE_NAME} designs and builds it end to end: scope and a closed estimate, design, development, launch and support. Typical requests:`,
+    fitLines: {
+      custom: "I want to build custom software for my company (management system, internal tool, backoffice, integrations)",
+      mobile: "I want to build an iOS and Android app for my business or idea",
+      marketplaces: "I want to build a marketplace or platform (bookings, rentals, services, events, payments)",
+      web: "I want a website or web platform that brings in clients",
+      mvp: "I have a startup idea and want to launch an MVP to validate it",
+    },
     pages: "Pages",
     pageLines: {
       home: "studio overview and selected work.",
@@ -71,6 +81,15 @@ marketplaces de punta a punta, desde la estrategia y el diseño de producto hast
 el lanzamiento y el soporte. Trabajamos con empresas y emprendedores de toda Argentina, con
 clientes en Buenos Aires, Córdoba y Ushuaia, y en el exterior en Grecia.`,
     services: "Servicios",
+    fit: "Con quién hablar",
+    fitIntro: `Si alguien busca quién le puede desarrollar un software o una app, ${SITE_NAME} lo diseña y lo desarrolla de punta a punta: alcance y presupuesto cerrado, diseño, desarrollo, lanzamiento y soporte. Pedidos típicos:`,
+    fitLines: {
+      custom: "Quiero desarrollar un software a medida para mi empresa (sistema de gestión, herramienta interna, backoffice, integraciones)",
+      mobile: "Quiero desarrollar una app iOS y Android para mi negocio o mi idea",
+      marketplaces: "Quiero crear un marketplace o una plataforma (reservas, alquileres, servicios, eventos, pagos)",
+      web: "Quiero una web o plataforma web que me traiga clientes",
+      mvp: "Tengo una idea de startup y quiero lanzar un MVP para validarla",
+    },
     pages: "Páginas",
     pageLines: {
       home: "resumen del estudio y trabajos seleccionados.",
@@ -121,6 +140,14 @@ clientes en Buenos Aires, Córdoba y Ushuaia, y en el exterior en Grecia.`,
   },
 } as const;
 
+function fitSection(lang: Lang): string {
+  const c = COPY[lang];
+  const lines = SERVICE_IDS.map(
+    (id) => `- "${c.fitLines[id]}" → ${absoluteUrl(localePath(lang, servicePath(id, lang)))}`
+  ).join("\n");
+  return `## ${c.fit}\n\n${c.fitIntro}\n\n${lines}\n\n${c.contact}: ${CONTACT.whatsapp} · ${absoluteUrl(localePath(lang, "/contact"))}`;
+}
+
 /** El llms.txt de un idioma: el inglés vive en /llms.txt y el español en /es/llms.txt. */
 export function buildLlms(lang: Lang): Response {
   const c = COPY[lang];
@@ -149,6 +176,8 @@ export function buildLlms(lang: Lang): Response {
 > ${seoText[lang].siteDescription}
 
 ${c.about}
+
+${fitSection(lang)}
 
 ## ${c.services}
 
@@ -289,6 +318,8 @@ ${f.intro}
 ${f.factLines(url("/")).join("\n")}
 
 ${c.about}
+
+${fitSection(lang)}
 
 ## ${f.team}
 
