@@ -20,7 +20,6 @@ import advisoryWebsites from "./posts/websites-for-consulting-and-financial-firm
 import realEstate from "./posts/real-estate-agency-software";
 import fieldBooking from "./posts/sports-field-booking-app";
 import blockchainCerts from "./posts/blockchain-certificates-use-cases";
-import whyNext from "./posts/why-we-build-with-nextjs";
 import webVitals from "./posts/core-web-vitals-for-business";
 import nextSeo from "./posts/nextjs-seo-checklist";
 import aiSearch from "./posts/optimize-website-for-ai-search";
@@ -47,7 +46,6 @@ export const posts: Post[] = [
   realEstate,
   fieldBooking,
   blockchainCerts,
-  whyNext,
   webVitals,
   nextSeo,
   aiSearch,

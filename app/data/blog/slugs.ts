@@ -24,7 +24,6 @@ const ES_SLUGS: Record<string, string> = {
   "real-estate-agency-software": "software-para-inmobiliarias",
   "sports-field-booking-app": "app-de-reserva-de-canchas",
   "blockchain-certificates-use-cases": "certificados-en-blockchain",
-  "why-we-build-with-nextjs": "por-que-desarrollamos-con-nextjs",
   "core-web-vitals-for-business": "core-web-vitals-para-negocios",
   "nextjs-seo-checklist": "checklist-seo-nextjs",
   "optimize-website-for-ai-search": "seo-para-buscadores-con-ia",
