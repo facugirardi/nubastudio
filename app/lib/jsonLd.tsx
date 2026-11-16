@@ -10,6 +10,7 @@ import {
   absoluteUrl,
   type TeamMember,
 } from "./seo";
+import { servicePath } from "../data/services/slugs";
 import { seoText } from "./seoText";
 
 /** Quita claves vacías para no emitir campos huecos en el JSON-LD. */
@@ -24,7 +25,10 @@ const personId = (m: TeamMember) => `${SITE_URL}/about#${m.id}`;
 
 const AREA_SERVED = [
   { "@type": "Country", name: "Argentina" },
-  { "@type": "Place", name: "Latin America" },
+  { "@type": "City", name: "Buenos Aires" },
+  { "@type": "City", name: "Córdoba" },
+  { "@type": "City", name: "Ushuaia" },
+  { "@type": "Country", name: "Greece" },
   { "@type": "Place", name: "Worldwide" },
 ];
 
@@ -36,8 +40,9 @@ export function personJsonLd(member: TeamMember, lang: Lang) {
     "@id": personId(member),
     name: member.name,
     jobTitle: member.jobTitle,
+    description: member.bio[lang],
     image: absoluteUrl(member.photo),
-    url: langUrl(lang, "/about"),
+    url: `${langUrl(lang, "/about")}#${member.id}`,
     worksFor: { "@id": ORG_ID },
     knowsAbout: member.knowsAbout,
     knowsLanguage: ["es", "en"],
@@ -90,13 +95,6 @@ export function organizationJsonLd(lang: Lang) {
         }
       : {}),
     founder: TEAM_MEMBERS.map((m) => ({ "@type": "Person", "@id": personId(m), name: m.name })),
-    employee: TEAM_MEMBERS.map((m) => ({
-      "@type": "Person",
-      "@id": personId(m),
-      name: m.name,
-      jobTitle: m.jobTitle,
-    })),
-    numberOfEmployees: { "@type": "QuantitativeValue", value: TEAM_MEMBERS.length },
     areaServed: AREA_SERVED,
     knowsAbout: [
       "Web design",
@@ -114,6 +112,26 @@ export function organizationJsonLd(lang: Lang) {
       "Generative engine optimization",
     ],
     sameAs: PROFILES,
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: seoText[lang].servicesListName,
+      url: langUrl(lang, "/services"),
+      itemListElement: seoText[lang].serviceItems.flatMap((item) =>
+        item.service
+          ? [
+              {
+                "@type": "Offer",
+                itemOffered: {
+                  "@type": "Service",
+                  "@id": `${langUrl(lang, servicePath(item.service, lang))}#service`,
+                  name: item.name,
+                  url: langUrl(lang, servicePath(item.service, lang)),
+                },
+              },
+            ]
+          : []
+      ),
+    },
     contactPoint: [
       {
         "@type": "ContactPoint",
@@ -216,11 +234,59 @@ export function caseStudyJsonLd(work: WorkItem, lang: Lang) {
     creator: { "@id": ORG_ID },
     provider: { "@id": ORG_ID },
     isPartOf: { "@id": siteId(lang) },
+    ...(productJsonLd(work) ? { about: productJsonLd(work) } : {}),
+  };
+}
+
+/** El producto en producción (web y/o app en las tiendas): los links públicos son la evidencia verificable del caso. */
+function productJsonLd(work: WorkItem) {
+  const { web, ios, android } = work.links ?? {};
+  const live = [web, ios, android].filter((u): u is string => Boolean(u));
+  if (!live.length) return null;
+  const os = [ios && "iOS", android && "Android"].filter(Boolean).join(", ");
+  return os
+    ? {
+        "@type": "MobileApplication",
+        name: work.title,
+        operatingSystem: os,
+        applicationCategory: work.seoTitle ?? work.subtitle,
+        url: web ?? ios ?? android,
+        sameAs: live,
+        ...(work.year ? { dateCreated: work.year } : {}),
+      }
+    : {
+        "@type": "WebSite",
+        name: work.title,
+        url: web,
+        ...(work.year ? { dateCreated: work.year } : {}),
+      };
+}
+
+/** Landing de un servicio: el Service con su URL, ligado a la página y a la organización. */
+export function serviceJsonLd(
+  lang: Lang,
+  { path, name, description, keywords }: { path: string; name: string; description: string; keywords: string[] }
+) {
+  const url = langUrl(lang, path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${url}#service`,
+    url,
+    name,
+    serviceType: name,
+    description,
+    keywords: keywords.join(", "),
+    inLanguage: lang,
+    provider: { "@id": ORG_ID },
+    areaServed: AREA_SERVED,
+    availableChannel: { "@type": "ServiceChannel", serviceUrl: langUrl(lang, "/contact") },
+    mainEntityOfPage: { "@id": `${url}#webpage` },
   };
 }
 
 export function servicesJsonLd(
-  services: { name: string; description: string }[],
+  services: { name: string; description: string; path?: string }[],
   lang: Lang
 ) {
   return {
@@ -236,6 +302,7 @@ export function servicesJsonLd(
         name: service.name,
         description: service.description,
         serviceType: service.name,
+        ...(service.path ? { url: langUrl(lang, service.path) } : {}),
         provider: { "@id": ORG_ID },
         areaServed: AREA_SERVED,
       },
@@ -296,7 +363,7 @@ export function blogPostingJsonLd(
       "@id": personId(post.author),
       name: post.author.name,
       jobTitle: post.author.jobTitle,
-      url: langUrl(lang, "/about"),
+      url: `${langUrl(lang, "/about")}#${post.author.id}`,
       worksFor: { "@id": ORG_ID },
       ...(post.author.profiles.length ? { sameAs: post.author.profiles } : {}),
     },

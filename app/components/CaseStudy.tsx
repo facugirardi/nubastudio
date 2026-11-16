@@ -45,8 +45,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 function Label({ index, children }: { index: string; children: React.ReactNode }) {
   return (
-    <p data-reveal className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
-      <span className="text-white/25">[{index}]</span> {children}
+    <p data-reveal className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
+      <span aria-hidden className="text-white/25">[{index}]</span> {children}
     </p>
   );
 }
@@ -54,13 +54,15 @@ function Label({ index, children }: { index: string; children: React.ReactNode }
 function MetaRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="grid grid-cols-[7rem_minmax(0,1fr)] items-baseline gap-4 border-b border-white/[0.08] py-4">
-      <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{label}</dt>
+      <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{label}</dt>
       <dd className="m-0 text-[15px] text-[#EDEDED]">{children}</dd>
     </div>
   );
 }
 
 export type CaseArticle = { title: string; excerpt: string; href: string };
+
+const METRIC_GRID = ["max-w-sm", "max-w-2xl sm:grid-cols-2", "sm:grid-cols-3", "sm:grid-cols-2 lg:grid-cols-4"];
 
 export default function CaseStudy({
   work: rawWork,
@@ -238,13 +240,13 @@ export default function CaseStudy({
             <nav data-hero aria-label={cs.breadcrumb} className="font-mono text-[11px] uppercase tracking-[0.08em]">
               <ol className="flex flex-wrap items-center gap-2">
                 <li>
-                  <Link href={path("/")} className="text-white/45 transition-colors hover:text-[#EDEDED]">
+                  <Link href={path("/")} className="text-white/55 transition-colors hover:text-[#EDEDED]">
                     {cs.home}
                   </Link>
                 </li>
                 <li aria-hidden className="text-white/25">/</li>
                 <li>
-                  <Link href={path("/works")} className="text-white/45 transition-colors hover:text-[#EDEDED]">
+                  <Link href={path("/works")} className="text-white/55 transition-colors hover:text-[#EDEDED]">
                     {cs.work}
                   </Link>
                 </li>
@@ -325,7 +327,7 @@ export default function CaseStudy({
                           {l.label}
                           <ArrowUpRight
                             size={10}
-                            className="text-white/40 transition-transform duration-200 group-hover/l:-translate-y-px group-hover/l:translate-x-px"
+                            className="text-white/55 transition-transform duration-200 group-hover/l:-translate-y-px group-hover/l:translate-x-px"
                           />
                         </a>
                       </li>
@@ -457,6 +459,30 @@ export default function CaseStudy({
               >
                 {work.result}
               </p>
+              {work.metrics?.length ? (
+                <div data-reveal className="mt-12">
+                  <dl className={`grid grid-cols-1 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.08] ${METRIC_GRID[Math.min(work.metrics.length, 4) - 1]}`}>
+                    {work.metrics.map((m) => (
+                      <div key={m.value + m.label} className="flex flex-col gap-2 bg-black px-5 py-6 sm:px-6">
+                        <dt className="order-2 text-[14px] leading-snug text-white/55">{m.label}</dt>
+                        <dd className="order-1 m-0 text-[clamp(2rem,3.4vw,2.8rem)] font-[450] leading-none tracking-[-0.045em] text-[#C6FF00]">
+                          {m.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                  {work.metricsAsOf ? (
+                    <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.08em] text-white/30">
+                      {cs.dataAsOf}{" "}
+                      {new Date(`${work.metricsAsOf}-15T12:00:00Z`).toLocaleDateString(lang === "es" ? "es-AR" : "en-US", {
+                        month: "long",
+                        year: "numeric",
+                        timeZone: "UTC",
+                      })}
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
               {links.length ? (
                 <div data-reveal className="mt-10 flex flex-wrap gap-2.5 sm:gap-3">
                   {links.map((l, i) => (
@@ -474,7 +500,7 @@ export default function CaseStudy({
                       {l.label}
                       <ArrowUpRight
                         size={11}
-                        className={`transition-transform duration-200 group-hover/cta:-translate-y-px group-hover/cta:translate-x-px ${i === 0 ? "" : "text-white/45"}`}
+                        className={`transition-transform duration-200 group-hover/cta:-translate-y-px group-hover/cta:translate-x-px ${i === 0 ? "" : "text-white/55"}`}
                       />
                     </a>
                   ))}
@@ -507,7 +533,7 @@ export default function CaseStudy({
                       </span>
                       <ArrowUpRight
                         size={12}
-                        className="mt-2 shrink-0 text-white/40 transition-colors group-hover/article:text-[#C6FF00]"
+                        className="mt-2 shrink-0 text-white/55 transition-colors group-hover/article:text-[#C6FF00]"
                       />
                     </a>
                   </li>
@@ -530,8 +556,8 @@ export default function CaseStudy({
             className="group/next grid gap-8 px-5 py-16 outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-[#C6FF00] sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-center lg:gap-16 lg:px-10 lg:py-24"
           >
             <div className="flex flex-col gap-6">
-              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
-                <span className="text-white/25">[→]</span> {cs.nextProject}
+              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
+                <span aria-hidden className="text-white/25">[→]</span> {cs.nextProject}
               </p>
               <div>
                 <p className="text-[clamp(2.5rem,6vw,5.5rem)] font-[450] leading-[0.95] tracking-[-0.06em] transition-colors duration-300 group-hover/next:text-white">
@@ -559,7 +585,7 @@ export default function CaseStudy({
           <div className="flex justify-center border-t border-white/[0.07] py-6">
             <Link
               href={path("/works")}
-              className="group/all inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-white/45 transition-colors hover:text-[#EDEDED]"
+              className="group/all inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55 transition-colors hover:text-[#EDEDED]"
             >
               {cs.allWork}
               <ArrowRight size={12} className="transition-transform duration-200 group-hover/all:translate-x-0.5" />

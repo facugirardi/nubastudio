@@ -34,7 +34,7 @@ export default function HomeCta() {
 
         <h2 data-reveal className="text-[clamp(2.75rem,6.4vw,5.5rem)] font-[450] leading-[0.98] tracking-[-0.055em]">
           {t.ctaHeading.map((line, i) => (
-            <span key={line} className={`block ${i === 1 ? "text-white/45" : ""}`}>
+            <span key={line} className={`block ${i === 1 ? "text-white/55" : ""}`}>
               {line}
             </span>
           ))}
@@ -58,7 +58,7 @@ export default function HomeCta() {
             className="inline-flex h-11 items-center gap-2 rounded-full border border-white/[0.14] bg-white/[0.02] px-5 text-[15px] font-medium text-[#EDEDED] transition-colors duration-150 hover:border-white/25 hover:bg-white/[0.07] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C6FF00]"
           >
             {t.whatsapp}
-            <ArrowUpRight size={11} className="text-white/45" />
+            <ArrowUpRight size={11} className="text-white/55" />
           </a>
         </div>
       </div>

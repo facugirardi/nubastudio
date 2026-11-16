@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { lastModified, postPath, publishedPosts } from "./data/blog";
+import { SERVICE_IDS, serviceLocalizedPath } from "./data/services";
 import { visibleWorks } from "./data/works";
 import { LANGS, localePath } from "./lib/lang";
 import { hreflangMap, pathIn, type LocalizedPath } from "./lib/pageMeta";
@@ -44,6 +45,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/blog", changeFrequency: "weekly", priority: 0.8 },
   ];
 
+  const serviceRoutes: Entry[] = SERVICE_IDS.map((id) => ({
+    path: serviceLocalizedPath(id),
+    changeFrequency: "monthly",
+    priority: 0.9,
+  }));
+
   const caseRoutes: Entry[] = visibleWorks.map((work) => ({
     path: `/cases/${work.slug}`,
     changeFrequency: "yearly",
@@ -58,5 +65,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     modified: new Date(lastModified(post)),
   }));
 
-  return [...staticRoutes, ...caseRoutes, ...postRoutes].flatMap(entriesFor);
+  return [...staticRoutes, ...serviceRoutes, ...caseRoutes, ...postRoutes].flatMap(entriesFor);
 }

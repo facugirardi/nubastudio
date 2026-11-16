@@ -25,7 +25,7 @@ export default function HomeWork() {
     <section id="work" ref={ref} className="relative bg-black font-display text-[#EDEDED]">
       <div className="mx-auto max-w-[1400px] border-x border-white/[0.07]">
         <SectionHeading index="01" label={t.workLabel} heading={t.workHeading}>
-          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">
+          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
             {String(works.length).padStart(2, "0")} {t.workLabel.toLowerCase()}
           </p>
         </SectionHeading>
@@ -56,7 +56,7 @@ export default function HomeWork() {
                 className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_120%_at_50%_100%,rgba(255,255,255,0.06),transparent_70%)] opacity-0 transition-opacity duration-300 group-hover/more:opacity-100"
               />
               <span className="relative">{t.seeMore}</span>
-              <span className="relative font-mono text-[11px] text-white/50 lg:text-white/35">({String(works.length).padStart(2, "0")})</span>
+              <span className="relative font-mono text-[11px] text-white/50 lg:text-white/55">({String(works.length).padStart(2, "0")})</span>
               <span className="relative flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-white/[0.08] lg:border-white/[0.12] lg:bg-transparent transition-[transform,background-color,color,border-color] duration-300 ease-out group-hover/more:translate-x-0.5 group-hover/more:border-[#EDEDED] group-hover/more:bg-[#EDEDED] group-hover/more:text-black">
                 <ArrowRight size={12} />
               </span>

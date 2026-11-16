@@ -204,8 +204,8 @@ export default function WorksIndex() {
       <div className="mx-auto max-w-[1400px] border-x border-white/[0.07]">
         <div ref={headRef} className="grid gap-10 px-5 pb-14 pt-32 sm:px-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-end lg:px-10 lg:pb-20 lg:pt-40">
           <div>
-            <p data-intro className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
-              <span className="text-white/25">[{String(works.length).padStart(2, "0")}]</span> {t.label}
+            <p data-intro className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
+              <span aria-hidden className="text-white/25">[{String(works.length).padStart(2, "0")}]</span> {t.label}
             </p>
             <h1 data-intro className="mt-5 max-w-[15ch] text-[clamp(2.75rem,6vw,5.25rem)] font-[450] leading-[0.98] tracking-[-0.055em]">
               {t.heading}
@@ -237,7 +237,7 @@ export default function WorksIndex() {
                 }`}
               >
                 {t.filters[f]}
-                <span className="hidden font-mono text-[10px] text-white/35 tabular-nums sm:inline">{String(counts[f]).padStart(2, "0")}</span>
+                <span className="hidden font-mono text-[10px] text-white/55 tabular-nums sm:inline">{String(counts[f]).padStart(2, "0")}</span>
               </button>
             ))}
           </div>
@@ -260,7 +260,7 @@ export default function WorksIndex() {
                   setView(v);
                 }}
                 className={`relative flex h-7 w-9 items-center justify-center rounded-full transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C6FF00] ${
-                  view === v ? "text-[#EDEDED]" : "text-white/45 hover:text-[#EDEDED]"
+                  view === v ? "text-[#EDEDED]" : "text-white/55 hover:text-[#EDEDED]"
                 }`}
               >
                 {v === "grid" ? <GridIcon /> : v === "list" ? <ListIcon /> : <FeedIcon />}
@@ -376,17 +376,17 @@ function ListRow({
         <span className="relative h-10 w-16 shrink-0 overflow-hidden rounded-md border border-white/[0.08] md:hidden">
           <Image src={work.image} alt="" fill sizes="64px" className="object-cover" />
         </span>
-        <span className="hidden font-mono text-[11px] uppercase tracking-[0.08em] text-white/35 md:block">
+        <span aria-hidden className="hidden font-mono text-[11px] uppercase tracking-[0.08em] text-white/35 md:block">
           {String(index + 1).padStart(2, "0")}
         </span>
         <span className="min-w-0">
           <span className="block truncate text-[clamp(1.4rem,3vw,2.6rem)] font-[450] leading-[1.05] tracking-[-0.045em] text-[#EDEDED] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/row:translate-x-2">
             {work.title}
           </span>
-          <span className="mt-1 block truncate text-[13px] text-white/45 md:hidden">{work.subtitle}</span>
+          <span className="mt-1 block truncate text-[13px] text-white/55 md:hidden">{work.subtitle}</span>
         </span>
         <span className="hidden truncate text-[15px] text-white/50 md:block">{work.subtitle}</span>
-        <span className="hidden font-mono text-[11px] uppercase tracking-[0.08em] text-white/35 tabular-nums md:block">{work.year}</span>
+        <span className="hidden font-mono text-[11px] uppercase tracking-[0.08em] text-white/55 tabular-nums md:block">{work.year}</span>
         <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.12] text-white/60 transition-[background-color,color,border-color,transform] duration-300 ease-out group-hover/row:rotate-45 group-hover/row:border-[#EDEDED] group-hover/row:bg-[#EDEDED] group-hover/row:text-black">
           <ArrowUpRight />
         </span>
@@ -432,15 +432,15 @@ function FeedItem({
         </div>
 
         <div className="mt-6 grid gap-4 lg:mt-8 lg:grid-cols-[3.5rem_minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-start lg:gap-8">
-          <span className="hidden pt-3 font-mono text-[11px] uppercase tracking-[0.08em] text-white/35 lg:block">
+          <span aria-hidden className="hidden pt-3 font-mono text-[11px] uppercase tracking-[0.08em] text-white/35 lg:block">
             {String(index + 1).padStart(2, "0")}
           </span>
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <h3 className="text-[clamp(2rem,4.4vw,3.75rem)] font-[450] leading-[1] tracking-[-0.05em] text-[#EDEDED]">{work.title}</h3>
-              <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">
+              <h2 className="text-[clamp(2rem,4.4vw,3.75rem)] font-[450] leading-[1] tracking-[-0.05em] text-[#EDEDED]">{work.title}</h2>
+              <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
                 {work.subtitle}
-                {work.year ? <span className="text-white/25"> · {work.year}</span> : null}
+                {work.year ? <span className="text-white/55"> · {work.year}</span> : null}
               </p>
             </div>
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/[0.12] text-white/60 transition-[background-color,color,border-color,transform] duration-300 ease-out group-hover/feed:rotate-45 group-hover/feed:border-[#EDEDED] group-hover/feed:bg-[#EDEDED] group-hover/feed:text-black lg:hidden">

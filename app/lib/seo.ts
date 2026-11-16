@@ -3,6 +3,8 @@
  * así que canonicals, sitemap y JSON-LD tienen que apuntar ahí. Si se cambia el
  * dominio principal en Vercel, cambiar NEXT_PUBLIC_SITE_URL.
  */
+import type { Lang } from "./lang";
+
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://www.nuba.studio";
 
@@ -13,7 +15,7 @@ export const SITE_NAME = "Nuba Studio";
 export const SITE_TAGLINE = "Digital product studio";
 
 export const SITE_DESCRIPTION =
-  "Nuba Studio is a digital product studio from Córdoba, Argentina. We design and build websites, mobile apps, marketplaces and digital products end to end.";
+  "Nuba Studio is a custom software and app development company in Argentina, based in Córdoba. We design and build business systems, websites, mobile apps and marketplaces end to end.";
 
 export const CONTACT = {
   phone: "+5493513471844",
@@ -55,6 +57,8 @@ export type TeamMember = {
   /** Perfiles personales (LinkedIn, GitHub, Behance…): alimentan `sameAs` del Person. */
   profiles: string[];
   knowsAbout: string[];
+  /** Biografía visible en /about y `description` del Person: solo hechos verificables. */
+  bio: Record<Lang, string>;
 };
 
 export const TEAM_MEMBERS: TeamMember[] = [
@@ -66,6 +70,10 @@ export const TEAM_MEMBERS: TeamMember[] = [
     photo: "/images/alejo.webp",
     profiles: ["https://www.linkedin.com/in/alejovaquero/"],
     knowsAbout: ["Product design", "UI/UX design", "Design systems", "Web design"],
+    bio: {
+      en: "Co-founder and product designer at Nuba Studio. Alejo leads interface and experience design on every project, from the first wireframes to the design system developers build on, and writes the studio's industry guides on real estate, events and marketplaces.",
+      es: "Cofundador y diseñador de producto en Nuba Studio. Alejo lidera el diseño de interfaz y experiencia en cada proyecto, desde los primeros wireframes hasta el sistema de diseño sobre el que se desarrolla, y escribe las guías por industria del estudio: inmobiliarias, eventos y marketplaces.",
+    },
   },
   {
     id: "facundo-girardi",
@@ -75,6 +83,10 @@ export const TEAM_MEMBERS: TeamMember[] = [
     photo: "/images/facu.webp",
     profiles: ["https://www.linkedin.com/in/facugirardi/"],
     knowsAbout: ["Software development", "Next.js", "React Native", "TypeScript", "Web performance"],
+    bio: {
+      en: "Co-founder and software developer at Nuba Studio. Facundo leads development: the websites, iOS and Android apps and APIs behind the studio's products, built with Next.js, React Native and TypeScript, and writes about performance, SEO and the technology choices behind each project.",
+      es: "Cofundador y desarrollador de software en Nuba Studio. Facundo lidera el desarrollo: los sitios, las apps iOS y Android y las APIs detrás de los productos del estudio, hechos con Next.js, React Native y TypeScript, y escribe sobre performance, SEO y las decisiones técnicas de cada proyecto.",
+    },
   },
   {
     id: "angel-vaquero",
@@ -84,6 +96,10 @@ export const TEAM_MEMBERS: TeamMember[] = [
     photo: "/images/angelito.webp",
     profiles: ["https://www.linkedin.com/in/angel-vaquero-7592a8194/"],
     knowsAbout: ["Product strategy", "MVP development", "Marketplaces", "Software project estimation"],
+    bio: {
+      en: "Co-founder and product strategist at Nuba Studio. Ángel leads discovery and scope: turning an idea into a closed scope, a roadmap and an estimate before anything is built, and writes the studio's guides on costs, MVPs and how to choose a development partner.",
+      es: "Cofundador y estratega de producto en Nuba Studio. Ángel lidera el descubrimiento y el alcance: convertir una idea en un alcance cerrado, una hoja de ruta y una estimación antes de construir nada, y escribe las guías del estudio sobre costos, MVPs y cómo elegir con quién desarrollar.",
+    },
   },
 ];
 

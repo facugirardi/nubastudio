@@ -14,9 +14,7 @@ type RGB = [number, number, number];
 type Palette = { core: RGB; mid: RGB; outer: RGB; rim: RGB };
 
 const PALETTES: Palette[] = [
-  { core: [1, 1, 1], mid: [0.9, 0.91, 0.94], outer: [0.86, 0.9, 0.82], rim: [1, 1, 1] },
-  { core: [1, 0.86, 0.7], mid: [1, 0.55, 0.5], outer: [0.62, 0.52, 1], rim: [1, 0.8, 0.68] },
-  { core: [0.86, 0.9, 1], mid: [0.5, 0.58, 1], outer: [0.32, 0.38, 0.95], rim: [0.7, 0.77, 1] },
+  { core: [1, 1, 1], mid: [0.92, 0.92, 0.92], outer: [0.9, 0.9, 0.9], rim: [1, 1, 1] },
   { core: [0.95, 1, 0.78], mid: [0.8, 1, 0.1], outer: [0.78, 1, 0], rim: [0.86, 1, 0.35] },
 ];
 
@@ -89,7 +87,7 @@ void main() {
   float distL = length(toL);
   float facing = max(dot(n, toL / max(distL, 1.0)), 0.0);
   float atten = 1.0 / (1.0 + (distL * distL) / (uHalf * uHalf * 12.0));
-  float lit = pow(facing, 1.8) * atten * uIntensity * 1.8;
+  float lit = pow(facing, 1.8) * atten * uIntensity * 0.85;
 
   float t = uTime * 0.06;
   vec3 col = vec3(0.0);
@@ -110,10 +108,10 @@ void main() {
     float wide = exp(-d / (uHalf * 1.1));
     col += uRim * (edge * 0.9 + bleed * 0.55) * lit;
     col += uRim * wide * 0.12 * lit;
-    col += uRim * (edge * 0.7 + bleed * 0.35) * uHover * 0.6;
+    col += uRim * (edge * 0.7 + bleed * 0.35) * uHover * 0.3;
 
     float atmos = fbm(q / uHalf * 0.9 + vec2(t, t * 0.6));
-    float amb = exp(-d / (uHalf * 0.6)) * 0.13 + exp(-length(q) / (uHalf * 2.2)) * 0.035;
+    float amb = exp(-d / (uHalf * 0.6)) * 0.065 + exp(-length(q) / (uHalf * 2.2)) * 0.018;
     col += mix(uOuter, uMid, 0.85) * amb * (0.7 + 0.6 * atmos);
   }
 
@@ -151,6 +149,15 @@ export function createHeroLight({
 }): HeroLight | null {
   const gl = canvas.getContext("webgl", { premultipliedAlpha: true, alpha: true, antialias: false, powerPreference: "low-power" });
   if (!gl) return null;
+
+  // Sin placa de video (SwiftShader, llvmpipe…) el shader corre en la CPU y frena todo:
+  // ahí queda la luz CSS de respaldo.
+  const debug = gl.getExtension("WEBGL_debug_renderer_info");
+  const renderer = debug ? String(gl.getParameter(debug.UNMASKED_RENDERER_WEBGL)) : "";
+  if (/swiftshader|llvmpipe|softpipe|software|basic render|mesa offscreen/i.test(renderer)) {
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    return null;
+  }
 
   let program: WebGLProgram;
   try {
@@ -205,9 +212,28 @@ export function createHeroLight({
     canvas.height = Math.round(h * dpr);
     gl.viewport(0, 0, canvas.width, canvas.height);
   };
+  // Posición del logo dentro del canvas: se mide solo cuando puede haber cambiado
+  // (scroll, resize, entrada animada), no en cada frame (evita reflows forzados).
+  const geo = { cx: 0, cy: 0, half: 0 };
+  let geoDirty = true;
+  const markDirty = () => (geoDirty = true);
+  const measure = () => {
+    const c = canvas.getBoundingClientRect();
+    const m = mark.getBoundingClientRect();
+    geo.cx = m.left + m.width / 2 - c.left;
+    geo.cy = m.top + m.height / 2 - c.top;
+    geo.half = m.width / 2;
+    geoDirty = false;
+  };
+
   resize();
-  const ro = new ResizeObserver(resize);
+  const ro = new ResizeObserver(() => {
+    resize();
+    markDirty();
+  });
   ro.observe(canvas);
+  ro.observe(mark);
+  window.addEventListener("scroll", markDirty, { passive: true });
 
   let visible = true;
   const io = new IntersectionObserver(([entry]) => {
@@ -220,6 +246,9 @@ export function createHeroLight({
   let last = performance.now();
   const start = last;
   let running = false;
+  let lastDraw = 0;
+  /** Los primeros segundos el logo entra animado (se mueve sin scroll): se mide siempre. */
+  const INTRO_MS = 3000;
 
   const frame = (now: number) => {
     const dt = Math.min((now - last) / 1000, 0.05);
@@ -242,14 +271,26 @@ export function createHeroLight({
       for (let i = 0; i < 3; i++) colors[key][i] += (goal[key][i] - colors[key][i]) * kc;
     });
 
-    const c = canvas.getBoundingClientRect();
-    const m = mark.getBoundingClientRect();
+    if (geoDirty || now - start < INTRO_MS) measure();
+
+    // En reposo (la luz llegó a su lugar) alcanza con 30 fps para el grano y la deriva.
+    const settled =
+      Math.abs(target.x - cur.x) < 0.5 &&
+      Math.abs(target.y - cur.y) < 0.5 &&
+      Math.abs(target.hover - cur.hover) < 0.01 &&
+      Math.abs(target.intensity - cur.intensity) < 0.005;
+    if (settled && now - lastDraw < 33) {
+      if (visible && !document.hidden) raf = requestAnimationFrame(frame);
+      else running = false;
+      return;
+    }
+    lastDraw = now;
 
     gl.uniform2f(U.res, w, h);
     gl.uniform1f(U.dpr, dpr);
     gl.uniform1f(U.time, (now - start) / 1000);
-    gl.uniform2f(U.center, m.left + m.width / 2 - c.left, m.top + m.height / 2 - c.top);
-    gl.uniform1f(U.half, m.width / 2);
+    gl.uniform2f(U.center, geo.cx, geo.cy);
+    gl.uniform1f(U.half, geo.half);
     gl.uniform2f(U.light, cur.x, cur.y);
     gl.uniform1f(U.intensity, cur.intensity);
     gl.uniform1f(U.hover, cur.hover);
@@ -288,6 +329,7 @@ export function createHeroLight({
     running = false;
     ro.disconnect();
     io.disconnect();
+    window.removeEventListener("scroll", markDirty);
     document.removeEventListener("visibilitychange", onVisibility);
     canvas.removeEventListener("webglcontextlost", onContextLost);
   }

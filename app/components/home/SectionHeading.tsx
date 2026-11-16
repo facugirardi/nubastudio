@@ -12,8 +12,8 @@ export default function SectionHeading({
   return (
     <div className="grid gap-8 px-5 pb-12 pt-24 sm:px-8 lg:grid-cols-2 lg:items-end lg:px-10 lg:pb-16 lg:pt-32">
       <div>
-        <p data-reveal className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
-          <span className="text-white/25">[{index}]</span> {label}
+        <p data-reveal className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
+          <span aria-hidden className="text-white/25">[{index}]</span> {label}
         </p>
         <h2
           data-reveal

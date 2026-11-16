@@ -12,6 +12,7 @@ const ES_SLUGS: Record<string, string> = {
   "how-to-choose-a-software-development-agency": "como-elegir-una-agencia-de-desarrollo-de-software",
   "native-vs-react-native-vs-pwa": "app-nativa-vs-react-native-vs-pwa",
   "custom-software-vs-saas": "software-a-medida-vs-saas",
+  "software-development-companies-argentina": "empresas-de-desarrollo-de-software-en-cordoba",
   "freelancer-vs-in-house-vs-agency": "freelancer-equipo-propio-o-agencia",
   "from-idea-to-launch-our-process": "de-la-idea-al-lanzamiento",
   "how-to-validate-an-app-idea": "como-validar-una-idea-de-app",

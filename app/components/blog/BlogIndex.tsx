@@ -10,8 +10,8 @@ export default function BlogIndex({ lang }: { lang: Lang }) {
     <div className="font-display text-[#EDEDED]">
       <header className="mx-auto grid max-w-[1400px] gap-12 px-5 pb-16 pt-32 sm:px-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-end lg:px-10 lg:pb-20 lg:pt-40">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
-            <span className="text-white/25">[{String(publishedPosts().length).padStart(2, "0")}]</span> {t.label}
+          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
+            <span aria-hidden className="text-white/25">[{String(publishedPosts().length).padStart(2, "0")}]</span> {t.label}
           </p>
           <h1 className="mt-5 max-w-[16ch] text-[clamp(2.75rem,6vw,5.25rem)] font-[450] leading-[0.98] tracking-[-0.055em]">
             {t.heading}
@@ -20,7 +20,7 @@ export default function BlogIndex({ lang }: { lang: Lang }) {
         </div>
 
         <nav aria-label={t.categoriesLabel} className="lg:justify-self-end">
-          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{t.categoriesLabel}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{t.categoriesLabel}</p>
           <ol className="mt-4 min-w-[280px] border-t border-white/[0.08]">
             {BLOG_CATEGORIES.filter((cat) => postsByCategory(cat).length).map((cat) => (
               <li key={cat} className="border-b border-white/[0.08]">
@@ -29,7 +29,7 @@ export default function BlogIndex({ lang }: { lang: Lang }) {
                   className="flex items-baseline justify-between gap-6 py-3 text-[15px] text-white/60 transition-colors hover:text-[#EDEDED]"
                 >
                   {t.categories[cat]}
-                  <span className="font-mono text-[11px] text-white/30">{String(postsByCategory(cat).length).padStart(2, "0")}</span>
+                  <span className="font-mono text-[11px] text-white/55">{String(postsByCategory(cat).length).padStart(2, "0")}</span>
                 </a>
               </li>
             ))}
@@ -45,10 +45,10 @@ export default function BlogIndex({ lang }: { lang: Lang }) {
             <div className="mx-auto max-w-[1400px] border-x border-white/[0.07]">
               <div className="flex items-baseline justify-between gap-6 px-5 py-6 sm:px-8 lg:px-10">
                 <h2 id={`${cat}-title`} className="text-[22px] font-[450] tracking-[-0.035em]">
-                  <span className="mr-3 font-mono text-[11px] tracking-normal text-white/30">0{i + 1}</span>
+                  <span aria-hidden className="mr-3 font-mono text-[11px] tracking-normal text-white/30">0{i + 1}</span>
                   {t.categories[cat]}
                 </h2>
-                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">
+                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
                   {list.length} {list.length === 1 ? t.article : t.articles}
                 </p>
               </div>

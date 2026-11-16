@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { getPost, isPublished, postPath } from "../../data/blog";
+import { translateServicePath } from "../../data/services/slugs";
 import { localePath, type Lang } from "../../lib/lang";
 
 type Block =
@@ -56,13 +57,13 @@ export function tableOfContents(body: string) {
 }
 
 /**
- * Los links del cuerpo se escriben sin idioma y con el slug en inglés: acá se
- * pasan al idioma de la página. Un link a un artículo todavía programado sale
- * como texto (null) hasta el día en que se publica.
+ * Los links del cuerpo se escriben sin idioma y con el slug en inglés (blog y
+ * servicios): acá se pasan al idioma de la página. Un link a un artículo
+ * todavía programado sale como texto (null) hasta el día en que se publica.
  */
 function internalHref(href: string, lang: Lang): string | null {
   const match = href.match(/^\/blog\/([^/?#]+)(.*)$/);
-  if (!match) return localePath(lang, href);
+  if (!match) return localePath(lang, translateServicePath(href, "en", lang));
   const post = getPost(match[1]);
   if (!post) return localePath(lang, href);
   return isPublished(post) ? localePath(lang, `${postPath(post, lang)}${match[2]}`) : null;
@@ -112,6 +113,11 @@ function inline(text: string, lang: Lang): ReactNode[] {
   }
   if (last < text.length) out.push(text.slice(last));
   return out;
+}
+
+/** Texto en línea con **negrita**, `código` y links (internos traducidos al idioma de la página). */
+export function Inline({ text, lang }: { text: string; lang: Lang }) {
+  return <>{inline(text, lang)}</>;
 }
 
 export default function PostBody({ body, lang }: { body: string; lang: Lang }) {
@@ -170,7 +176,7 @@ export default function PostBody({ body, lang }: { body: string; lang: Lang }) {
                   <thead>
                     <tr className="bg-white/[0.04]">
                       {block.head.map((h, j) => (
-                        <th key={j} className="px-4 py-3 font-mono text-[11px] font-normal uppercase tracking-[0.08em] text-white/45">
+                        <th key={j} className="px-4 py-3 font-mono text-[11px] font-normal uppercase tracking-[0.08em] text-white/55">
                           {h}
                         </th>
                       ))}

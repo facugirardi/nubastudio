@@ -21,6 +21,7 @@ export function localizeWork(work: WorkItem, lang: Lang): WorkItem {
     description: t.description ?? work.description,
     process: t.process ?? work.process,
     result: t.result ?? work.result,
+    metrics: t.metrics ?? work.metrics,
     features: t.features ?? work.features,
   };
 }

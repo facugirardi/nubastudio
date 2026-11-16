@@ -26,6 +26,8 @@ export default function SmoothScroll({
   useEffect(() => {
     let cancelled = false;
     let cleanup: (() => void) | undefined;
+    // Con "reducir movimiento" queda el scroll nativo (la espiral infinita necesita Lenis igual).
+    if (!infinite && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     // Lenis se descarga después de hidratar: no bloquea el primer render y el scroll nativo sirve mientras tanto.
     import("lenis").then(({ default: LenisCtor }) => {

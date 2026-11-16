@@ -8,6 +8,7 @@ import { localizeWork } from "../lib/localizeWork";
 import { useLanguage } from "../lib/i18n";
 import { getUiText } from "../lib/uiText";
 import { NUBA_MARK_PATH } from "./NubaMark";
+import { onLoaderReveal } from "../lib/loaderGate";
 import { ArrowRight } from "./icons";
 import type { HeroLight, LightTarget } from "./heroLight";
 
@@ -15,25 +16,11 @@ type Sky = { outer: string; mid: string; core: string; edge: string; rim: string
 
 const SKIES: Sky[] = [
   {
-    outer: "radial-gradient(circle, rgba(198,255,0,0.07) 0%, rgba(198,255,0,0.025) 35%, transparent 62%)",
+    outer: "radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.018) 35%, transparent 62%)",
     mid: "radial-gradient(circle, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.07) 38%, transparent 68%)",
     core: "radial-gradient(circle, #fff 0%, rgba(255,255,255,0.7) 30%, rgba(255,255,255,0.15) 55%, transparent 72%)",
     edge: "rgba(255,255,255,0.22)",
     rim: "rgba(255,255,255,0.95)",
-  },
-  {
-    outer: "radial-gradient(circle, rgba(170,120,255,0.11) 0%, rgba(140,150,255,0.05) 30%, rgba(120,200,255,0.035) 45%, transparent 64%)",
-    mid: "radial-gradient(circle, rgba(255,150,100,0.3) 0%, rgba(220,120,190,0.12) 30%, rgba(150,130,255,0.07) 46%, rgba(120,200,255,0.04) 58%, transparent 70%)",
-    core: "radial-gradient(circle, #fff1dc 0%, rgba(255,184,120,0.85) 26%, rgba(240,120,150,0.3) 46%, rgba(160,130,255,0.16) 60%, transparent 74%)",
-    edge: "rgba(255,170,120,0.35)",
-    rim: "rgba(255,206,170,0.95)",
-  },
-  {
-    outer: "radial-gradient(circle, rgba(70,90,220,0.12) 0%, rgba(70,90,220,0.04) 35%, transparent 62%)",
-    mid: "radial-gradient(circle, rgba(120,150,255,0.26) 0%, rgba(90,120,255,0.07) 38%, transparent 68%)",
-    core: "radial-gradient(circle, #e6eeff 0%, rgba(140,165,255,0.75) 28%, rgba(80,100,230,0.2) 55%, transparent 72%)",
-    edge: "rgba(150,175,255,0.32)",
-    rim: "rgba(176,194,255,0.95)",
   },
   {
     outer: "radial-gradient(circle, rgba(198,255,0,0.14) 0%, rgba(198,255,0,0.045) 35%, transparent 62%)",
@@ -44,7 +31,7 @@ const SKIES: Sky[] = [
   },
 ];
 
-const NIGHT = 2;
+const NIGHT = -1;
 const REST_INTENSITY = 0.4;
 
 const RIM_CONE = "conic-gradient(from calc(var(--rim-a, 0deg) - 180deg), transparent 0deg 95deg, var(--rim) 180deg, transparent 265deg 360deg)";
@@ -66,7 +53,7 @@ const STARS = (() => {
   }).join(",");
 })();
 
-export default function Hero({ ready }: { ready: boolean }) {
+export default function Hero() {
   const { lang, path } = useLanguage();
   const t = getUiText(lang).hero;
   const works = visibleWorks.map((w) => localizeWork(w, lang));
@@ -90,7 +77,7 @@ export default function Hero({ ready }: { ready: boolean }) {
     const root = rootRef.current;
     const canvas = canvasRef.current;
     const mark = markRef.current;
-    if (!ready || !root || !canvas || !mark) return;
+    if (!root || !canvas || !mark) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let cancelled = false;
@@ -125,7 +112,7 @@ export default function Hero({ ready }: { ready: boolean }) {
       delete root.dataset.gl;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready]);
+  }, []);
 
   const changeWeather = () => {
     setSky((s) => (s + 1) % SKIES.length);
@@ -139,7 +126,7 @@ export default function Hero({ ready }: { ready: boolean }) {
 
   useEffect(() => {
     const root = rootRef.current;
-    if (!root || !ready) return;
+    if (!root) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const reveal = root.querySelectorAll<HTMLElement>("[data-reveal]");
@@ -150,8 +137,10 @@ export default function Hero({ ready }: { ready: boolean }) {
       return;
     }
 
+    let stopWaiting = () => {};
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+      const tl = gsap.timeline({ defaults: { ease: "expo.out" }, paused: true });
+      stopWaiting = onLoaderReveal(() => tl.play());
       tl.fromTo(glowRef.current, { opacity: 0, scale: 0.55 }, { opacity: 1, scale: 1, duration: 2.2 }, 0)
         .fromTo(
           markRef.current,
@@ -174,8 +163,11 @@ export default function Hero({ ready }: { ready: boolean }) {
       root.dataset.state = "done";
     }, root);
 
-    return () => ctx.revert();
-  }, [ready]);
+    return () => {
+      stopWaiting();
+      ctx.revert();
+    };
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -192,12 +184,21 @@ export default function Hero({ ready }: { ready: boolean }) {
 
     const light = { a: 0, i: REST_INTENSITY };
     const target = glTarget.current;
+    // offsetWidth fuerza layout: se guarda y se actualiza solo cuando cambia el tamaño.
+    let markWidth = mark.offsetWidth;
+    let rootHeight = root.offsetHeight;
+    const sizeObserver = new ResizeObserver(() => {
+      markWidth = mark.offsetWidth;
+      rootHeight = root.offsetHeight;
+    });
+    sizeObserver.observe(mark);
+    sizeObserver.observe(root);
     const paint = () => {
       mark.style.setProperty("--rim-a", `${light.a}deg`);
       mark.style.setProperty("--rim-i", light.i.toFixed(3));
       if (!fine) {
         const rad = (light.a * Math.PI) / 180;
-        const reach = mark.offsetWidth * 2.2;
+        const reach = markWidth * 2.2;
         target.x = Math.sin(rad) * reach;
         target.y = -Math.cos(rad) * reach;
         target.intensity = 0.75;
@@ -246,7 +247,7 @@ export default function Hero({ ready }: { ready: boolean }) {
       aim(0);
       toIntensity(REST_INTENSITY);
       target.x = 0;
-      target.y = -mark.offsetWidth * 3;
+      target.y = -markWidth * 3;
       target.hover = 0;
       target.intensity = REST_INTENSITY + 0.15;
     };
@@ -261,7 +262,7 @@ export default function Hero({ ready }: { ready: boolean }) {
     const onScroll = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        const h = root.offsetHeight || 1;
+        const h = rootHeight || 1;
         const p = Math.min(Math.max(window.scrollY / h, 0), 1);
         gsap.set(parallax, { y: p * h * 0.35, opacity: 1 - p * 1.1 });
         gsap.set(content, { y: p * h * -0.08, opacity: 1 - p * 1.4 });
@@ -282,6 +283,7 @@ export default function Hero({ ready }: { ready: boolean }) {
       cancelAnimationFrame(frame);
       cancelAnimationFrame(pointerFrame);
       orbit?.kill();
+      sizeObserver.disconnect();
     };
   }, []);
 
@@ -296,7 +298,7 @@ export default function Hero({ ready }: { ready: boolean }) {
     >
       <style>{`
         .hero[data-state="pending"] [data-reveal],
-        .hero[data-state="pending"] [data-line],
+        html:not([data-loader="on"]) .hero[data-state="pending"] [data-line],
         .hero[data-state="pending"] .hero-glow,
         .hero[data-state="pending"] .hero-mark { opacity: 0; }
       `}</style>
@@ -358,7 +360,7 @@ export default function Hero({ ready }: { ready: boolean }) {
                   ref={pressRef}
                   type="button"
                   onClick={changeWeather}
-                  aria-label={`${t.weatherAction}: ${t.weather[sky]}`}
+                  aria-label={`${t.weatherAction}: ${t.weather[sky === 1 ? 3 : 0]}`}
                   className="hero-rim group/sky pointer-events-auto relative block h-full w-full cursor-pointer rounded-[22%] focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-[#C6FF00]"
                   style={{ "--rim": SKIES[sky].rim } as React.CSSProperties}
                 >
@@ -434,12 +436,12 @@ export default function Hero({ ready }: { ready: boolean }) {
               <ul className="flex flex-col gap-2.5">
                 {t.pillars.map((pillar, i) => (
                   <li key={pillar} data-reveal className="flex items-baseline gap-3 text-[15px] text-[#EDEDED] lg:text-base">
-                    <span className="font-mono text-[11px] text-white/35">0{i + 1}</span>
+                    <span aria-hidden className="font-mono text-[11px] text-white/35">0{i + 1}</span>
                     {pillar}
                   </li>
                 ))}
               </ul>
-              <p data-reveal className="mt-6 font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">
+              <p data-reveal className="mt-6 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
                 {t.location}
               </p>
             </div>
@@ -459,7 +461,7 @@ export default function Hero({ ready }: { ready: boolean }) {
                     href={path(`/cases/${work.slug}`)}
                     aria-hidden={dup || undefined}
                     tabIndex={dup ? -1 : undefined}
-                    className="px-8 text-[19px] font-medium tracking-[-0.03em] text-white/45 transition-colors duration-200 hover:text-white lg:px-12 lg:text-[22px]"
+                    className="px-8 text-[19px] font-medium tracking-[-0.03em] text-white/55 transition-colors duration-200 hover:text-white lg:px-12 lg:text-[22px]"
                   >
                     {work.title}
                   </Link>

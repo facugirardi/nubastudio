@@ -4,6 +4,8 @@
  * localizeWork(). Title, images, technologies, links y year no se traducen
  * (nombres propios). seoTitle y seoDescription sí: cada idioma tiene su propio SEO.
  */
+import type { WorkMetric } from "./works";
+
 export type WorkTranslation = {
   subtitle: string;
   seoTitle?: string;
@@ -13,6 +15,8 @@ export type WorkTranslation = {
   description?: string;
   process?: string;
   result?: string;
+  /** Mismo orden que `metrics` en works.ts: solo cambia el label. */
+  metrics?: WorkMetric[];
   features?: string[];
 };
 
@@ -21,11 +25,14 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
     subtitle: "Diseño y Desarrollo de Producto",
     seoTitle: "Pagos y pedidos para eventos",
     seoDescription: "Nubapay es una plataforma de pedidos y pagos con QR para eventos: los asistentes pagan desde el celular y los organizadores ven las ventas en vivo. Por Nuba Studio.",
-    task: "Los eventos masivos en Latinoamérica todavía funcionan con cajas registradoras: filas largas, barras lentas, ventas perdidas y sin control en tiempo real. Los organizadores necesitaban una forma simple y escalable para que los asistentes pidan, paguen y retiren desde el teléfono, sin descargar una app, sin hardware extra y sin el caos del checkout tradicional.",
+    task: "Los eventos masivos en Argentina todavía funcionan con cajas registradoras: filas largas, barras lentas, ventas perdidas y sin control en tiempo real. Los organizadores necesitaban una forma simple y escalable para que los asistentes pidan, paguen y retiren desde el teléfono, sin descargar una app, sin hardware extra y sin el caos del checkout tradicional.",
     solutions: "Construimos Nubapay como el sistema operativo de los eventos masivos. Los asistentes escanean un QR, navegan el menú digital, pagan desde el teléfono y retiran con un QR único de un solo uso. Los organizadores tienen un dashboard en vivo de ventas, pedidos y rendimiento. El staff valida el retiro desde cualquier dispositivo. También diseñamos Atendium, una IA que atiende, recomienda y hace upselling las 24 horas, más unickeys sobre Solana para que cada QR de retiro sea único, de un solo uso e imposible de falsificar. Un evento puede estar en vivo en menos de 20 minutos.",
     description: "Nubapay es una plataforma de pedidos y pagos para eventos masivos. Los asistentes escanean un QR, pagan desde el teléfono y retiran sin hacer fila, mientras los organizadores ven cada venta moverse en tiempo real. Sin app para descargar. Sin caja registradora.",
     process: "Diseñamos y desarrollamos el producto completo de punta a punta: una tienda pública para asistentes, un espacio de trabajo para organizadores con catálogos, pedidos, staff y puntos de retiro, y una API en Flask que sostiene toda la operación. La experiencia es web-first para que cualquiera entre desde un QR o un link. Los pagos corren por Mercado Pago. Los QR de retiro son de un solo uso con validación antifraude, y los tickets se hashean y registran en Solana Mainnet. El mismo sistema sirve para festivales, boliches, estadios, fiestas privadas, ferias y food trucks.",
-    result: "Nubapay está en vivo en nubapay.app. Los asistentes piden y pagan desde el teléfono y retiran sin hacer fila. Los organizadores ven ventas y pedidos en tiempo real. El staff escanea QR únicos desde cualquier dispositivo. La puesta en marcha toma minutos, no hay costos fijos, y la plataforma escala de un food truck a un estadio sin hardware extra.",
+    result: "Nubapay está en vivo en nubapay.app. Los asistentes piden y pagan desde el teléfono y retiran sin hacer fila. Los organizadores ven ventas y pedidos en tiempo real. El staff escanea QR únicos desde cualquier dispositivo. La puesta en marcha toma minutos, no hay costos fijos, y la plataforma escala de un food truck a un estadio sin hardware extra. Ya se usó en eventos como Landia, Buh Halloween y Cassette, y hay más eventos programados.",
+    metrics: [
+      { value: "3+", label: "Eventos con Nubapay: Landia, Buh Halloween y Cassette" },
+    ],
     features: [
       "Menú digital desde un QR, sin app para descargar",
       "Pagos móviles con Mercado Pago",
@@ -66,7 +73,11 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
     solutions: "Reconstruimos y extendimos la experiencia inmobiliaria de punta a punta: páginas de propiedad más ricas, búsqueda y mapa fijos (sticky) en los listados, selectores de moneda y de unidad (m²/ft²), y filtros que realmente coinciden con lo que hay en la base de datos, corrigiendo un filtro de ubicación que descartaba resultados en silencio. En el backend agregamos geocodificación inversa server-side para que cada propiedad resuelva automáticamente su país, región y área, construimos el motor de enrutamiento de emails que envía cada tipo de consulta a la bandeja correcta, y mantuvimos sincronizado el camino de búsqueda por SQL crudo con el ORM a medida que evolucionaban los filtros. Para el equipo detrás de escena, lanzamos Loggia: un backoffice que cubre 14 categorías de producto, gestión de reservas, un flujo de itinerario compartido con un modal de reserva inline, y un generador de reportes para propietarios con un rediseño completo de UI/UX y exportación a PDF, para que los dueños de villas reciban un resumen de rendimiento prolijo.",
     description: "Kennedy's Group alquila villas de ultra lujo y construye experiencias de concierge a medida alrededor de ellas. Somos su equipo full-stack permanente: el sitio público de propiedades, la API de reservas y Loggia, el backoffice donde se maneja toda la operación.",
     process: "Como socio full-stack permanente, trabajamos en todo el stack: la API en Express/PostgreSQL, el sitio público en Next.js y el panel de administración Loggia, lo que significó que cada funcionalidad tenía que mantenerse consistente entre las páginas de cara al huésped y las herramientas internas construidas sobre componentes compartidos. Lanzamos de forma continua en incrementos pequeños y probados, corrigiendo problemas reales de datos (filtros incorrectos, geocodificación faltante, portadas erróneas) junto con nuevas funcionalidades, siempre manteniendo sincronizadas las vistas de villas y propiedades entre el sitio público y el panel de administración.",
-    result: "Kennedy's Group hoy corre sobre una plataforma full-stack confiable: los huéspedes obtienen búsqueda de propiedades rápida y precisa con filtros que funcionan y páginas de detalle enriquecidas, los propietarios reciben reportes de rendimiento en PDF prolijos, y el equipo interno gestiona villas, eventos, reservas y productos de concierge para 14 categorías de producto desde un solo backoffice, con la capa de API manteniendo los datos consistentes en todo el sistema.",
+    result: "Kennedy's Group hoy corre sobre una plataforma full-stack confiable: los huéspedes obtienen búsqueda de propiedades rápida y precisa con filtros que funcionan y páginas de detalle enriquecidas, los propietarios reciben reportes de rendimiento en PDF prolijos, y el equipo interno gestiona villas, eventos, reservas y productos de concierge para 14 categorías de producto desde un solo backoffice, con la capa de API manteniendo los datos consistentes en todo el sistema. Con más de 300 propiedades, el sitio mejoró un 70% en velocidad, SEO, visibilidad en buscadores de IA y carga de datos.",
+    metrics: [
+      { value: "300+", label: "Propiedades gestionadas en la plataforma" },
+      { value: "70%", label: "Mejora en velocidad, SEO, visibilidad en buscadores de IA y carga de datos" },
+    ],
     features: [
       "Búsqueda y filtros inmobiliarios avanzados",
       "Búsqueda y mapa fijos (sticky) en los listados",
@@ -101,12 +112,18 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   nuddo: {
     subtitle: "Desarrollo Web y Mobile",
     seoTitle: "Marketplace de moda de segunda mano",
-    seoDescription: "Nuddo es un marketplace de moda circular para comprar y vender ropa de segunda mano en web, iOS y Android. App de marketplace desarrollada por Nuba Studio.",
+    seoDescription: "Nuddo es un marketplace de moda circular en web, iOS y Android con más de 2.500 usuarios y 3.500 publicaciones. Desarrollado por Nuba Studio.",
     task: "Vender una prenda que ya no usás debería tomar minutos, pero la reventa suele trabarse en tres puntos: publicar es lo bastante tedioso como para que el artículo nunca se liste, pagarle a un desconocido se siente inseguro para ambas partes, y coordinar la entrega arruina el trato después de ya haberlo acordado. Nuddo tenía que resolver los tres puntos a la vez, en web, iOS y Android, y dejar espacio para que marcas de moda locales vendan colecciones nuevas en el mismo lugar.",
     solutions: "Construimos el marketplace para que cada uno de esos tres puntos deje de ser una decisión. Listar un artículo toma pocos pasos, así publicar es un acto pequeño y no un proyecto. Los pagos corren por Mercado Pago con protección para ambas partes, así ninguna confía a ciegas en un desconocido. El envío puerta a puerta es parte de la transacción en vez de algo que compradores y vendedores negocian después, con opciones estándar o económicas según el valor de la prenda. Un sistema de reputación hace visible el historial de un vendedor antes de la compra, no después. Las marcas locales tienen su propio espacio para mostrar colecciones nuevas junto a los artículos de segunda mano.",
     description: "Nuddo es un marketplace de moda circular para comprar y vender ropa de segunda mano, en web, iOS y Android. Envío puerta a puerta, pagos protegidos y reputación de vendedor hacen que cada intercambio se sienta seguro. No es solo un marketplace: es una comunidad donde cada prenda todavía tiene una historia para contar.",
     process: "Construimos web, iOS y Android contra una única API en Flask, para que un listado, un pago y una etiqueta de envío se comporten igual sin importar dónde se creen. React Native cubrió ambas plataformas móviles desde un solo código base, y la web se construyó en Next.js. El orden importó: diseñamos y probamos primero el flujo de venta, porque un marketplace sin inventario no tiene nada para vender, y cada otra pantalla se construyó alrededor de mantener ese flujo corto.",
-    result: "Nuddo está en vivo en web, App Store y Google Play. Los vendedores listan en pocos pasos, los compradores pagan con protección para ambas partes, y el envío se reserva como parte del trato en vez de después. La reputación traslada confianza entre personas que nunca se conocieron, y las marcas locales venden colecciones nuevas junto a los artículos de segunda mano en el mismo catálogo.",
+    result: "Nuddo está en vivo en web, App Store y Google Play. Los vendedores listan en pocos pasos, los compradores pagan con protección para ambas partes, y el envío se reserva como parte del trato en vez de después. La reputación traslada confianza entre personas que nunca se conocieron, y las marcas locales venden colecciones nuevas junto a los artículos de segunda mano en el mismo catálogo. Nuddo tiene 2.502 usuarios registrados, 2.947 descargas, 3.577 publicaciones y más de 100 ventas concretadas.",
+    metrics: [
+      { value: "2.502", label: "Usuarios registrados" },
+      { value: "2.947", label: "Descargas de la app" },
+      { value: "3.577", label: "Publicaciones" },
+      { value: "100+", label: "Ventas concretadas" },
+    ],
     features: [
       "Publicación y venta de artículos fácil",
       "Integración de envío puerta a puerta",
@@ -139,12 +156,15 @@ export const WORKS_ES: Record<string, WorkTranslation> = {
   checkrto: {
     subtitle: "Desarrollo Web",
     seoTitle: "Plataforma de revisión técnica vehicular",
-    seoDescription: "CheckRTO digitaliza la revisión técnica vehicular: inspecciones, informes, certificados digitales y cumplimiento en una sola plataforma web. Por Nuba Studio.",
+    seoDescription: "CheckRTO digitaliza la revisión técnica vehicular: más de 10.000 inspecciones, informes y certificados digitales en una sola plataforma web. Por Nuba Studio.",
     task: "La revisión técnica vehicular obligatoria todavía funciona en papel. Un inspector llena un formulario a mano, el informe se tipea en otro lado, y el certificado llega después por un proceso separado. Nada está conectado, así que una inspección se ingresa varias veces y ni el inspector ni el dueño del vehículo pueden ver en qué estado está. CheckRTO tenía que contener toda la inspección en un solo sistema.",
     solutions: "Construimos una plataforma que lleva una inspección desde el ingreso hasta el certificado emitido sin salir del flujo de trabajo. Los inspectores registran cada revisión contra una checklist estructurada, y el informe se genera solo a partir de lo ingresado en vez de escribirse una segunda vez. Los certificados se emiten digitalmente desde ese mismo registro, así el documento y la inspección nunca pueden estar en desacuerdo. Encima se apoyan dos dashboards: uno para inspectores trabajando su cola, otro para dueños de vehículos siguiendo el estado e historial de un vehículo. El seguimiento de cumplimiento corre a través de cada paso, así el rastro de auditoría es un subproducto del trabajo.",
     description: "CheckRTO es una plataforma de revisión técnica vehicular que corre todo el ciclo de vida en un solo lugar. Los inspectores registran revisiones, generan informes y emiten certificados digitales sin salir nunca del flujo de trabajo. El papelerío de una inspección, finalmente digital.",
     process: "Empezamos desde la inspección misma, mapeando la secuencia que un inspector realmente sigue para que el software la reflejara en vez de imponer un orden nuevo. Los dos dashboards se diseñaron por separado a partir de ahí, ya que un inspector trabajando una cola y un dueño revisando un vehículo necesitan cosas opuestas de los mismos datos. El backend en Flask y el frontend en Next.js se construyeron después alrededor de ese único registro compartido, así la generación de informes y la emisión de certificados leen de la inspección en vez de duplicarla.",
-    result: "CheckRTO está en vivo en checkrto.com. Una inspección se registra una vez y viaja a través de revisión, informe y certificado como un solo registro. Los inspectores trabajan desde una cola en vez de una pila de formularios, los dueños pueden revisar el estado de un vehículo sin llamar a nadie, y cada paso deja un rastro auditable.",
+    result: "CheckRTO está en vivo en checkrto.com. Una inspección se registra una vez y viaja a través de revisión, informe y certificado como un solo registro. Los inspectores trabajan desde una cola en vez de una pila de formularios, los dueños pueden revisar el estado de un vehículo sin llamar a nadie, y cada paso deja un rastro auditable. Ya se procesaron más de 10.000 inspecciones en la plataforma.",
+    metrics: [
+      { value: "10.000+", label: "Inspecciones vehiculares procesadas" },
+    ],
     features: [
       "Gestión de revisiones de inspección",
       "Generación automática de informes",

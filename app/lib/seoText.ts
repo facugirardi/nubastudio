@@ -1,3 +1,4 @@
+import type { ServiceId } from "../data/services/slugs";
 import type { Lang } from "./lang";
 
 /**
@@ -21,8 +22,8 @@ export type SeoText = {
   blog: { title: string; description: string; ogTitle: string; name: string };
   /** Migas de pan del JSON-LD. */
   crumbs: { home: string; about: string; services: string; contact: string; works: string; blog: string };
-  /** Servicios del JSON-LD de /services. */
-  serviceItems: { name: string; description: string }[];
+  /** Servicios del JSON-LD de /services (`service`: la landing que lo desarrolla). */
+  serviceItems: { name: string; description: string; service?: ServiceId }[];
   worksCollection: { name: string; description: string };
   servicesListName: string;
   contactPageName: string;
@@ -54,7 +55,7 @@ export const seoText: Record<Lang, SeoText> = {
     tagline: "Digital product studio",
     slogan: "We turn ideas into digital products",
     siteDescription:
-      "Nuba Studio is a digital product studio from Córdoba, Argentina. We design and build websites, mobile apps, marketplaces and digital products end to end.",
+      "Nuba Studio is a custom software and app development company in Argentina, based in Córdoba. We design and build business systems, web platforms, mobile apps and marketplaces end to end for companies and startups across Argentina, from Buenos Aires to Ushuaia, and abroad.",
     keywords: [
       "digital product studio",
       "custom software development",
@@ -66,30 +67,35 @@ export const seoText: Record<Lang, SeoText> = {
       "Next.js development",
       "React Native development",
       "UI UX design studio",
+      "software development company Argentina",
+      "best software development companies Argentina",
+      "app development company Argentina",
+      "web development company Argentina",
       "software development Córdoba Argentina",
+      "nearshore software development Argentina",
     ],
     home: {
       title: "Nuba Studio | Custom Software & App Development",
       description:
-        "We build custom software, web platforms, and mobile applications for businesses and startups. Explore our work and start your project.",
+        "Custom software and app development company in Argentina, based in Córdoba. We build business systems, web platforms and mobile apps for companies and startups.",
       ogTitle: "Nuba Studio | Custom Software & App Development",
     },
     about: {
-      title: "About - A design & development studio in Córdoba",
+      title: "About - Software development company in Argentina",
       description:
-        "Nuba Studio is a small team from Córdoba, Argentina where design, code and strategy share one table. Meet the people and see what we've shipped.",
+        "Nuba Studio is a senior software development team in Argentina, based in Córdoba, where design, code and strategy share one table. Meet the people and see what we've shipped.",
       ogTitle: "About Nuba Studio",
     },
     services: {
       title: "Services - Web, app & marketplace development",
       description:
-        "Web development, iOS & Android apps, marketplaces and platforms, and product strategy. Nuba Studio designs and builds digital products end to end.",
+        "Custom software, web development, iOS & Android apps, marketplaces and product strategy. Nuba Studio designs and builds digital products end to end.",
       ogTitle: "Services - Nuba Studio",
     },
     contact: {
       title: "Contact - Start your web or app project",
       description:
-        "Tell us about your project. Nuba Studio builds websites, apps and marketplaces from Córdoba, Argentina. Reach us on WhatsApp, phone or LinkedIn.",
+        "Tell us about your project. Nuba Studio builds custom software, websites and apps for companies across Argentina. Reach us on WhatsApp, phone or LinkedIn.",
       ogTitle: "Contact Nuba Studio",
     },
     works: {
@@ -108,22 +114,32 @@ export const seoText: Record<Lang, SeoText> = {
     crumbs: { home: "Home", about: "About", services: "Services", contact: "Contact", works: "Work", blog: "Blog" },
     serviceItems: [
       {
+        name: "Custom Software Development",
+        service: "custom",
+        description:
+          "Business systems, web platforms, backoffices and integrations designed and built around how your company works.",
+      },
+      {
         name: "Web Development",
+        service: "web",
         description:
           "Sites and platforms that load fast, feel alive and turn visitors into clients. Built with Next.js, React and a CMS when you need one.",
       },
       {
         name: "Mobile Apps",
+        service: "mobile",
         description:
           "Native-feeling iOS and Android products people actually want to open, built with React Native and Expo.",
       },
       {
         name: "Marketplaces & Platforms",
+        service: "marketplaces",
         description:
           "Two-sided products with payments, dashboards, authentication and APIs, built to scale.",
       },
       {
         name: "Product Strategy & MVP",
+        service: "mvp",
         description:
           "From raw idea to a shipped MVP: discovery, prototyping and a roadmap validated and scoped to grow.",
       },
@@ -141,7 +157,7 @@ export const seoText: Record<Lang, SeoText> = {
         title: "We turn ideas into",
         accent: "digital products",
         subtitle:
-          "A small, senior team from Córdoba, Argentina. Three disciplines, one process, nothing handed off.",
+          "A senior software team in Argentina. Three disciplines, one process, nothing handed off.",
         footer: "About the studio",
       },
       services: {
@@ -155,7 +171,7 @@ export const seoText: Record<Lang, SeoText> = {
         title: "Let's build",
         accent: "something real",
         subtitle:
-          "Tell us about your project. We build websites, apps and marketplaces from Córdoba, Argentina.",
+          "Tell us about your project. We build software, websites and apps for companies across Argentina.",
         footer: "Contact",
       },
       works: {
@@ -174,10 +190,10 @@ export const seoText: Record<Lang, SeoText> = {
     },
     homeContent: {
       ariaLabel: "About Nuba Studio and selected work",
-      h1: "Nuba Studio - custom software and app development studio in Córdoba, Argentina",
+      h1: "Nuba Studio - custom software and app development company in Argentina",
       intro: [
-        "Nuba Studio is a digital product studio based in Córdoba, Argentina. We design and build websites, mobile apps, marketplaces and digital products end to end - from strategy and product design to development and launch. We work with founders and companies across Argentina, Latin America and the rest of the world.",
-        "Our services include web design and development, iOS and Android app development, marketplace and platform engineering, product and UI/UX design. We build with Next.js, React, React Native, TypeScript, Python and Node.",
+        "Nuba Studio is a custom software and app development company in Argentina, based in Córdoba. Our senior team designs and builds business systems, websites, mobile apps and marketplaces end to end - from strategy and product design to development, launch and ongoing support. We work with companies and founders across Argentina, with clients in Buenos Aires, Córdoba and Ushuaia, and abroad in Greece.",
+        "Our services include custom software development, web design and development, iOS and Android app development, marketplace and platform engineering, product and UI/UX design. We build with Next.js, React, React Native, TypeScript, Python and Node.",
       ],
       selectedWork: "Selected work",
       explore: "Explore Nuba Studio",
@@ -194,10 +210,19 @@ export const seoText: Record<Lang, SeoText> = {
     tagline: "Estudio de producto digital",
     slogan: "Convertimos ideas en productos digitales",
     siteDescription:
-      "Nuba Studio es un estudio de producto digital de Córdoba, Argentina. Diseñamos y desarrollamos sitios web, apps móviles, marketplaces y productos digitales de punta a punta.",
+      "Nuba Studio es una empresa argentina de desarrollo de software a medida y apps, con base en Córdoba. Diseñamos y desarrollamos sistemas, plataformas web, apps móviles y marketplaces de punta a punta para empresas y startups de todo el país, de Buenos Aires a Ushuaia.",
     keywords: [
-      "estudio de producto digital",
+      "empresa de desarrollo de software",
       "desarrollo de software a medida",
+      "empresa de software Argentina",
+      "mejores empresas de software Argentina",
+      "empresa de desarrollo de software Argentina",
+      "software factory Argentina",
+      "empresa de software Córdoba",
+      "software factory Córdoba",
+      "empresa de desarrollo de apps",
+      "desarrollo de sistemas a medida",
+      "estudio de producto digital",
       "desarrollo de aplicaciones móviles",
       "desarrollo web",
       "agencia digital Córdoba",
@@ -209,27 +234,27 @@ export const seoText: Record<Lang, SeoText> = {
       "desarrollo de software Argentina",
     ],
     home: {
-      title: "Nuba Studio | Desarrollo de Software a Medida y Apps",
+      title: "Nuba Studio | Desarrollo de Software a Medida y Apps en Argentina",
       description:
-        "Desarrollamos software a medida, aplicaciones web y móviles para empresas y startups. Conocé nuestros proyectos y cotizá tu idea.",
-      ogTitle: "Nuba Studio | Desarrollo de Software a Medida y Apps",
+        "Empresa argentina de desarrollo de software a medida y apps. Hacemos sistemas, plataformas web y aplicaciones móviles para empresas y startups de todo el país.",
+      ogTitle: "Nuba Studio | Desarrollo de Software a Medida y Apps en Argentina",
     },
     about: {
-      title: "Nosotros - Estudio de diseño y desarrollo",
+      title: "Nosotros - Empresa de desarrollo de software en Argentina",
       description:
-        "Nuba Studio es un equipo chico de Córdoba, Argentina, donde diseño, código y estrategia comparten la misma mesa. Conocé al equipo y lo que lanzamos.",
+        "Nuba Studio es un equipo senior de desarrollo de software en Argentina, con base en Córdoba, donde diseño, código y estrategia comparten la misma mesa. Conocé al equipo y lo que lanzamos.",
       ogTitle: "Sobre Nuba Studio",
     },
     services: {
-      title: "Servicios - Desarrollo web, apps y marketplaces",
+      title: "Servicios - Software a medida, apps y marketplaces",
       description:
-        "Desarrollo web, apps iOS y Android, marketplaces y plataformas, y estrategia de producto. Nuba Studio diseña y desarrolla productos digitales.",
+        "Software a medida, desarrollo web, apps iOS y Android, marketplaces y estrategia de producto. Nuba Studio diseña y desarrolla productos digitales.",
       ogTitle: "Servicios - Nuba Studio",
     },
     contact: {
       title: "Contacto - Empezá tu proyecto web o app",
       description:
-        "Contanos tu proyecto. Nuba Studio desarrolla webs, apps y marketplaces desde Córdoba, Argentina. Escribinos por WhatsApp, teléfono o LinkedIn.",
+        "Contanos tu proyecto. Nuba Studio desarrolla software a medida, webs y apps para empresas de toda Argentina. Escribinos por WhatsApp, teléfono o LinkedIn.",
       ogTitle: "Contactá a Nuba Studio",
     },
     works: {
@@ -248,17 +273,26 @@ export const seoText: Record<Lang, SeoText> = {
     crumbs: { home: "Inicio", about: "Nosotros", services: "Servicios", contact: "Contacto", works: "Trabajos", blog: "Blog" },
     serviceItems: [
       {
+        name: "Desarrollo de software a medida",
+        service: "custom",
+        description:
+          "Sistemas de gestión, plataformas web, backoffices e integraciones diseñados y desarrollados alrededor de cómo trabaja tu empresa.",
+      },
+      {
         name: "Desarrollo web",
+        service: "web",
         description:
           "Sitios y plataformas que cargan rápido, se sienten vivos y convierten visitantes en clientes. Hechos con Next.js, React y un CMS cuando lo necesitás.",
       },
       {
         name: "Apps móviles",
+        service: "mobile",
         description:
           "Productos iOS y Android con sensación nativa que la gente quiere abrir, hechos con React Native y Expo.",
       },
       {
         name: "Marketplaces y plataformas",
+        service: "marketplaces",
         description:
           "Productos de dos lados con pagos, dashboards, autenticación y APIs, pensados para escalar.",
       },
@@ -269,6 +303,7 @@ export const seoText: Record<Lang, SeoText> = {
       },
       {
         name: "Estrategia de producto y MVP",
+        service: "mvp",
         description:
           "De la idea cruda a un MVP en producción: descubrimiento, prototipado y una hoja de ruta validada y dimensionada para crecer.",
       },
@@ -286,7 +321,7 @@ export const seoText: Record<Lang, SeoText> = {
         title: "Convertimos ideas en",
         accent: "productos digitales",
         subtitle:
-          "Un equipo chico y senior de Córdoba, Argentina. Tres disciplinas, un solo proceso, nada se delega.",
+          "Un equipo senior de desarrollo de software en Argentina. Tres disciplinas, un solo proceso, nada se delega.",
         footer: "Sobre el estudio",
       },
       services: {
@@ -300,7 +335,7 @@ export const seoText: Record<Lang, SeoText> = {
         title: "Construyamos",
         accent: "algo real",
         subtitle:
-          "Contanos sobre tu proyecto. Desarrollamos sitios web, apps y marketplaces desde Córdoba, Argentina.",
+          "Contanos sobre tu proyecto. Desarrollamos software, webs y apps para empresas de toda Argentina.",
         footer: "Contacto",
       },
       works: {
@@ -319,10 +354,10 @@ export const seoText: Record<Lang, SeoText> = {
     },
     homeContent: {
       ariaLabel: "Sobre Nuba Studio y trabajos seleccionados",
-      h1: "Nuba Studio - estudio de desarrollo de software a medida y apps en Córdoba, Argentina",
+      h1: "Nuba Studio - empresa de desarrollo de software a medida y apps en Argentina",
       intro: [
-        "Nuba Studio es un estudio de producto digital con base en Córdoba, Argentina. Diseñamos y desarrollamos sitios web, apps móviles, marketplaces y productos digitales de punta a punta - desde la estrategia y el diseño de producto hasta el desarrollo y el lanzamiento. Trabajamos con emprendedores y empresas de Argentina, Latinoamérica y el resto del mundo.",
-        "Nuestros servicios incluyen diseño y desarrollo web, desarrollo de apps iOS y Android, ingeniería de marketplaces y plataformas, diseño de producto y UI/UX. Construimos con Next.js, React, React Native, TypeScript, Python y Node.",
+        "Nuba Studio es una empresa argentina de desarrollo de software a medida y apps, con base en Córdoba. Nuestro equipo senior diseña y desarrolla sistemas, sitios web, apps móviles y marketplaces de punta a punta - desde la estrategia y el diseño de producto hasta el desarrollo, el lanzamiento y el soporte. Trabajamos con empresas y emprendedores de toda Argentina, con clientes en Buenos Aires, Córdoba y Ushuaia, y en el exterior en Grecia.",
+        "Nuestros servicios incluyen desarrollo de software a medida, diseño y desarrollo web, desarrollo de apps iOS y Android, ingeniería de marketplaces y plataformas, diseño de producto y UI/UX. Construimos con Next.js, React, React Native, TypeScript, Python y Node.",
       ],
       selectedWork: "Trabajos seleccionados",
       explore: "Explorá Nuba Studio",

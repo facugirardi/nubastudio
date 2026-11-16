@@ -6,6 +6,7 @@ import { getUiText } from "../../lib/uiText";
 import SectionHeading from "./SectionHeading";
 import { useReveal } from "./useReveal";
 import { ArrowRight } from "../icons";
+import { isServiceId, servicePath } from "../../data/services/slugs";
 
 const LINE = { fill: "none", stroke: "currentColor", strokeWidth: 1, vectorEffect: "non-scaling-stroke" } as const;
 const MOVE = "transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] [transform-box:fill-box]";
@@ -139,11 +140,19 @@ export default function HomeServices() {
             const Fig = FIGS[i % FIGS.length];
             return (
               <li key={service.title} data-reveal className="group/cell relative flex flex-col bg-black p-5 sm:p-8 lg:p-10">
-                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/30">FIG 0.{i + 1}</p>
-                <div className="my-8 h-36 text-white/45 transition-colors duration-500 group-hover/cell:text-white/80 group-data-[active=true]/cell:text-white/80 lg:h-40">
+                <p aria-hidden className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/30">FIG 0.{i + 1}</p>
+                <div className="my-8 h-36 text-white/55 transition-colors duration-500 group-hover/cell:text-white/80 group-data-[active=true]/cell:text-white/80 lg:h-40">
                   <Fig />
                 </div>
-                <h3 className="text-[19px] font-medium tracking-[-0.02em] text-[#EDEDED]">{service.title}</h3>
+                <h3 className="text-[19px] font-medium tracking-[-0.02em] text-[#EDEDED]">
+                  {isServiceId(service.id) ? (
+                    <a href={path(servicePath(service.id, lang))} className="after:absolute after:inset-0 focus-visible:outline-none">
+                      {service.title}
+                    </a>
+                  ) : (
+                    service.title
+                  )}
+                </h3>
                 <p className="mt-2 max-w-[34ch] text-[15px] leading-[1.55] text-white/50">{service.desc}</p>
               </li>
             );
@@ -158,7 +167,7 @@ export default function HomeServices() {
                 aria-hidden
                 className="pointer-events-none absolute -bottom-1/2 -right-1/4 h-[120%] w-[120%] rounded-full bg-[radial-gradient(circle,rgba(198,255,0,0.12),transparent_60%)] opacity-60 transition-opacity duration-500 group-hover/cta:opacity-100"
               />
-              <p className="relative font-mono text-[11px] uppercase tracking-[0.08em] text-white/30">FIG 0.{ui.services.list.length + 1}</p>
+              <p aria-hidden className="relative font-mono text-[11px] uppercase tracking-[0.08em] text-white/30">FIG 0.{ui.services.list.length + 1}</p>
               <div className="relative">
                 <h3 className="text-[clamp(1.6rem,2.4vw,2.1rem)] font-[450] leading-[1.05] tracking-[-0.04em] text-[#EDEDED]">
                   {t.servicesCtaTitle}

@@ -155,12 +155,12 @@ export default function ContactIndex() {
       <div className="mx-auto max-w-[1400px] border-x border-white/[0.07]">
         <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
           <div className="flex flex-col px-5 pb-12 pt-32 sm:px-8 lg:border-r lg:border-white/[0.07] lg:px-10 lg:pb-16 lg:pt-40">
-            <p data-intro className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
-              <span className="text-white/25">[ES · EN]</span> {p.label}
+            <p data-intro className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
+              <span className="text-white/55">[ES · EN]</span> {p.label}
             </p>
             <h1 className="mt-6 max-w-[11ch] text-[clamp(2.75rem,6vw,5.5rem)] font-[450] leading-[1] tracking-[-0.055em]">
               {t.headline.split(" ").map((word, i, arr) => (
-                <span key={i} className="inline-block overflow-hidden pb-[0.1em] align-top -mb-[0.1em]">
+                <span key={i} className="-mx-[0.1em] -mb-[0.2em] -mt-[0.1em] inline-block overflow-hidden px-[0.1em] pb-[0.2em] pt-[0.1em] align-top">
                   <span data-word className="inline-block">
                     {word}
                     {i < arr.length - 1 ? " " : ""}
@@ -173,7 +173,7 @@ export default function ContactIndex() {
             </p>
 
             <div data-intro className="mt-auto pt-14">
-              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{p.channels}</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{p.channels}</p>
               <ul className="mt-4 border-t border-white/[0.08]">
                 {channels.map((c) => (
                   <li key={c.label} className="border-b border-white/[0.08]">
@@ -182,7 +182,7 @@ export default function ContactIndex() {
                       {...(c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       className="group/ch flex items-center gap-4 py-4"
                     >
-                      <span className="w-24 shrink-0 font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">{c.label}</span>
+                      <span className="w-24 shrink-0 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{c.label}</span>
                       <span className="min-w-0 flex-1 truncate text-[16px] text-white/70 transition-colors duration-200 group-hover/ch:text-[#EDEDED]">
                         {c.value}
                       </span>
@@ -193,7 +193,7 @@ export default function ContactIndex() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-6 flex items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">
+              <div className="mt-6 flex items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
                 <span>{t.place}</span>
                 {/* La hora depende del cliente: hasta hidratar no se muestra un placeholder. */}
                 {time ? (
@@ -212,7 +212,7 @@ export default function ContactIndex() {
             />
             <div data-intro className="relative">
               <div className="mb-8">
-                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{p.startWith}</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{p.startWith}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {t.seeds.map((seed) => (
                     <button
@@ -229,7 +229,7 @@ export default function ContactIndex() {
               </div>
 
               <div className="mb-8">
-                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/35">{p.budget}</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{p.budget}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {p.budgets.map((option) => {
                     const active = budget === option;
@@ -253,17 +253,17 @@ export default function ContactIndex() {
                 </div>
               </div>
 
-              <div className={`rounded-[18px] p-px transition-colors duration-500 ${busy ? "composer-busy" : "bg-white/[0.1] focus-within:bg-white/[0.22]"}`}>
+              <div className={`rounded-[18px] p-px transition-colors duration-500 ${busy ? "composer-busy" : "bg-white/[0.1] focus-within:bg-white/[0.45]"}`}>
                 <div className="rounded-[17px] bg-[#070707]">
                   <div className="flex items-center justify-between gap-4 border-b border-white/[0.07] px-5 py-3.5">
-                    <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">{p.composer}</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{p.composer}</span>
                     <span aria-live="polite" className="font-mono text-[11px] uppercase tracking-[0.08em]">
                       {status === "polishing" ? (
                         <span className="text-[#C6FF00]">{t.polishing}…</span>
                       ) : status === "error" ? (
                         <span className="text-[#ff8a7a]">{t.error}</span>
                       ) : nearLimit ? (
-                        <span className="tabular-nums text-white/40">
+                        <span className="tabular-nums text-white/55">
                           {text.length}/{MAX_CHARS}
                         </span>
                       ) : null}
@@ -290,7 +290,7 @@ export default function ContactIndex() {
                         send();
                       }
                     }}
-                    className="block min-h-[260px] w-full resize-none bg-transparent px-5 py-5 text-[18px] leading-[1.55] tracking-[-0.01em] text-[#EDEDED] outline-none placeholder:text-white/25 disabled:opacity-60 lg:min-h-[320px] lg:text-[20px]"
+                    className="block min-h-[260px] w-full resize-none bg-transparent px-5 py-5 text-[18px] leading-[1.55] tracking-[-0.01em] text-[#EDEDED] outline-none placeholder:text-white/45 disabled:opacity-60 lg:min-h-[320px] lg:text-[20px]"
                   />
 
                   <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.07] px-4 py-3">
@@ -320,7 +320,7 @@ export default function ContactIndex() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className="hidden font-mono text-[10.5px] uppercase tracking-[0.06em] text-white/30 sm:inline">
+                      <span className="hidden font-mono text-[10.5px] uppercase tracking-[0.06em] text-white/55 sm:inline">
                         <kbd className="rounded border border-white/[0.12] px-1.5 py-0.5 font-mono">{modKey} Enter</kbd> {p.shortcut}
                       </span>
                       <button
@@ -337,13 +337,13 @@ export default function ContactIndex() {
                 </div>
               </div>
 
-              <p className="mt-3 text-right font-mono text-[10.5px] uppercase tracking-[0.06em] text-white/30">{p.hint}</p>
+              <p className="mt-3 text-right font-mono text-[10.5px] uppercase tracking-[0.06em] text-white/55">{p.hint}</p>
             </div>
           </div>
         </div>
 
         <nav aria-label={t.recentWork} className="border-t border-white/[0.07]">
-          <p className="px-5 pt-10 font-mono text-[11px] uppercase tracking-[0.08em] text-white/35 sm:px-8 lg:px-10">{t.recentWork}</p>
+          <p className="px-5 pt-10 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55 sm:px-8 lg:px-10">{t.recentWork}</p>
           <ul className="mt-5 grid grid-cols-1 gap-px border-t border-white/[0.07] bg-white/[0.07] sm:grid-cols-3">
             {recent.map((work) => (
               <li key={work.slug} className="bg-black">
@@ -358,7 +358,7 @@ export default function ContactIndex() {
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-[16px] text-[#EDEDED]">{work.title}</span>
-                    <span className="block truncate text-[13px] text-white/40">{work.subtitle}</span>
+                    <span className="block truncate text-[13px] text-white/55">{work.subtitle}</span>
                   </span>
                   <span className="text-white/30 transition-[transform,color] duration-300 group-hover/rw:-translate-y-0.5 group-hover/rw:translate-x-0.5 group-hover/rw:text-[#EDEDED]">
                     <ArrowUpRight />

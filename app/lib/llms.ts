@@ -1,4 +1,5 @@
 import { getPost, isPublished, lastModified, postAuthor, postPath, publishedPosts } from "../data/blog";
+import { services, servicePath } from "../data/services";
 import { visibleWorks } from "../data/works";
 import { getWorkFaq } from "../data/worksFaq";
 import { LANGS, localePath, type Lang } from "./lang";
@@ -9,17 +10,12 @@ import { getUiText } from "./uiText";
 
 const COPY = {
   en: {
-    about: `${SITE_NAME} is a digital product studio based in ${CONTACT.city}, Argentina. We design
-and build websites, mobile apps, marketplaces and digital products end to end, from
-product strategy and design through development and launch. We work with founders and
-companies in Argentina, across Latin America and internationally.`,
+    about: `${SITE_NAME} is a custom software and app development company in Argentina, based in
+${CONTACT.city}. Our senior team designs and builds business systems, websites, mobile apps and
+marketplaces end to end, from product strategy and design through development, launch and
+ongoing support. We work with companies and founders across Argentina, with clients in Buenos Aires, Córdoba and
+Ushuaia, and abroad in Greece.`,
     services: "Services",
-    serviceLines: [
-      "- **Web development** - sites and platforms built with Next.js, React and TypeScript.",
-      "- **Mobile apps** - iOS and Android products built with React Native and Expo.",
-      "- **Marketplaces & platforms** - two-sided products with payments, dashboards and APIs.",
-      "- **Product strategy & MVP** - discovery, prototyping and roadmap through to a shipped MVP.",
-    ],
     pages: "Pages",
     pageLines: {
       home: "studio overview and selected work.",
@@ -45,19 +41,20 @@ companies in Argentina, across Latin America and internationally.`,
       facts: "Key facts",
       factLines: (url: string) => [
         `- Name: ${SITE_NAME}`,
-        `- Type: digital product studio (design and software development)`,
+        `- Type: custom software and app development company (design and development)`,
         `- Founded: ${FOUNDED}`,
-        `- Location: ${CONTACT.city}, Argentina. Works remotely with clients worldwide.`,
+        `- Location: ${CONTACT.city}, Argentina. Clients in Buenos Aires, Córdoba and Ushuaia (Argentina) and in Greece.`,
         `- Languages: English and Spanish`,
         `- Website: ${url}`,
       ],
-      team: "Team",
+      team: "Founders",
       faq: "Frequently asked questions",
       contactFaq: "Before starting a project",
       caseTask: "The challenge",
       caseSolution: "The solution",
       caseProcess: "Process",
       caseResult: "Result",
+      caseMetrics: "Key numbers",
       caseFeatures: "Features",
       caseTech: "Technologies",
       caseLinks: "Links",
@@ -68,17 +65,12 @@ companies in Argentina, across Latin America and internationally.`,
     },
   },
   es: {
-    about: `${SITE_NAME} es un estudio de producto digital con base en ${CONTACT.city}, Argentina. Diseñamos
-y desarrollamos sitios web, apps móviles, marketplaces y productos digitales de punta a punta,
-desde la estrategia y el diseño de producto hasta el desarrollo y el lanzamiento. Trabajamos con
-emprendedores y empresas de Argentina, de Latinoamérica y del resto del mundo.`,
+    about: `${SITE_NAME} es una empresa argentina de desarrollo de software a medida y apps, con base en
+${CONTACT.city}. Nuestro equipo senior diseña y desarrolla sistemas, sitios web, apps móviles y
+marketplaces de punta a punta, desde la estrategia y el diseño de producto hasta el desarrollo,
+el lanzamiento y el soporte. Trabajamos con empresas y emprendedores de toda Argentina, con
+clientes en Buenos Aires, Córdoba y Ushuaia, y en el exterior en Grecia.`,
     services: "Servicios",
-    serviceLines: [
-      "- **Desarrollo web** - sitios y plataformas hechos con Next.js, React y TypeScript.",
-      "- **Apps móviles** - productos iOS y Android hechos con React Native y Expo.",
-      "- **Marketplaces y plataformas** - productos de dos lados con pagos, dashboards y APIs.",
-      "- **Estrategia de producto y MVP** - descubrimiento, prototipado y hoja de ruta hasta un MVP en producción.",
-    ],
     pages: "Páginas",
     pageLines: {
       home: "resumen del estudio y trabajos seleccionados.",
@@ -104,19 +96,20 @@ emprendedores y empresas de Argentina, de Latinoamérica y del resto del mundo.`
       facts: "Datos clave",
       factLines: (url: string) => [
         `- Nombre: ${SITE_NAME}`,
-        `- Tipo: estudio de producto digital (diseño y desarrollo de software)`,
+        `- Tipo: empresa de desarrollo de software a medida y apps (diseño y desarrollo)`,
         `- Fundado: ${FOUNDED}`,
-        `- Ubicación: ${CONTACT.city}, Argentina. Trabaja de forma remota con clientes de todo el mundo.`,
+        `- Ubicación: ${CONTACT.city}, Argentina. Clientes en Buenos Aires, Córdoba y Ushuaia (Argentina) y en Grecia.`,
         `- Idiomas: español e inglés`,
         `- Sitio: ${url}`,
       ],
-      team: "Equipo",
+      team: "Fundadores",
       faq: "Preguntas frecuentes",
       contactFaq: "Antes de empezar un proyecto",
       caseTask: "El desafío",
       caseSolution: "La solución",
       caseProcess: "Proceso",
       caseResult: "Resultado",
+      caseMetrics: "Cifras",
       caseFeatures: "Funcionalidades",
       caseTech: "Tecnologías",
       caseLinks: "Links",
@@ -147,6 +140,10 @@ export function buildLlms(lang: Lang): Response {
     .map((p) => `- [${p.content[lang].title}](${url(postPath(p, lang))}): ${p.content[lang].description}`)
     .join("\n");
 
+  const serviceLinks = services
+    .map((sv) => `- [${sv.content[lang].name}](${url(servicePath(sv.id, lang))}): ${sv.content[lang].description}`)
+    .join("\n");
+
   const body = `# ${SITE_NAME}
 
 > ${seoText[lang].siteDescription}
@@ -155,7 +152,7 @@ ${c.about}
 
 ## ${c.services}
 
-${c.serviceLines.join("\n")}
+${serviceLinks}
 
 ## ${c.pages}
 
@@ -227,9 +224,18 @@ export function buildLlmsFull(lang: Lang): Response {
   const text = seoText[lang];
   const url = (path: string) => absoluteUrl(localePath(lang, path));
 
-  const team = TEAM_MEMBERS.map((m) => `- **${m.name}** - ${m.jobTitle}${m.profiles.length ? ` (${m.profiles.join(", ")})` : ""}`).join("\n");
+  const team = TEAM_MEMBERS.map(
+    (m) => `- **${m.name}** - ${m.jobTitle}${m.profiles.length ? ` (${m.profiles.join(", ")})` : ""}. ${m.bio[lang]}`
+  ).join("\n");
 
-  const services = text.serviceItems.map((s) => `### ${s.name}\n\n${s.description}`).join("\n\n");
+  const serviceSections = [
+    ...services.map((sv) => {
+      const sc = sv.content[lang];
+      const body = absoluteLinks(sc.body.trim(), lang).replace(/^(#{2,3}) /gm, (_, h: string) => `#${h} `);
+      return `## ${sc.name}\n\n${url(servicePath(sv.id, lang))}\n\n> ${sc.description}\n\n${body}\n\n### ${f.faq}\n\n${faqBlock(sc.faq).replace(/^### /gm, "#### ")}`;
+    }),
+    ...text.serviceItems.filter((s) => !s.service).map((s) => `## ${s.name}\n\n${s.description}`),
+  ].join("\n\n---\n\n");
 
   const cases = visibleWorks
     .map((raw) => {
@@ -242,6 +248,9 @@ export function buildLlmsFull(lang: Lang): Response {
         w.solutions ? `### ${f.caseSolution}\n\n${w.solutions}` : "",
         w.process ? `### ${f.caseProcess}\n\n${w.process}` : "",
         w.result ? `### ${f.caseResult}\n\n${w.result}` : "",
+        w.metrics?.length
+          ? `### ${f.caseMetrics}${w.metricsAsOf ? ` (${w.metricsAsOf})` : ""}\n\n${w.metrics.map((m) => `- ${m.value}: ${m.label}`).join("\n")}`
+          : "",
         w.features?.length ? `### ${f.caseFeatures}\n\n${w.features.map((x) => `- ${x}`).join("\n")}` : "",
         w.technologies?.length ? `### ${f.caseTech}\n\n${w.technologies.join(", ")}` : "",
       ];
@@ -287,7 +296,7 @@ ${team}
 
 # ${c.services}
 
-${services}
+${serviceSections}
 
 ## ${f.faq}
 

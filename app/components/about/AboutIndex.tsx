@@ -10,7 +10,8 @@ import { openCase } from "../home/WorkCard";
 import { prefetchCase } from "../caseTransition";
 import { visibleWorks } from "../../data/works";
 import { localizeWork } from "../../lib/localizeWork";
-import { CONTACT, FOUNDED, PROJECTS_SHIPPED } from "../../lib/seo";
+import { CONTACT, FOUNDED, PROJECTS_SHIPPED, TEAM_MEMBERS } from "../../lib/seo";
+import { ArrowUpRight } from "../icons";
 import { useLanguage } from "../../lib/i18n";
 import { getUiText } from "../../lib/uiText";
 
@@ -26,13 +27,17 @@ const VERB_ROLES = ["Strategy", "Design", "Development"] as const;
 
 type Person = (typeof TEAM)[number];
 
+function member(name: string) {
+  return TEAM_MEMBERS.find((m) => m.name === name) ?? TEAM_MEMBERS[0];
+}
+
 function personFor(role: (typeof VERB_ROLES)[number]): Person {
   return TEAM.find((p) => p.role === role) ?? TEAM[0];
 }
 
 function Word({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <span className="inline-block overflow-hidden pb-[0.12em] align-top -mb-[0.12em]">
+    <span className="-mx-[0.1em] -mb-[0.2em] -mt-[0.1em] inline-block overflow-hidden px-[0.1em] pb-[0.2em] pt-[0.1em] align-top">
       <span data-word className={`inline-block ${className}`}>
         {children}
       </span>
@@ -116,8 +121,8 @@ function Header() {
   return (
     <div ref={rootRef}>
       <div className="px-5 pb-16 pt-32 sm:px-8 lg:px-10 lg:pb-24 lg:pt-40">
-        <p data-intro className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/45">
-          <span className="text-white/25">[{FOUNDED}]</span> {ui.aboutPage.label}
+        <p data-intro className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">
+          <span aria-hidden className="text-white/25">[{FOUNDED}]</span> {ui.aboutPage.label}
         </p>
         <h1 className="mt-6 max-w-[16ch] text-[clamp(2.75rem,7vw,6.5rem)] font-[450] leading-[1.02] tracking-[-0.055em] text-[#EDEDED]">
           {start.map((w, i) => (
@@ -178,7 +183,7 @@ function Header() {
               data-intro
               className={`flex flex-col justify-between gap-6 px-5 py-8 sm:px-8 lg:px-10 lg:py-10 ${i > 0 ? "sm:border-l sm:border-white/[0.07]" : ""} ${i % 2 === 1 ? "border-l border-white/[0.07]" : ""} ${i > 1 ? "border-t border-white/[0.07] sm:border-t-0" : ""}`}
             >
-              <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">{fact.label}</dt>
+              <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{fact.label}</dt>
               <dd className="whitespace-nowrap text-[clamp(1.5rem,2.4vw,2.25rem)] font-[450] leading-none tracking-[-0.04em] text-[#EDEDED] tabular-nums">
                 {fact.value}
               </dd>
@@ -249,6 +254,7 @@ function Reel() {
                   alt={dup ? "" : `${work.title} - ${work.subtitle}`}
                   fill
                   sizes="420px"
+                  loading={i < 3 ? "eager" : "lazy"}
                   className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/shot:scale-[1.04]"
                 />
                 <span className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover/shot:opacity-100">
@@ -289,7 +295,10 @@ function Studio() {
   );
 }
 
-function People() {
+/** Artículos publicados por persona (id de TEAM_MEMBERS), ya con su URL en el idioma de la página. */
+export type AuthorArticles = Record<string, { title: string; href: string }[]>;
+
+function People({ articles }: { articles: AuthorArticles }) {
   const { lang } = useLanguage();
   const ui = getUiText(lang);
 
@@ -300,7 +309,7 @@ function People() {
       </SectionHeading>
       <ul className="grid grid-cols-1 gap-px border-t border-white/[0.07] bg-white/[0.07] sm:grid-cols-3">
         {TEAM.map((person, i) => (
-          <li key={person.name} data-reveal className="group/person bg-black p-5 sm:p-6 lg:p-8">
+          <li key={person.name} id={member(person.name).id} data-reveal className="group/person scroll-mt-24 bg-black p-5 sm:p-6 lg:p-8">
             <div className="relative aspect-[4/5] overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]">
               <Image
                 src={person.photo}
@@ -315,8 +324,40 @@ function People() {
             </div>
             <div className="mt-5 flex items-baseline justify-between gap-4">
               <p className="text-[20px] font-medium tracking-[-0.03em] text-[#EDEDED]">{person.name}</p>
-              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/40">{ui.about.roles[person.role]}</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{ui.about.roles[person.role]}</p>
             </div>
+            <p className="mt-4 text-[15px] leading-[1.6] text-white/55">{member(person.name).bio[lang]}</p>
+            {member(person.name).profiles.length > 0 && (
+              <ul className="mt-5 flex flex-wrap gap-x-4 gap-y-1">
+                {member(person.name).profiles.map((url) => (
+                  <li key={url}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer me"
+                      className="group/in inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.08em] text-white/60 transition-colors hover:text-[#C6FF00]"
+                    >
+                      {/linkedin/.test(url) ? "LinkedIn" : new URL(url).hostname.replace(/^www\./, "")}
+                      <ArrowUpRight size={9} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {(articles[member(person.name).id] ?? []).length > 0 && (
+              <div className="mt-6 border-t border-white/[0.08] pt-4">
+                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/55">{ui.aboutPage.writesAbout}</p>
+                <ul className="mt-2">
+                  {articles[member(person.name).id].slice(0, 3).map((a) => (
+                    <li key={a.href}>
+                      <a href={a.href} className="block py-1.5 text-[14px] leading-[1.4] text-white/60 transition-colors hover:text-[#EDEDED]">
+                        {a.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </li>
         ))}
       </ul>
@@ -324,7 +365,7 @@ function People() {
   );
 }
 
-export default function AboutIndex() {
+export default function AboutIndex({ articles }: { articles: AuthorArticles }) {
   const ref = useRef<HTMLElement>(null);
   useReveal(ref);
 
@@ -336,7 +377,7 @@ export default function AboutIndex() {
       <Reel />
       <div className="mx-auto max-w-[1400px] border-x border-white/[0.07]">
         <Studio />
-        <People />
+        <People articles={articles} />
       </div>
     </section>
   );
