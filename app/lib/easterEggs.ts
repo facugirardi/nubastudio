@@ -1,6 +1,5 @@
 import { CONTACT, SITE_URL } from "./seo";
 import { localePath, type Lang } from "./lang";
-import { NIGHT_EVENT } from "./nightSky";
 
 const LIME = "color:#C6FF00";
 const DIM = "color:#888";
@@ -33,11 +32,8 @@ const TEXT = {
       cases: "our projects, in a table",
       contact: "how to reach us",
       rain: "make it rain",
-      night: "toggle night mode on the home hero",
     },
     raining: "☔ Bring an umbrella.",
-    night: "🌙 Night mode toggled (look at the hero on the home page).",
-    away: "☁️ Come back, we miss you",
   },
   es: {
     hello: "¿Mirando el código? Nos vamos a llevar bien.",
@@ -48,11 +44,8 @@ const TEXT = {
       cases: "nuestros proyectos, en una tabla",
       contact: "cómo contactarnos",
       rain: "que llueva",
-      night: "prende o apaga el modo noche del hero de la home",
     },
     raining: "☔ Traé paraguas.",
-    night: "🌙 Modo noche cambiado (mirá el hero de la home).",
-    away: "☁️ Volvé, te extrañamos",
   },
 } as const;
 
@@ -147,25 +140,8 @@ function installConsole(lang: Lang) {
       console.log(t.raining);
       if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) rain();
     },
-    night() {
-      window.dispatchEvent(new CustomEvent(NIGHT_EVENT));
-      console.log(t.night);
-    },
   };
   Object.defineProperty(window, "nuba", { value: api, configurable: true });
-}
-
-function installAwayTitle(lang: Lang) {
-  let saved = "";
-  document.addEventListener("visibilitychange", () => {
-    const away = TEXT[document.documentElement.lang === "es" ? "es" : lang].away;
-    if (document.hidden) {
-      saved = document.title;
-      document.title = away;
-    } else if (document.title === away && saved) {
-      document.title = saved;
-    }
-  });
 }
 
 export function installEasterEggs(lang: Lang) {
@@ -173,5 +149,4 @@ export function installEasterEggs(lang: Lang) {
   installed = true;
   printBanner(lang);
   installConsole(lang);
-  installAwayTitle(lang);
 }

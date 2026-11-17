@@ -76,28 +76,6 @@ body::-webkit-scrollbar {
   opacity: 1;
 }
 
-.hero[data-night="on"]:not([data-gl="on"]) .hero-glow .hero-css-light,
-.hero[data-night="on"][data-gl="on"] .hero-gl {
-  opacity: 0.55;
-}
-
-.hero[data-night="on"] .hero-stars {
-  animation: hero-twinkle 5s ease-in-out infinite alternate;
-}
-
-@keyframes hero-twinkle {
-  from { opacity: 1; }
-  to { opacity: 0.55; }
-}
-
-.hero[data-offscreen] .hero-stars {
-  animation-play-state: paused;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero[data-night="on"] .hero-stars { animation: none; }
-}
-
 @property --composer-angle {
   syntax: "<angle>";
   inherits: false;

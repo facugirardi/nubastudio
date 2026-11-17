@@ -10,7 +10,6 @@ import { getUiText } from "../lib/uiText";
 import { SERVICE_IDS, servicePath } from "../data/services/slugs";
 import { translatePath } from "../lib/translatePath";
 import NubaMark from "./NubaMark";
-import { useLogoStorm } from "./useLogoStorm";
 import { ArrowUpRight, ChevronDown } from "./icons";
 
 const NAV_IDS = ["work", "services", "about", "blog", "contact"] as const;
@@ -190,7 +189,6 @@ export default function Navbar() {
   const closeTimer = useRef<number | undefined>(undefined);
 
   const barRef = useRef<HTMLElement>(null);
-  const { markRef: stormMarkRef, boltRef: stormBoltRef, onClick: onLogoClick } = useLogoStorm();
   const menuRef = useRef<HTMLDivElement>(null);
 
   const hrefFor = (id: NavId) => path(id === "work" ? "/works" : `/${id}`);
@@ -296,21 +294,10 @@ export default function Navbar() {
         <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-8 px-5 sm:px-8 lg:px-10">
           <a
             href={path("/")}
-            onClick={onLogoClick}
             aria-label={t.nav.homeLabel}
             className="group/logo flex shrink-0 items-center gap-2.5 rounded-md text-[#EDEDED] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C6FF00]"
           >
-            <span ref={stormMarkRef} className="relative block">
-              <NubaMark className="h-[26px] w-[26px] transition-transform duration-300 ease-out group-hover/logo:rotate-[-8deg] group-hover/logo:scale-105" />
-              <svg
-                ref={stormBoltRef}
-                aria-hidden
-                viewBox="0 0 10 16"
-                className="pointer-events-none absolute left-1/2 top-[calc(100%-2px)] h-4 w-2.5 -translate-x-1/2 origin-top opacity-0 drop-shadow-[0_0_6px_rgba(198,255,0,0.8)]"
-              >
-                <path d="M6 0 1 9h3.5L3 16l6-9.5H5.5L7.5 0Z" fill="#C6FF00" />
-              </svg>
-            </span>
+            <NubaMark className="h-[26px] w-[26px] transition-transform duration-300 ease-out group-hover/logo:rotate-[-8deg] group-hover/logo:scale-105" />
             <span className="text-[17px] font-semibold tracking-[-0.04em]">Nuba Studio</span>
           </a>
 

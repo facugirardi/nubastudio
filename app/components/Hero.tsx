@@ -9,7 +9,6 @@ import { useLanguage } from "../lib/i18n";
 import { getUiText } from "../lib/uiText";
 import { NUBA_MARK_PATH } from "./NubaMark";
 import { onLoaderReveal } from "../lib/loaderGate";
-import { NIGHT_EVENT, isArgentinaNight } from "../lib/nightSky";
 import { ArrowRight } from "./icons";
 import type { HeroLight, LightTarget } from "./heroLight";
 
@@ -32,6 +31,7 @@ const SKIES: Sky[] = [
   },
 ];
 
+const NIGHT = -1;
 const REST_INTENSITY = 0.4;
 
 const RIM_CONE = "conic-gradient(from calc(var(--rim-a, 0deg) - 180deg), transparent 0deg 95deg, var(--rim) 180deg, transparent 265deg 360deg)";
@@ -44,11 +44,11 @@ const STARS = (() => {
     seed = (seed * 16807) % 2147483647;
     return seed / 2147483647;
   };
-  return Array.from({ length: 72 }, () => {
+  return Array.from({ length: 46 }, () => {
     const x = (rand() * 100).toFixed(1);
     const y = (rand() * 100).toFixed(1);
-    const a = (0.45 + rand() * 0.55).toFixed(2);
-    const r = rand() > 0.8 ? 2.2 : 1.4;
+    const a = (0.25 + rand() * 0.6).toFixed(2);
+    const r = rand() > 0.85 ? 1.6 : 1;
     return `radial-gradient(${r}px ${r}px at ${x}% ${y}%, rgba(255,255,255,${a}), transparent)`;
   }).join(",");
 })();
@@ -68,33 +68,6 @@ export default function Hero() {
   const glRef = useRef<HeroLight | null>(null);
   const glTarget = useRef<LightTarget>({ x: 0, y: -600, hover: 0, intensity: REST_INTENSITY });
   const [sky, setSky] = useState(0);
-  const [night, setNight] = useState(false);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root || !night) return;
-    const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) delete root.dataset.offscreen;
-      else root.dataset.offscreen = "";
-    });
-    io.observe(root);
-    return () => io.disconnect();
-  }, [night]);
-
-  useEffect(() => {
-    const check = () => setNight(isArgentinaNight());
-    check();
-    const timer = window.setInterval(check, 5 * 60 * 1000);
-    const toggle = () => {
-      window.clearInterval(timer);
-      setNight((n) => !n);
-    };
-    window.addEventListener(NIGHT_EVENT, toggle);
-    return () => {
-      window.clearInterval(timer);
-      window.removeEventListener(NIGHT_EVENT, toggle);
-    };
-  }, []);
 
   useEffect(() => {
     glRef.current?.setPalette(sky);
@@ -320,7 +293,6 @@ export default function Hero() {
     <section
       ref={rootRef}
       data-state="pending"
-      data-night={night ? "on" : undefined}
       aria-label="Nuba Studio"
       className="hero group/hero relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-black font-display text-[#EDEDED]"
     >
@@ -353,11 +325,9 @@ export default function Hero() {
               className="hero-glow absolute left-1/2 top-1/2 -z-10 h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 sm:h-[820px] sm:w-[820px]"
             >
               <div
-                className="absolute inset-[12%] rounded-full transition-opacity duration-[2000ms] ease-out motion-reduce:transition-none [mask-image:radial-gradient(circle,black_45%,transparent_75%)]"
-                style={{ opacity: night ? 1 : 0 }}
-              >
-                <div className="hero-stars absolute inset-0" style={{ backgroundImage: STARS }} />
-              </div>
+                className="absolute inset-[12%] rounded-full transition-opacity duration-1000 ease-out motion-reduce:transition-none [mask-image:radial-gradient(circle,black_30%,transparent_70%)]"
+                style={{ backgroundImage: STARS, opacity: sky === NIGHT ? 1 : 0 }}
+              />
               <div className="hero-css-light absolute inset-0">
               {SKIES.map((s, i) => (
                 <div
