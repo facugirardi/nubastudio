@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { getLenis } from "./SmoothScroll";
 import { NUBA_CLOUD_PATH, NUBA_MARK_PATH } from "./NubaMark";
-import { LOADER_ID, LOADER_KEY, markRevealed } from "../lib/loaderGate";
+import { LOADER_ID, LOADER_KEY, isHydrated, markRevealed } from "../lib/loaderGate";
 
 const SIZE = 96;
 const BASE = SIZE / 78;
@@ -155,7 +155,8 @@ export default function Loader() {
       suppressHydrationWarning
       className="fixed inset-0 z-[9999] overflow-hidden"
     >
-      <script dangerouslySetInnerHTML={{ __html: SKIP_SCRIPT }} />
+      {/* Montado por navegación del cliente el script no correría (y React avisa): ahí decide useLayoutEffect. */}
+      {!isHydrated() && <script dangerouslySetInnerHTML={{ __html: SKIP_SCRIPT }} />}
       {/* Sin JS (o si falla) el loader no puede quedar tapando la página. */}
       <noscript>
         <style>{`#${LOADER_ID}{display:none!important}`}</style>

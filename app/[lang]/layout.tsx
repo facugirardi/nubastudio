@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import "../globals.css";
 import CaseTransitionProvider from "../components/caseTransition";
+import PageTransition from "../components/PageTransition";
 import { fontVariables } from "../lib/fonts";
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "../lib/jsonLd";
 import { LanguageProvider } from "../lib/i18n";
@@ -99,6 +100,7 @@ export default async function RootLayout({
         <LanguageProvider lang={lang}>
           {children}
           <CaseTransitionProvider />
+          <PageTransition />
         </LanguageProvider>
       </body>
     </html>

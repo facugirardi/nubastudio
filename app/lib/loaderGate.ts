@@ -27,3 +27,8 @@ export function onLoaderReveal(cb: () => void): () => void {
   waiting.add(cb);
   return () => waiting.delete(cb);
 }
+
+/** true cuando la app ya hidrató: lo que monta después llega por navegación del cliente, no del HTML del servidor. */
+let hydrated = false;
+export const markHydrated = () => (hydrated = true);
+export const isHydrated = () => hydrated;
