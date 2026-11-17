@@ -2,11 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import gsap from "gsap";
 import { useLanguage } from "../lib/i18n";
 import { getUiText } from "../lib/uiText";
 import NubaMark, { NUBA_MARK_PATH } from "./NubaMark";
 import { CONTACT, SITE_NAME } from "../lib/seo";
+
+const CloudDodge = dynamic(() => import("./CloudDodge"), { ssr: false });
 
 const CLOUD_PATH = NUBA_MARK_PATH.slice(NUBA_MARK_PATH.lastIndexOf("M26.88"));
 
@@ -301,6 +304,7 @@ export default function NotFoundContent() {
   const { lang, path } = useLanguage();
   const t = getUiText(lang).notFound;
   const [mode, setMode] = useState<"human" | "machine">("human");
+  const [playing, setPlaying] = useState(false);
   const [requested, setRequested] = useState("");
   const [stamp, setStamp] = useState("");
 
@@ -333,9 +337,20 @@ export default function NotFoundContent() {
         >
           <NubaMark className="h-7 w-7" />
         </Link>
-        <span className={`font-mono text-[11px] tracking-[0.2em] ${mode === "machine" ? "text-accent/60" : "text-white/55"}`}>
-          {t.errorLabel}
-        </span>
+        <div className="flex items-center gap-5">
+          {mode === "human" ? (
+            <button
+              type="button"
+              onClick={() => setPlaying(true)}
+              className="group/play rounded-full border border-white/15 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-white/70 transition-colors hover:border-accent/60 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+            >
+              <span aria-hidden className="text-accent">▶</span> {t.game.play}
+            </button>
+          ) : null}
+          <span className={`hidden font-mono text-[11px] tracking-[0.2em] sm:inline ${mode === "machine" ? "text-accent/60" : "text-white/55"}`}>
+            {t.errorLabel}
+          </span>
+        </div>
       </header>
 
       {mode === "human" && (
@@ -363,6 +378,8 @@ export default function NotFoundContent() {
         {tab("human", t.modeHuman)}
         {tab("machine", t.modeMachine)}
       </div>
+
+      {playing ? <CloudDodge text={t.game} onClose={() => setPlaying(false)} /> : null}
     </main>
   );
 }

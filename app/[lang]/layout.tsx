@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import "../globals.css";
 import CaseTransitionProvider from "../components/caseTransition";
 import PageTransition from "../components/PageTransition";
+import EasterEggs from "../components/EasterEggs";
 import { fontVariables } from "../lib/fonts";
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "../lib/jsonLd";
 import { LanguageProvider } from "../lib/i18n";
@@ -101,6 +102,7 @@ export default async function RootLayout({
           {children}
           <CaseTransitionProvider />
           <PageTransition />
+          <EasterEggs />
         </LanguageProvider>
       </body>
     </html>

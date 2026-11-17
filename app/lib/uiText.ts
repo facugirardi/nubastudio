@@ -324,6 +324,15 @@ const dict = {
     },
     notFound: {
       errorLabel: "404 NOT_FOUND",
+      game: {
+        play: "Dodge the bugs",
+        hint: "Move with the mouse, your finger or ← →",
+        score: "Score",
+        best: "Best",
+        over: "A bug got you.",
+        retry: "Click, tap or Enter to retry · Esc to exit",
+        close: "Exit game",
+      },
       heading: "This cloud drifted away.",
       body: "The link may be broken or the page may have moved. Everything we've built is still one click away.",
       requested: "Requested",
@@ -670,6 +679,15 @@ const dict = {
     },
     notFound: {
       errorLabel: "404 NOT_FOUND",
+      game: {
+        play: "Esquivá los bugs",
+        hint: "Movete con el mouse, el dedo o ← →",
+        score: "Puntos",
+        best: "Récord",
+        over: "Te agarró un bug.",
+        retry: "Click, toque o Enter para reintentar · Esc para salir",
+        close: "Salir del juego",
+      },
       heading: "Esta nube se fue a otro lado.",
       body: "El link puede estar roto o la página puede haberse movido. Todo lo que construimos sigue a un click de distancia.",
       requested: "Solicitada",
