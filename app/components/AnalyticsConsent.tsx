@@ -6,6 +6,7 @@ import LocaleLink from "./LocaleLink";
 
 const GTM_ID = "GTM-PT4M3NXK";
 const GA_ID = "G-CX20Z9V367";
+const CLARITY_ID = "zgf4omxkye";
 export const CONSENT_STORAGE_KEY = "nuba_consent";
 
 const TEXT = {
@@ -47,6 +48,15 @@ function loadTags() {
   gtag("js", new Date());
   gtag("config", GA_ID);
   loadScript("ga-script", `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`);
+
+  const c = window as unknown as { clarity?: ((...args: unknown[]) => void) & { q?: unknown[] } };
+  c.clarity =
+    c.clarity ||
+    function (...args: unknown[]) {
+      (c.clarity!.q = c.clarity!.q || []).push(args);
+    };
+  c.clarity("consentv2", { ad_Storage: "denied", analytics_Storage: "granted" });
+  loadScript("clarity-script", `https://www.clarity.ms/tag/${CLARITY_ID}`);
 }
 
 function readChoice(): string | null {
@@ -63,7 +73,7 @@ function saveChoice(value: "granted" | "denied") {
   } catch {}
 }
 
-/** GA4 y Google Tag Manager (para Clarity): solo se cargan si la persona aceptó. */
+/** GA4, Google Tag Manager y Clarity: solo se cargan si la persona aceptó. */
 export default function AnalyticsConsent() {
   const { lang } = useLanguage();
   const [visible, setVisible] = useState(false);

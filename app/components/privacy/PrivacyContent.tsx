@@ -30,7 +30,7 @@ const CONTENT: Record<
         body: ["We measure how the site is used to improve it. We do it in two ways:"],
         list: [
           "Without cookies: Vercel Web Analytics and Speed Insights count visits, pages, country, referrer, device type and loading performance. The data is aggregated and does not identify you.",
-          "Only if you accept: Google Analytics 4 and Google Tag Manager record pages viewed, time on site, approximate location and device. Google sets cookies to tell visits apart. We may also use Microsoft Clarity through Tag Manager to see heatmaps and session recordings. None of these load unless you press Accept.",
+          "Only if you accept: Google Analytics 4 and Google Tag Manager record pages viewed, time on site, approximate location and device. Google sets cookies to tell visits apart. Microsoft Clarity records heatmaps and anonymized session recordings to show us how people use the pages. None of these load unless you press Accept.",
         ],
       },
       {
@@ -45,7 +45,7 @@ const CONTENT: Record<
         id: "providers",
         heading: "Who else processes data",
         body: [
-          "The site is hosted on Vercel. Google (Analytics, Tag Manager and Gemini), Microsoft (Clarity, if enabled) and Meta (WhatsApp) process data under their own policies. Some of them operate outside your country, including the United States.",
+          "The site is hosted on Vercel. Google (Analytics, Tag Manager and Gemini), Microsoft (Clarity) and Meta (WhatsApp) process data under their own policies. Some of them operate outside your country, including the United States.",
           "Google Analytics keeps data for the period set in our account, never more than 14 months.",
         ],
       },
@@ -88,7 +88,7 @@ const CONTENT: Record<
         body: ["Medimos cómo se usa el sitio para mejorarlo. Lo hacemos de dos maneras:"],
         list: [
           "Sin cookies: Vercel Web Analytics y Speed Insights cuentan visitas, páginas, país, de dónde llegás, tipo de dispositivo y velocidad de carga. Los datos son agregados y no te identifican.",
-          "Solo si aceptás: Google Analytics 4 y Google Tag Manager registran páginas vistas, tiempo en el sitio, ubicación aproximada y dispositivo. Google usa cookies para distinguir visitas. También podemos usar Microsoft Clarity a través de Tag Manager para ver mapas de calor y grabaciones de sesiones. Nada de esto se carga si no tocás Aceptar.",
+          "Solo si aceptás: Google Analytics 4 y Google Tag Manager registran páginas vistas, tiempo en el sitio, ubicación aproximada y dispositivo. Google usa cookies para distinguir visitas. Microsoft Clarity registra mapas de calor y grabaciones de sesiones anonimizadas para mostrarnos cómo se usan las páginas. Nada de esto se carga si no tocás Aceptar.",
         ],
       },
       {
@@ -103,7 +103,7 @@ const CONTENT: Record<
         id: "providers",
         heading: "Quién más procesa datos",
         body: [
-          "El sitio está alojado en Vercel. Google (Analytics, Tag Manager y Gemini), Microsoft (Clarity, si se activa) y Meta (WhatsApp) procesan datos según sus propias políticas. Algunos operan fuera de tu país, incluido Estados Unidos.",
+          "El sitio está alojado en Vercel. Google (Analytics, Tag Manager y Gemini), Microsoft (Clarity) y Meta (WhatsApp) procesan datos según sus propias políticas. Algunos operan fuera de tu país, incluido Estados Unidos.",
           "Google Analytics conserva los datos durante el período configurado en nuestra cuenta, nunca más de 14 meses.",
         ],
       },
