@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLanguage } from "../lib/i18n";
+import { SITE_HOST } from "../lib/seo";
 import LocaleLink from "./LocaleLink";
 
 const GTM_ID = "GTM-PT4M3NXK";
@@ -33,7 +34,7 @@ function loadScript(id: string, src: string) {
 }
 
 function loadTags() {
-  if (document.getElementById("gtm-script")) return;
+  if (window.location.hostname !== SITE_HOST || document.getElementById("gtm-script")) return;
   const w = window as unknown as { dataLayer?: unknown[] };
   w.dataLayer = w.dataLayer || [];
 
