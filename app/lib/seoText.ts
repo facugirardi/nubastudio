@@ -18,10 +18,11 @@ export type SeoText = {
   about: { title: string; description: string; ogTitle: string };
   services: { title: string; description: string; ogTitle: string };
   contact: { title: string; description: string; ogTitle: string };
+  privacy: { title: string; description: string; ogTitle: string };
   works: { title: string; description: string; ogTitle: string };
   blog: { title: string; description: string; ogTitle: string; name: string };
   /** Migas de pan del JSON-LD. */
-  crumbs: { home: string; about: string; services: string; contact: string; works: string; blog: string };
+  crumbs: { home: string; about: string; services: string; contact: string; works: string; blog: string; privacy: string };
   /** Servicios del JSON-LD de /services (`service`: la landing que lo desarrolla). */
   serviceItems: { name: string; description: string; service?: ServiceId }[];
   worksCollection: { name: string; description: string };
@@ -98,6 +99,12 @@ export const seoText: Record<Lang, SeoText> = {
         "Tell us about your project. Nuba Studio builds custom software, websites and apps for companies across Argentina. Reach us on WhatsApp, phone or LinkedIn.",
       ogTitle: "Contact Nuba Studio",
     },
+    privacy: {
+      title: "Privacy policy and cookies",
+      description:
+        "How Nuba Studio handles your data: what we measure on this site, which cookies we use only with your consent, and how to contact us.",
+      ogTitle: "Privacy policy - Nuba Studio",
+    },
     works: {
       title: "Portfolio - Websites, apps & platforms we built",
       description:
@@ -111,7 +118,7 @@ export const seoText: Record<Lang, SeoText> = {
       ogTitle: "Blog - Nuba Studio",
       name: "Nuba Studio Blog",
     },
-    crumbs: { home: "Home", about: "About", services: "Services", contact: "Contact", works: "Work", blog: "Blog" },
+    crumbs: { home: "Home", about: "About", services: "Services", contact: "Contact", works: "Work", blog: "Blog", privacy: "Privacy" },
     serviceItems: [
       {
         name: "Custom Software Development",
@@ -261,6 +268,12 @@ export const seoText: Record<Lang, SeoText> = {
         "Contanos tu proyecto. Nuba Studio desarrolla software a medida, webs y apps para empresas de toda Argentina. Escribinos por WhatsApp, teléfono o LinkedIn.",
       ogTitle: "Contactá a Nuba Studio",
     },
+    privacy: {
+      title: "Política de privacidad y cookies",
+      description:
+        "Cómo trata Nuba Studio tus datos: qué medimos en este sitio, qué cookies usamos solo con tu consentimiento y cómo contactarnos.",
+      ogTitle: "Política de privacidad - Nuba Studio",
+    },
     works: {
       title: "Portfolio - Webs, apps y plataformas",
       description:
@@ -274,7 +287,7 @@ export const seoText: Record<Lang, SeoText> = {
       ogTitle: "Blog - Nuba Studio",
       name: "Blog de Nuba Studio",
     },
-    crumbs: { home: "Inicio", about: "Nosotros", services: "Servicios", contact: "Contacto", works: "Trabajos", blog: "Blog" },
+    crumbs: { home: "Inicio", about: "Nosotros", services: "Servicios", contact: "Contacto", works: "Trabajos", blog: "Blog", privacy: "Privacidad" },
     serviceItems: [
       {
         name: "Desarrollo de software a medida",

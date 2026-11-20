@@ -168,7 +168,10 @@ export default function Footer() {
 
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.07] px-5 py-5 font-mono text-[11px] uppercase tracking-[0.08em] text-white/55 sm:px-8 lg:px-10">
           <p>
-            © {new Date().getFullYear()} Nuba Studio · {CONTACT.city}, {CONTACT.country} · {t.footerRights}
+            © {new Date().getFullYear()} Nuba Studio · {CONTACT.city}, {CONTACT.country} · {t.footerRights} ·{" "}
+            <a href={path("/privacy")} className="transition-colors duration-150 hover:text-[#EDEDED]">
+              {lang === "es" ? "Privacidad" : "Privacy"}
+            </a>
           </p>
           <button
             type="button"

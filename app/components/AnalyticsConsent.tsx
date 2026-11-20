@@ -2,21 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { useLanguage } from "../lib/i18n";
+import LocaleLink from "./LocaleLink";
 
 const GTM_ID = "GTM-PT4M3NXK";
 const GA_ID = "G-CX20Z9V367";
-const STORAGE_KEY = "nuba_consent";
+export const CONSENT_STORAGE_KEY = "nuba_consent";
 
 const TEXT = {
   en: {
     message: "We use cookies to measure how the site is used and improve it. Nothing is loaded unless you accept.",
     accept: "Accept",
     reject: "Reject",
+    more: "Privacy policy",
   },
   es: {
     message: "Usamos cookies para medir cómo se usa el sitio y mejorarlo. No se carga nada si no aceptás.",
     accept: "Aceptar",
     reject: "Rechazar",
+    more: "Política de privacidad",
   },
 } as const;
 
@@ -48,7 +51,7 @@ function loadTags() {
 
 function readChoice(): string | null {
   try {
-    return localStorage.getItem(STORAGE_KEY);
+    return localStorage.getItem(CONSENT_STORAGE_KEY);
   } catch {
     return null;
   }
@@ -56,7 +59,7 @@ function readChoice(): string | null {
 
 function saveChoice(value: "granted" | "denied") {
   try {
-    localStorage.setItem(STORAGE_KEY, value);
+    localStorage.setItem(CONSENT_STORAGE_KEY, value);
   } catch {}
 }
 
@@ -93,6 +96,9 @@ export default function AnalyticsConsent() {
       className="fixed inset-x-4 bottom-4 z-[120] max-w-[420px] rounded-2xl border border-white/15 bg-black/90 p-5 text-white backdrop-blur-md sm:inset-x-auto sm:left-6 sm:bottom-6"
     >
       <p className="font-sans text-[14px] leading-relaxed text-white/80">{t.message}</p>
+      <LocaleLink href="/privacy" className="mt-2 inline-block font-sans text-[13px] text-white/55 underline-offset-4 transition-colors hover:text-white hover:underline">
+        {t.more}
+      </LocaleLink>
       <div className="mt-4 flex gap-3">
         <button
           type="button"
