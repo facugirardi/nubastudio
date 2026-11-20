@@ -6,6 +6,7 @@ import "../globals.css";
 import CaseTransitionProvider from "../components/caseTransition";
 import PageTransition from "../components/PageTransition";
 import EasterEggs from "../components/EasterEggs";
+import AnalyticsConsent from "../components/AnalyticsConsent";
 import { fontVariables } from "../lib/fonts";
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "../lib/jsonLd";
 import { LanguageProvider } from "../lib/i18n";
@@ -105,6 +106,7 @@ export default async function RootLayout({
           <CaseTransitionProvider />
           <PageTransition />
           <EasterEggs />
+          <AnalyticsConsent />
         </LanguageProvider>
         <Analytics />
         <SpeedInsights />
