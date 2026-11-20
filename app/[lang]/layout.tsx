@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "../globals.css";
 import CaseTransitionProvider from "../components/caseTransition";
 import PageTransition from "../components/PageTransition";
@@ -104,6 +106,8 @@ export default async function RootLayout({
           <PageTransition />
           <EasterEggs />
         </LanguageProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
