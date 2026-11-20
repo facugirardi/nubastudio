@@ -5,6 +5,7 @@ import Hero from "./Hero";
 import Loader from "./Loader";
 import SmoothScroll from "./SmoothScroll";
 import HomeWork from "./home/HomeWork";
+import HomeTestimonial from "./home/HomeTestimonial";
 import HomeServices from "./home/HomeServices";
 import HomeProcess from "./home/HomeProcess";
 import HomeCta from "./home/HomeCta";
@@ -22,6 +23,7 @@ export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactN
           {seoFallback}
           <Hero />
           <HomeWork />
+          <HomeTestimonial />
           <HomeServices />
           <HomeProcess />
           <HomeCta />
