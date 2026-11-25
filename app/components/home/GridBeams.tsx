@@ -22,15 +22,21 @@ export default function GridBeams() {
     if (!rails || !layer) return;
     const vBeams = Array.from(rails.querySelectorAll<HTMLElement>(".grid-beam-v"));
 
-    const lines = Array.from(document.querySelectorAll<HTMLElement>("main section, footer")).filter(
-      (el) => parseFloat(getComputedStyle(el).borderTopWidth) > 0,
-    );
-    const hBeams = lines.map(() => {
-      const node = document.createElement("span");
-      node.className = "grid-beam-h";
-      layer.appendChild(node);
-      return node;
-    });
+    // Las líneas horizontales se buscan recién cuando arrancan los haces (no en plena hidratación):
+    // getComputedStyle al montar forzaba un recálculo de estilos de toda la página.
+    let lines: HTMLElement[] | null = null;
+    let hBeams: HTMLElement[] = [];
+    const findLines = () => {
+      lines = Array.from(document.querySelectorAll<HTMLElement>("main section, footer")).filter(
+        (el) => parseFloat(getComputedStyle(el).borderTopWidth) > 0,
+      );
+      hBeams = lines.map(() => {
+        const node = document.createElement("span");
+        node.className = "grid-beam-h";
+        layer.appendChild(node);
+        return node;
+      });
+    };
 
     let y = -BASE_LEN;
     let x = -H_LEN;
@@ -50,6 +56,9 @@ export default function GridBeams() {
         delay -= dt;
         return;
       }
+      if (!lines) findLines();
+      // Primero todas las lecturas de layout y después las escrituras: intercalarlas fuerza un reflow por haz.
+      const rects = lines!.map((el) => el.getBoundingClientRect());
 
       const push = Math.abs(velocity);
       const boost = Math.min(push * 0.35, 0.45);
@@ -66,9 +75,8 @@ export default function GridBeams() {
 
       x += (H_BASE_SPEED + push * SCROLL_GAIN * 0.6) * dt;
       if (x > 1 + H_GAP) x = 0;
-      lines.forEach((el, i) => {
+      rects.forEach((r, i) => {
         const node = hBeams[i];
-        const r = el.getBoundingClientRect();
         if (r.top < -2 || r.top > vh) {
           node.style.opacity = "0";
           return;

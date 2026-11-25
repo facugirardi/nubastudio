@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
-import { visibleWorks } from "../data/works";
-import { localizeWork } from "../lib/localizeWork";
+import type { WorkSummary } from "../data/works";
 import { useLanguage } from "../lib/i18n";
 import { getUiText } from "../lib/uiText";
 import { NUBA_MARK_PATH } from "./NubaMark";
 import { onLoaderReveal } from "../lib/loaderGate";
+import { afterPaint } from "../lib/afterPaint";
 import { ArrowRight } from "./icons";
 import type { HeroLight, LightTarget } from "./heroLight";
 
@@ -53,10 +53,9 @@ const STARS = (() => {
   }).join(",");
 })();
 
-export default function Hero() {
+export default function Hero({ works }: { works: WorkSummary[] }) {
   const { lang, path } = useLanguage();
   const t = getUiText(lang).hero;
-  const works = visibleWorks.map((w) => localizeWork(w, lang));
 
   const rootRef = useRef<HTMLElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
@@ -137,10 +136,12 @@ export default function Hero() {
       return;
     }
 
-    let stopWaiting = () => {};
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "expo.out" }, paused: true });
-      stopWaiting = onLoaderReveal(() => tl.play());
+    // La timeline se arma cuando el hero va a entrar y después de un pintado (afterPaint);
+    // mientras tanto lo oculta el CSS de data-state="pending".
+    const ctx = gsap.context(() => {}, root);
+    let cancelBuild = () => {};
+    const build = () => ctx.add(() => {
+      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
       tl.fromTo(glowRef.current, { opacity: 0, scale: 0.55 }, { opacity: 1, scale: 1, duration: 2.2 }, 0)
         .fromTo(
           markRef.current,
@@ -161,10 +162,12 @@ export default function Hero() {
           0.5
         );
       root.dataset.state = "done";
-    }, root);
+    });
+    const stopWaiting = onLoaderReveal(() => (cancelBuild = afterPaint(build)));
 
     return () => {
       stopWaiting();
+      cancelBuild();
       ctx.revert();
     };
   }, []);
@@ -184,15 +187,17 @@ export default function Hero() {
 
     const light = { a: 0, i: REST_INTENSITY };
     const target = glTarget.current;
-    // offsetWidth fuerza layout: se guarda y se actualiza solo cuando cambia el tamaño.
-    let markWidth = mark.offsetWidth;
-    let rootHeight = root.offsetHeight;
-    const sizeObserver = new ResizeObserver(() => {
-      markWidth = mark.offsetWidth;
-      rootHeight = root.offsetHeight;
+    // Los tamaños llegan por ResizeObserver (con el layout ya hecho): leer offsetWidth acá forzaría un reflow.
+    let markWidth = 0;
+    let rootHeight = 0;
+    const sizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const box = entry.borderBoxSize?.[0];
+        if (entry.target === mark) markWidth = box?.inlineSize ?? entry.contentRect.width;
+        else rootHeight = box?.blockSize ?? entry.contentRect.height;
+      }
+      if (window.scrollY > 0) onScroll();
     });
-    sizeObserver.observe(mark);
-    sizeObserver.observe(root);
     const paint = () => {
       mark.style.setProperty("--rim-a", `${light.a}deg`);
       mark.style.setProperty("--rim-i", light.i.toFixed(3));
@@ -274,7 +279,8 @@ export default function Hero() {
       root.addEventListener("pointerleave", onLeave);
     }
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    sizeObserver.observe(mark);
+    sizeObserver.observe(root);
 
     return () => {
       root.removeEventListener("pointermove", onMove);

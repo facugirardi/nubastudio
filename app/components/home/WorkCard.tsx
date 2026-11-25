@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { prefetchCase, startCaseTransition } from "../caseTransition";
 import { ArrowUpRight } from "../icons";
-import type { WorkItem } from "../../data/works";
+import type { WorkSummary } from "../../data/works";
 
 function spotlight(e: React.PointerEvent<HTMLElement>) {
   const el = e.currentTarget;
@@ -12,7 +12,7 @@ function spotlight(e: React.PointerEvent<HTMLElement>) {
   el.style.setProperty("--y", `${e.clientY - r.top}px`);
 }
 
-export function openCase(work: WorkItem, source?: () => Element | null) {
+export function openCase(work: WorkSummary, source?: () => Element | null) {
   return (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
@@ -42,7 +42,7 @@ export default function WorkCard({
   featured = false,
   priority = false,
 }: {
-  work: WorkItem;
+  work: WorkSummary;
   index: number;
   href: string;
   viewCase: string;

@@ -2,8 +2,7 @@
 
 import { useRef } from "react";
 import { ArrowRight } from "../icons";
-import { visibleWorks } from "../../data/works";
-import { localizeWork } from "../../lib/localizeWork";
+import type { WorkSummary } from "../../data/works";
 import { useLanguage } from "../../lib/i18n";
 import { getUiText } from "../../lib/uiText";
 import SectionHeading from "./SectionHeading";
@@ -12,13 +11,12 @@ import { useReveal } from "./useReveal";
 
 const FEATURED = 3;
 
-export default function HomeWork() {
+export default function HomeWork({ works }: { works: WorkSummary[] }) {
   const { lang, path } = useLanguage();
   const t = getUiText(lang).home;
   const ref = useRef<HTMLElement>(null);
-  useReveal(ref);
+  useReveal(ref, { belowFold: true });
 
-  const works = visibleWorks.map((w) => localizeWork(w, lang));
   const shown = works.slice(0, FEATURED);
 
   return (

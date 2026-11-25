@@ -11,8 +11,9 @@ import HomeProcess from "./home/HomeProcess";
 import HomeCta from "./home/HomeCta";
 import Footer from "./home/Footer";
 import GridBeams from "./home/GridBeams";
+import type { WorkSummary } from "../data/works";
 
-export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactNode }) {
+export default function HomeClient({ works, seoFallback }: { works: WorkSummary[]; seoFallback?: React.ReactNode }) {
   return (
     <>
       <Loader />
@@ -21,9 +22,9 @@ export default function HomeClient({ seoFallback }: { seoFallback?: React.ReactN
         <GridBeams />
         <main id="main" tabIndex={-1} className="outline-none">
           {seoFallback}
-          <Hero />
-          <HomeWork />
-          <HomeTestimonial />
+          <Hero works={works} />
+          <HomeWork works={works} />
+          <HomeTestimonial works={works} />
           <HomeServices />
           <HomeProcess />
           <HomeCta />

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { afterPaint } from "../../lib/afterPaint";
 import NubaMark from "../NubaMark";
 import { useLenis } from "../SmoothScroll";
 import { CONTACT } from "../../lib/seo";
@@ -43,7 +44,8 @@ export default function Footer() {
   useEffect(() => {
     const word = wordRef.current;
     if (!word || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {}, word);
+    const cancel = afterPaint(() => ctx.add(() => {
       gsap.fromTo(
         word.querySelectorAll("[data-char]"),
         { yPercent: 100 },
@@ -55,8 +57,11 @@ export default function Footer() {
           scrollTrigger: { trigger: word, start: "top 98%", once: true },
         }
       );
-    }, word);
-    return () => ctx.revert();
+    }));
+    return () => {
+      cancel();
+      ctx.revert();
+    };
   }, []);
 
   useEffect(() => {

@@ -13,7 +13,7 @@ export default function HomeCta() {
   const ui = getUiText(lang);
   const t = ui.home;
   const ref = useRef<HTMLElement>(null);
-  useReveal(ref);
+  useReveal(ref, { belowFold: true });
 
   return (
     <section ref={ref} className="relative isolate overflow-hidden border-t border-white/[0.07] bg-black font-display text-[#EDEDED]">

@@ -63,7 +63,7 @@ export default function Loader() {
       return;
     }
 
-    document.documentElement.style.overflow = "hidden";
+    if (document.documentElement.style.overflow !== "hidden") document.documentElement.style.overflow = "hidden";
     getLenis()?.stop();
 
     const end = Math.hypot(window.innerWidth, window.innerHeight) / 12;
@@ -91,21 +91,28 @@ export default function Loader() {
     if (!document.fonts) done.fonts = true;
 
     // Solo las imágenes de la primera pantalla: lo de más abajo (o de terceros) no frena la entrada.
-    const firstScreen = [...document.images].filter((img) => {
-      if (root.contains(img)) return false;
-      const r = img.getBoundingClientRect();
-      return r.bottom > 0 && r.top < window.innerHeight && r.width > 0;
-    });
-    Promise.all(
-      firstScreen.map((img) =>
-        img.complete
-          ? null
-          : new Promise((resolve) => {
-              img.addEventListener("load", resolve, { once: true });
-              img.addEventListener("error", resolve, { once: true });
-            })
-      )
-    ).then(() => (done.images = true));
+    // IntersectionObserver resuelve qué se ve sin forzar un layout mientras React hidrata.
+    const images = [...document.images].filter((img) => !root.contains(img));
+    let imagesObserver: IntersectionObserver | null = null;
+    if (images.length === 0 || typeof IntersectionObserver === "undefined") {
+      done.images = true;
+    } else {
+      imagesObserver = new IntersectionObserver((entries) => {
+        imagesObserver?.disconnect();
+        const firstScreen = entries.filter((e) => e.isIntersecting && e.boundingClientRect.width > 0).map((e) => e.target as HTMLImageElement);
+        Promise.all(
+          firstScreen.map((img) =>
+            img.complete
+              ? null
+              : new Promise((resolve) => {
+                  img.addEventListener("load", resolve, { once: true });
+                  img.addEventListener("error", resolve, { once: true });
+                })
+          )
+        ).then(() => (done.images = true));
+      });
+      images.forEach((img) => imagesObserver!.observe(img));
+    }
 
     // Red de seguridad: pase lo que pase, a los 3 s se abre.
     after(3000, () => Object.assign(done, { fonts: true, images: true }));
@@ -115,7 +122,6 @@ export default function Loader() {
     const progress = { p: 0 };
     let finale: gsap.core.Timeline | null = null;
 
-    gsap.fromTo(captionRef.current, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", delay: 0.1 });
 
     const tick = () => {
       const goal = target();
@@ -143,6 +149,7 @@ export default function Loader() {
       gsap.ticker.remove(tick);
       finale?.kill();
       timers.forEach(clearTimeout);
+      imagesObserver?.disconnect();
       document.documentElement.style.overflow = "";
     };
   }, []);
@@ -161,7 +168,7 @@ export default function Loader() {
       <noscript>
         <style>{`#${LOADER_ID}{display:none!important}`}</style>
       </noscript>
-      <style>{`#${LOADER_ID}{animation:nuba-loader-failsafe 0s linear 5s forwards}@keyframes nuba-loader-failsafe{to{visibility:hidden;pointer-events:none}}`}</style>
+      <style>{`#${LOADER_ID}{animation:nuba-loader-failsafe 0s linear 5s forwards}@keyframes nuba-loader-failsafe{to{visibility:hidden;pointer-events:none}}#${LOADER_ID} .nuba-loader-caption{animation:nuba-loader-caption .4s cubic-bezier(.25,.46,.45,.94) .1s backwards}@keyframes nuba-loader-caption{from{opacity:0;translate:-50% 6px}to{opacity:1;translate:-50% 0}}`}</style>
       <svg className="absolute inset-0 h-full w-full" aria-hidden>
         <defs>
           <mask id="nuba-loader-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
@@ -192,7 +199,7 @@ export default function Loader() {
 
       <p
         ref={captionRef}
-        className="absolute left-1/2 top-1/2 flex -translate-x-1/2 items-baseline gap-2.5 whitespace-nowrap font-display text-[17px] font-semibold tracking-[-0.04em] text-[#EDEDED] opacity-0"
+        className="nuba-loader-caption absolute left-1/2 top-1/2 flex -translate-x-1/2 items-baseline gap-2.5 whitespace-nowrap font-display text-[17px] font-semibold tracking-[-0.04em] text-[#EDEDED]"
         style={{ marginTop: SIZE / 2 + 26 }}
       >
         Nuba Studio

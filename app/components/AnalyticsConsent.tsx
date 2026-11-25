@@ -86,8 +86,20 @@ export default function AnalyticsConsent() {
       return;
     }
     if (choice === "denied") return;
-    const timer = window.setTimeout(() => setVisible(true), 2500);
-    return () => window.clearTimeout(timer);
+    // Aparece recién con la primera interacción: Chrome deja de medir el LCP ahí,
+    // así el texto del banner nunca pasa a ser el elemento LCP de la página.
+    const events = ["pointerdown", "keydown", "wheel", "touchstart", "scroll"] as const;
+    let timer = 0;
+    const show = () => {
+      stop();
+      timer = window.setTimeout(() => setVisible(true), 800);
+    };
+    const stop = () => events.forEach((e) => window.removeEventListener(e, show));
+    events.forEach((e) => window.addEventListener(e, show, { passive: true }));
+    return () => {
+      stop();
+      window.clearTimeout(timer);
+    };
   }, []);
 
   if (!visible) return null;

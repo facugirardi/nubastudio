@@ -35,6 +35,9 @@ export type WorkItem = {
   };
 };
 
+/** Lo que la home necesita de cada caso: se arma en el servidor para no mandar al cliente los textos completos en/es. */
+export type WorkSummary = Pick<WorkItem, "title" | "subtitle" | "image" | "slug" | "year" | "description" | "technologies">;
+
 export const works: WorkItem[] = [
   {
     title: "Nubapay",

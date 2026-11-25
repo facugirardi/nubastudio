@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { visibleWorks } from "../../data/works";
+import type { WorkSummary } from "../../data/works";
 import { publishedTestimonials } from "../../data/testimonials";
 import { useLanguage } from "../../lib/i18n";
 import { getUiText } from "../../lib/uiText";
@@ -11,14 +11,14 @@ import { ArrowUpRight } from "../icons";
 import { openCase } from "./WorkCard";
 import { useReveal } from "./useReveal";
 
-export default function HomeTestimonial() {
+export default function HomeTestimonial({ works }: { works: WorkSummary[] }) {
   const { lang, path } = useLanguage();
   const t = getUiText(lang).home;
   const ref = useRef<HTMLElement>(null);
-  useReveal(ref);
+  useReveal(ref, { belowFold: true });
 
   const item = publishedTestimonials[0];
-  const work = item && visibleWorks.find((w) => w.slug === item.caseSlug);
+  const work = item && works.find((w) => w.slug === item.caseSlug);
   if (!item || !work) return null;
 
   return (

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import HomeClient from "../components/HomeClient";
 import HomeSeoContent from "../components/HomeSeoContent";
-import { visibleWorks } from "../data/works";
+import { visibleWorks, type WorkSummary } from "../data/works";
 import { JsonLd, webPageJsonLd, worksCollectionJsonLd } from "../lib/jsonLd";
 import { isLang } from "../lib/lang";
 import { localizeWork } from "../lib/localizeWork";
@@ -23,16 +23,26 @@ export default async function Home({ params }: Props) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
   const { home } = seoText[lang];
+  const localized = visibleWorks.map((w) => localizeWork(w, lang));
+  const homeWorks: WorkSummary[] = localized.map(({ title, subtitle, image, slug, year, description, technologies }) => ({
+    title,
+    subtitle,
+    image,
+    slug,
+    year,
+    description,
+    technologies,
+  }));
 
   return (
     <>
       <JsonLd
         data={[
           webPageJsonLd(lang, "/", { name: home.title, description: home.description }),
-          worksCollectionJsonLd(visibleWorks.map((w) => localizeWork(w, lang)), lang, "/"),
+          worksCollectionJsonLd(localized, lang, "/"),
         ]}
       />
-      <HomeClient seoFallback={<HomeSeoContent lang={lang} />} />
+      <HomeClient works={homeWorks} seoFallback={<HomeSeoContent lang={lang} />} />
     </>
   );
 }

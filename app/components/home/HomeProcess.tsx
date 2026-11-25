@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { afterPaint } from "../../lib/afterPaint";
 import { FOUNDED, PROJECTS_SHIPPED } from "../../lib/seo";
 import { useLanguage } from "../../lib/i18n";
 import { getUiText } from "../../lib/uiText";
@@ -19,7 +20,7 @@ export default function HomeProcess({ index = "03" }: { index?: string }) {
   const stepsRef = useRef<HTMLOListElement>(null);
   const fillRef = useRef<HTMLSpanElement>(null);
   const countRef = useRef<HTMLSpanElement>(null);
-  useReveal(ref);
+  useReveal(ref, { belowFold: true });
 
   const steps = ui.services.process;
 
@@ -35,7 +36,8 @@ export default function HomeProcess({ index = "03" }: { index?: string }) {
       return;
     }
 
-    const ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {}, list.parentElement ?? list);
+    const cancel = afterPaint(() => ctx.add(() => {
       const mm = gsap.matchMedia();
       mm.add({ desktop: "(min-width: 1024px)", mobile: "(max-width: 1023px)" }, (c) => {
         const axis = c.conditions?.desktop ? "scaleX" : "scaleY";
@@ -71,9 +73,12 @@ export default function HomeProcess({ index = "03" }: { index?: string }) {
           count.textContent = String(Math.round(state.v)).padStart(2, "0");
         },
       });
-    }, list.parentElement ?? list);
+    }));
 
-    return () => ctx.revert();
+    return () => {
+      cancel();
+      ctx.revert();
+    };
   }, []);
 
   const stats = [

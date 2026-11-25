@@ -96,7 +96,17 @@ body::-webkit-scrollbar {
   to { transform: translate3d(-50%, 0, 0); }
 }
 
+/* Entrada del navbar en CSS: con GSAP leía estilos calculados en plena hidratación (reflow forzado). */
+.navbar-enter {
+  animation: navbar-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
+}
+
+@keyframes navbar-enter {
+  from { opacity: 0; transform: translateY(-12px); }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .navbar-enter,
   .hero-marquee-track,
   .composer-busy { animation: none !important; }
 }

@@ -188,8 +188,8 @@ export default function Navbar() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const closeTimer = useRef<number | undefined>(undefined);
 
-  const barRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuShown = useRef(false);
 
   const hrefFor = (id: NavId) => path(id === "work" ? "/works" : `/${id}`);
   const isActive = (id: NavId) => current.startsWith(id === "work" ? "/works" : `/${id}`);
@@ -214,12 +214,6 @@ export default function Navbar() {
   useEffect(() => () => window.clearTimeout(closeTimer.current), []);
 
   useEffect(() => {
-    const bar = barRef.current;
-    if (!bar || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    gsap.fromTo(bar, { y: -12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, delay: 0.3, ease: "expo.out" });
-  }, []);
-
-  useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -233,6 +227,7 @@ export default function Navbar() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (open) {
+      menuShown.current = true;
       lenis?.stop();
       document.documentElement.style.overflow = "hidden";
       gsap.set(menu, { visibility: "visible" });
@@ -244,6 +239,8 @@ export default function Navbar() {
         gsap.fromTo(items, { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.05, delay: 0.25, ease: "expo.out", overwrite: true });
       }
     } else {
+      // Cerrado de entrada ya lo deja el CSS: tocarlo al montar forzaba un recálculo de estilos.
+      if (!menuShown.current) return;
       lenis?.start();
       document.documentElement.style.overflow = "";
       gsap.to(menu, {
@@ -284,8 +281,7 @@ export default function Navbar() {
   return (
     <>
       <header
-        ref={barRef}
-        className={`fixed inset-x-0 top-0 z-[100] font-display transition-[background-color,border-color,backdrop-filter] duration-300 ${
+        className={`navbar-enter fixed inset-x-0 top-0 z-[100] font-display transition-[background-color,border-color,backdrop-filter] duration-300 ${
           solid
             ? "border-b border-white/[0.08] bg-black/70 backdrop-blur-xl backdrop-saturate-150"
             : "border-b border-transparent bg-transparent"
